@@ -44,19 +44,53 @@ graph TD
 | Real-time (future)  | Flask-SocketIO          | Only if we want live sync later                   |
 
 
-## 4. Folder Structure
+## 4. Folder Structure (Phase 0 — LIVE & ETERNAL)
 ```
-app/
-├── auth/
-│   ├── __init__.py
-│   ├── forms.py          # Just for login (WTForms or manual)
-│   ├── routes.py         # /login, /logout, /register (optional)
-│   └── utils.py          # bcrypt wrappers
-├── models/
-│   └── user.py           # SQLAlchemy User model + load_user()
-├── templates/auth/
-│   ├── login.html        # Minimal, dark mode, jacked
-│   └── layout.html       # Extends base with no nav when logged out
+wfm-power-planner/
+├── .gitignore
+├── alembic.ini
+├── changelog.md
+├── PROJECT.md                  ← This sacred document
+├── requirements.txt
+├── run.py                      ← flask run entry point
+│
+├── app/
+│   ├── init.py             ← App factory + dashboard route
+│   ├── config.py               ← Config (PostgreSQL URI + secrets)
+│   ├── extensions.py           ← db, login_manager, bcrypt
+│   │
+│   ├── auth/
+│   │   ├── init.py
+│   │   ├── routes.py           ← /auth/login + logout
+│   │   └── utils.py            ← bcrypt helpers
+│   │
+│   ├── models/
+│   │   ├── init.py
+│   │   ├── user.py             ← User model (Single Warrior Mode)
+│   │   ├── goal.py             ← Ready for Phase 1
+│   │   └── task.py             ← Ready for Phase 1
+│   │
+│   ├── services/
+│   │   ├── init.py
+│   │   ├── goal_service.py     ← Future home of all Goal writes (Tenet #17)
+│   │   └── task_service.py
+│   │
+│   ├── static/
+│   │   ├── css/
+│   │   │   └── main.css        ← Pure hand-rolled, dark-mode glory
+│   │   └── js/
+│   │       ├── constants.js   ← Future enum mirror (Tenet #3)
+│   │       └── lib/
+│   │           └── sortable.min.js   ← ONLY allowed 3rd-party lib (Tenet #30)
+│   │
+│   └── templates/
+│       ├── base.html           ← Dark mode, hamburger menu, block structure
+│       ├── index.html          ← Dashboard (Phase 0 victory screen)
+│       └── auth/
+│           └── login.html      ← The gate to the fortress
+│
+├── migrations/                 ← Alembic lives here (ready for Phase 1)
+└── venv/                       ← Your virtual environment
 ```
 
 ## 5. Key Decisions & Rationale (FINAL — LOCKED IN WITH 24-INCH PYTHON POWER)
