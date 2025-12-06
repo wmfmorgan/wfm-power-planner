@@ -1,9 +1,9 @@
-# PROJECT.md — WFM PLANNER (2025 Goal Domination System)
+# WFM POWER PLANNER — 2025 TOTAL DOMINATION SYSTEM
 
-> **“Train. Plan. DOMINATE.”**  
-> A private, offline-first, personal operating system built for people who are serious about winning 2025 and beyond.
+> **“Train hard. Plan harder. DOMINATE FOREVER.”**  
+> The private, offline-first, power-charged operating system for warriors who refuse to lose.
 
-Last updated: 2025-12-05
+Last updated: 2025-12-06
 
 ## 1. Summary & Core Functionality
 WFM Planner is a full-life management system that combines:
