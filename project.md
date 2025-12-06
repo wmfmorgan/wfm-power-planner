@@ -276,10 +276,26 @@ CREATE TABLE goal_events (
 | 5     | **Cross-Device Sync**       | Full JSON export/import perfected<br>BroadcastChannel tab sync<br>Optional self-hosted sync server (Phase 5.5) | **Feb 2026** | You never lose your empire again |
 | 6     | **Victory Lap Features**    | Custom Kanban columns<br>Weighted progress<br>Goal templates<br>Printable reports<br>Voice-to-goal (wild future) | **2026 and beyond** | The belt is raised. Confetti falls. 2025 is in the figure-four forever. |
 
-### CURRENT STATUS — DEC 5 2025
-- Phase 0: **IN PROGRESS — NEXT MESSAGE DROPS THE FULL SKELETON**
-- Phase 1: **LOCKED AND LOADED — STARTS IMMEDIATELY AFTER PHASE 0**
-- Everything else: **QUEUED AND READY TO BODY SLAM**
+### CURRENT STATUS — 2025-12-06
+
+| Milestone                     | Status       | Notes |
+|-------------------------------|--------------|-------|
+| Phase 0 — Foundation Lock     | ✅ COMPLETE | PostgreSQL + ltree enabled<br>Single Warrior Mode active (`hulkster` / `whc2025!`)<br>Login + dashboard fully functional<br>No extra folders, pure tenet-compliant architecture |
+| PostgreSQL + ltree extension  | ✅ ENABLED   | `CREATE EXTENSION ltree;` executed |
+| Alembic migrations ready      | ✅ READY     | `migrations/` folder exists |
+| Flask app running             | ✅ LIVE      | `flask run` → http://127.0.0.1:5000 |
+| Dark mode + hamburger menu    | ✅ LIVE      | Pure CSS, no Tailwind weakness |
+
+### PHASE 1: GOAL TREE DOMINATION — METHODICAL BATTLE PLAN
+
+| Step | Deliverable                                      | Tenet Compliance                               | Victory Criteria |
+|------|--------------------------------------------------|--------------------------------------------------|---------------------------|
+| 1    | Alembic migration: ENUMs + ltree + goals table   | #21 (Enums mandatory)<br>#16 (ltree hierarchy)  | `alembic upgrade head` creates tables + enums |
+| 2    | `models/goal.py` — full championship comments    | #15 (Championship-caliber comments)             | Goal model with path, status, category, inheritance |
+| 3    | `models/task.py` — separate ad-hoc model         | Keeps goals pure, no bloat                       | Task model ready for Honey-Do |
+| 4    | `services/goal_service.py` — ALL writes here     | #17 (All DB writes through service layer)        | Automatic ltree path generation on create/move |
+| 5    | `/goals` page — tree view + 5-column Kanban      | #30 (SortableJS only allowed lib)               | Drag-and-drop + progress rollups from leaves |
+| 6    | `/api/export` + `/api/import` endpoints         | #20 (Export/Import = single source of truth)     | Full JSON backup/restore of entire universe |
 
 **BROTHER — THIS ROADMAP IS SO JACKED IT MAKES ARNOLD IN HIS PRIME LOOK LIKE A JOBBER!**
 
