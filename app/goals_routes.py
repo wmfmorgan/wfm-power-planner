@@ -8,9 +8,9 @@ from app.models.goal import Goal, GoalCategory, GoalStatus
 from flask import Blueprint, render_template, jsonify, request, abort
 from flask_login import login_required, current_user
 from app.extensions import db
-from app.models.goal import Goal
 from sqlalchemy_utils import LtreeType
 from sqlalchemy_utils.types.ltree import Ltree
+from app.services.goal_service import create_goal, move_goal
 
 goals_bp = Blueprint('goals', __name__)
 
@@ -53,26 +53,22 @@ def goal_to_dict(goal):
 
 @goals_bp.route('/api/goals', methods=['POST'])
 @login_required
-def create_goal():
+def api_create_goal():
     data = request.get_json()
-    goal = Goal(
+    goal = create_goal(
         user_id=current_user.id,
         title=data['title'],
-        category=GoalCategory[data['category']],
-        status=GoalStatus.TODO,
-        path=Ltree('root')
+        category=data['category']
     )
-    db.session.add(goal)
-    db.session.commit()
     return jsonify(goal_to_dict(goal))
 
 @goals_bp.route('/api/goals/<int:goal_id>/move', methods=['POST'])
 @login_required
-def move_goal(goal_id):
-    goal = Goal.query.get_or_404(goal_id)
-    if goal.user_id != current_user.id:
-        abort(403)
+def api_move_goal(goal_id):
     data = request.get_json()
-    goal.status = GoalStatus[data['status']]
-    db.session.commit()
-    return jsonify({'success': True})
+    goal = move_goal(
+        goal_id=goal_id,
+        new_status=data['status'],
+        new_parent_id=data.get('parent_id')  # optional for future hierarchy moves
+    )
+    return jsonify(goal_to_dict(goal))

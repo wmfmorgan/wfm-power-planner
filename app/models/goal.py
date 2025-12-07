@@ -73,7 +73,7 @@ class Goal(db.Model):
     # Hierarchy
     parent_id = db.Column(db.Integer, db.ForeignKey('goals.id'), nullable=True)
     path = db.Column(LtreeType, nullable=False, index=True,
-                comment="Materialized path: 1.3.2 — enables O(1) subtree queries")
+                     comment="Materialized path: 1.3.2 — enables O(1) subtree queries")
     
     # Kanban column
     status = db.Column(SQLEnum(GoalStatus), nullable=False, default=GoalStatus.TODO,
