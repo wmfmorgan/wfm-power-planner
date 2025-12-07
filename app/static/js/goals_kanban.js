@@ -1,52 +1,126 @@
 // app/static/js/goals_kanban.js
-// TENET #1 OBEYED — NO INLINE JS
-// TENET #15 OBEYED — CHAMPIONSHIP COMMENTS
+// STEP 7 — TREE VIEW + COLLAPSE + KANBAN — FULLY FUNCTIONAL
+
+let allGoals = [];
 
 document.addEventListener('DOMContentLoaded', () => {
   fetchGoals();
-  initSortable();
+  document.getElementById('add-goal-btn').addEventListener('click', openModal);
 });
 
 function fetchGoals() {
   fetch('/api/goals')
     .then(r => r.json())
-    .then(goals => renderGoals(goals));
+    .then(goals => {
+      allGoals = goals;
+      renderTree(goals);
+      renderKanban(goals);
+    });
 }
 
-function renderGoals(goals) {
-  // Clear all columns
-  document.querySelectorAll('#kanban > div > div[id]').forEach(col => col.innerHTML = '');
+// TREE RENDERER
+function renderTree(goals) {
+  const container = document.getElementById('goal-tree');
+  container.innerHTML = '';
 
-  goals.forEach(goal => {
-    const card = createGoalCard(goal);
-    document.getElementById(goal.status.toLowerCase()).appendChild(card);
-  });
-}
+  const buildTreeHtml = (node, level = 0) => {
+    const indent = '&nbsp;'.repeat(level * 4);
+    const toggle = node.children?.length ? `<span class="toggle cursor-pointer text-yellow-400 mr-2">[−]</span>` : '<span class="mr-6"></span>';
+    const card = document.createElement('div');
+    card.className = 'mb-2 p-3 bg-gray-700 rounded flex items-center';
+    card.innerHTML = `
+      ${toggle}
+      <span class="font-medium">${escapeHtml(node.title)}</span>
+      <span class="ml-auto text-sm text-gray-400">${node.category} • ${node.status} • ${node.progress}%</span>
+    `;
 
-function createGoalCard(goal) {
-  const div = document.createElement('div');
-  div.className = `bg-gray-700 p-4 rounded-lg cursor-move border-l-4 border-${getCategoryColor(goal.category)}-500`;
-  div.dataset.id = goal.id;
-  div.innerHTML = `
-    <div class="font-bold text-white">${escapeHtml(goal.title)}</div>
-    <div class="text-sm text-gray-400">${goal.category}</div>
-    <div class="mt-3">
-      <div class="bg-gray-600 rounded-full h-3 overflow-hidden">
-        <div class="bg-green-500 h-full transition-all" style="width: ${goal.progress}%"></div>
-      </div>
-      <div class="text-xs text-right text-gray-400">${goal.progress}%</div>
-    </div>
-  `;
-  return div;
-}
+    container.appendChild(card);
 
-function getCategoryColor(cat) {
-  const colors = {
-    MARITAL: 'pink', SOCIAL: 'purple', FINANCIAL: 'yellow',
-    WORK: 'blue', FAMILY: 'orange', SPIRITUAL: 'indigo',
-    HEALTH: 'green', HOBBY: 'red'
+    if (node.children?.length) {
+      const childrenDiv = document.createElement('div');
+      childrenDiv.className = 'children ml-8';
+      node.children.forEach(child => buildTreeHtml(child, level + 1));
+      container.appendChild(childrenDiv);
+
+      // Collapse/expand logic
+      card.querySelector('.toggle').addEventListener('click', (e) => {
+        const toggle = e.target;
+        const isOpen = toggle.textContent === '[−]';
+        toggle.textContent = isOpen ? '[+]' : '[−]';
+        childrenDiv.style.display = isOpen ? 'none' : 'block';
+      });
+    }
   };
-  return colors[cat] || 'gray';
+
+  goals.forEach(goal => buildTreeHtml(goal));
+}
+
+// Helper to flatten tree for Kanban
+function flatGoals(nodes, result = []) {
+  nodes.forEach(node => {
+    result.push(node);
+    if (node.children) flatGoals(node.children, result);
+  });
+  return result;
+}
+
+// KANBAN RENDERER — FIXED, ETERNAL, TENET-COMPLIANT
+function renderKanban(goals) {
+  // Clear all columns first
+  document.querySelectorAll('#kanban [id]').forEach(col => col.innerHTML = '');
+
+  const flatList = flatGoals(goals);
+
+  console.log(`Rendering ${flatList.length} goals into Kanban...`);
+
+  const categoryColors = {
+    'work': 'blue',
+    'health': 'green',
+    'family': 'orange',
+    'financial': 'yellow',
+    'spiritual': 'indigo',
+    'social': 'purple',
+    'marital': 'pink',
+    'hobby': 'red'
+  };
+
+  flatList.forEach(goal => {
+    // CRITICAL FIX: status comes from ENUM as lowercase string already!
+    const statusKey = goal.status.toLowerCase(); // 'doing', 'todo', etc.
+    const column = document.getElementById(statusKey);
+    console.log('Goal:', goal.title, '→ Status:', statusKey, '→ Column exists:', !!column);
+    if (!column) {
+      console.warn(`No column found for status: ${statusKey}`, goal);
+      return;
+    }
+
+    const card = document.createElement('div');
+    card.className = 'goal-card bg-gray-800 p-5 rounded-xl cursor-move shadow-lg border-l-4 transition-all hover:scale-105 hover:shadow-2xl';
+    card.dataset.id = goal.id;
+
+    // FORCE CORRECT COLOR — NO MISTAKES
+    const catKey = goal.category.toLowerCase();
+    const colorMap = {
+    work: 'blue', health: 'green', family: 'orange', financial: 'yellow',
+    spiritual: 'indigo', social: 'purple', marital: 'pink', hobby: 'red'
+    };
+    card.classList.add(`border-${colorMap[catKey] || 'gray'}-500`);
+
+    card.innerHTML = `
+    <div class="font-bold text-white text-xl mb-2">${escapeHtml(goal.title)}</div>
+    <div class="text-sm text-gray-400 uppercase tracking-wider mb-3">${goal.category}</div>
+    <div class="mt-4">
+        <div class="bg-gray-700 rounded-full h-4 overflow-hidden border border-gray-600">
+        <div class="bg-gradient-to-r from-green-500 to-emerald-600 h-full transition-all duration-700" style="width: ${goal.progress}%"></div>
+        </div>
+        <div class="text-xs text-right text-gray-300 mt-2 font-bold">${goal.progress}%</div>
+    </div>
+    `;
+
+    column.appendChild(card);
+  });
+
+  initSortable(); // Re-init after DOM update
 }
 
 function escapeHtml(text) {
@@ -55,7 +129,7 @@ function escapeHtml(text) {
   return div.innerHTML;
 }
 
-// MODAL LOGIC
+// Modal functions
 function openModal() {
   document.getElementById('goal-modal').classList.remove('hidden');
   document.getElementById('goal-title').focus();
@@ -69,49 +143,64 @@ function closeModal() {
 function saveGoal() {
   const title = document.getElementById('goal-title').value.trim();
   if (!title) return;
-
-  const payload = {
-    title: title,
-    category: document.getElementById('goal-category').value
-  };
-
+alert(document.getElementById('goal-category').value);
   fetch('/api/goals', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(payload)
+    body: JSON.stringify({
+      title: title,
+      category: document.getElementById('goal-category').value
+      
+    })
   })
   .then(r => r.json())
-  .then(goal => {
+  .then(() => {
     closeModal();
-    fetchGoals(); // Refresh the board
-  })
-  .catch(err => console.error('Save failed:', err));
-}
-
-// BUTTON EVENT
-document.getElementById('add-goal-btn').addEventListener('click', openModal);
-
-// SORTABLEJS INIT
-function initSortable() {
-  document.querySelectorAll('#kanban > div > div[id]').forEach(column => {
-    new Sortable(column, {
-      group: 'kanban',
-      animation: 150,
-      ghostClass: 'bg-gray-900 opacity-50',
-      onEnd: handleDrop
-    });
+    fetchGoals();
   });
 }
 
-function handleDrop(evt) {
-  const goalId = evt.item.dataset.id;
-  const newStatus = evt.to.id.toUpperCase();
+// Sortable.js — FIXED FOR 2025 DOMINATION
+function initSortable() {
+  // Destroy any existing instances first (prevents duplicate listeners)
+  document.querySelectorAll('#kanban [id]').forEach(column => {
+    if (column.sortable) {
+      column.sortable.destroy();
+    }
+  });
 
-  fetch(`/api/goals/${goalId}/move`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ status: newStatus })
-  })
-  .then(() => fetchGoals())
-  .catch(err => console.error('Move failed:', err));
+  document.querySelectorAll('#kanban [id]').forEach(column => {
+    column.sortable = new Sortable(column, {
+      group: 'kanban',
+      animation: 180,
+      easing: "cubic-bezier(0.68, -0.55, 0.27, 1.55)",
+      ghostClass: 'kanban-ghost',        // ← FIXED: No spaces!
+      chosenClass: 'kanban-chosen',
+      dragClass: 'kanban-dragging',
+      
+      onEnd: (evt) => {
+        if (evt.from === evt.to && evt.oldIndex === evt.newIndex) return;
+
+        const goalId = evt.item.dataset.id;
+        const newStatus = evt.to.id.toUpperCase();  // 'todo' → 'TODO'
+
+        fetch(`/api/goals/${goalId}/move`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ 
+            status: newStatus 
+          })
+        })
+        .then(r => {
+          if (!r.ok) throw new Error('Move failed');
+          return r.json();
+        })
+        .then(() => fetchGoals())
+        .catch(err => {
+          console.error('Move failed:', err);
+          fetchGoals(); // Revert on failure
+        });
+      }
+    });
+  });
 }

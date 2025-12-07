@@ -1,54 +1,70 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="max-w-7xl mx-auto p-6">
-  <h1 class="text-4xl font-bold text-yellow-400 mb-8">GOAL DOMINATION CENTER</h1>
-  
-  <!-- + ADD GOAL BUTTON — FIXED POSITION -->
-  <button id="add-goal-btn" class="fixed bottom-8 right-8 bg-yellow-500 hover:bg-yellow-400 text-black font-bold text-4xl w-16 h-16 rounded-full shadow-2xl z-50">
+  <h1 class="text-4xl font-bold text-yellow-400 mb-8 drop-shadow-lg">GOAL DOMINATION CENTER</h1>
+
+  <!-- + ADD GOAL BUTTON -->
+  <button id="add-goal-btn" class="fixed bottom-8 right-8 bg-yellow-500 hover:bg-yellow-400 text-black font-bold text-5xl w-20 h-20 rounded-full shadow-2xl z-50 transition-all hover:scale-110">
     +
   </button>
 
-  <div id="kanban" class="grid grid-cols-1 md:grid-cols-5 gap-6">
-    {% for status in ['BACKLOG', 'TODO', 'DOING', 'BLOCKED', 'DONE'] %}
-    <div class="bg-gray-800 rounded-lg p-4 min-h-screen border border-gray-700">
-      <h2 class="text-2xl font-bold text-center mb-6 
-        {{ 'text-red-400' if status=='BLOCKED' else 
-           'text-yellow-400' if status=='DOING' else 
-           'text-green-400' if status=='DONE' else 'text-gray-400' }}">
-        {{ status }}
-      </h2>
-      <div id="{{ status|lower }}" class="space-y-4"></div>
-    </div>
-    {% endfor %}
+  <!-- TREE VIEW -->
+  <div class="mb-12">
+    <h2 class="text-3xl font-bold text-gray-200 mb-6">Goal Tree</h2>
+    <div id="goal-tree" class="bg-gray-800 rounded-xl p-8 min-h-96 border-2 border-gray-700 shadow-2xl"></div>
   </div>
 
-  <!-- ADD GOAL MODAL — HIDDEN BY DEFAULT -->
-  <div id="goal-modal" class="hidden fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50">
-    <div class="bg-gray-800 p-8 rounded-lg shadow-2xl w-96 border border-gray-700">
-      <h2 class="text-3xl font-bold text-yellow-400 mb-6">CREATE NEW GOAL</h2>
-      <input type="text" id="goal-title" placeholder="Goal title..." class="w-full p-3 mb-4 bg-gray-700 rounded border border-gray-600 focus:border-yellow-400 text-white">
-      <select id="goal-category" class="w-full p-3 mb-6 bg-gray-700 rounded border border-gray-600 text-white">
-        <option value="WORK">WORK</option>
-        <option value="HEALTH">HEALTH</option>
-        <option value="FAMILY">FAMILY</option>
-        <option value="FINANCIAL">FINANCIAL</option>
-        <option value="SPIRITUAL">SPIRITUAL</option>
-        <option value="SOCIAL">SOCIAL</option>
-        <option value="MARITAL">MARITAL</option>
-        <option value="HOBBY">HOBBY</option>
-      </select>
-      <div class="flex gap-4">
-        <button onclick="saveGoal()" class="flex-1 bg-green-500 hover:bg-green-400 text-black font-bold py-3 rounded">
-          SAVE GOAL
-        </button>
-        <button onclick="closeModal()" class="flex-1 bg-gray-600 hover:bg-gray-500 text-white font-bold py-3 rounded">
-          CANCEL
-        </button>
-      </div>
+  <!-- KANBAN BOARD -->
+  <h2 class="text-3xl font-bold text-gray-200 mb-8">Kanban</h2>
+  <div id="kanban" class="grid grid-cols-1 md:grid-cols-5 gap-8">
+    <div class="bg-gray-900 rounded-xl p-6 border-2 border-gray-800 shadow-xl">
+      <h3 class="text-2xl font-bold text-center mb-6 text-gray-400">BACKLOG</h3>
+      <div id="backlog" class="space-y-4 min-h-96"></div>
+    </div>
+    <div class="bg-gray-900 rounded-xl p-6 border-2 border-gray-800 shadow-xl">
+      <h3 class="text-2xl font-bold text-center mb-6 text-gray-400">TODO</h3>
+      <div id="todo" class="space-y-4 min-h-96"></div>
+    </div>
+    <div class="bg-gray-900 rounded-xl p-6 border-2 border-gray-800 shadow-xl">
+      <h3 class="text-2xl font-bold text-center mb-6 text-yellow-400">DOING</h3>
+      <div id="doing" class="space-y-4 min-h-96"></div>
+    </div>
+    <div class="bg-gray-900 rounded-xl p-6 border-2 border-gray-800 shadow-xl">
+      <h3 class="text-2xl font-bold text-center mb-6 text-red-400">BLOCKED</h3>
+      <div id="blocked" class="space-y-4 min-h-96"></div>
+    </div>
+    <div class="bg-gray-900 rounded-xl p-6 border-2 border-gray-800 shadow-xl">
+      <h3 class="text-2xl font-bold text-center mb-6 text-green-400">DONE</h3>
+      <div id="done" class="space-y-4 min-h-96"></div>
     </div>
   </div>
 </div>
 
+<!-- ADD GOAL MODAL -->
+<div id="goal-modal" class="hidden fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50">
+  <div class="bg-gray-800 p-10 rounded-2xl shadow-3xl w-96 border-4 border-yellow-500">
+    <h2 class="text-4xl font-black text-yellow-400 mb-8 text-center">CREATE NEW GOAL</h2>
+    <input type="text" id="goal-title" placeholder="Goal title..." class="w-full p-4 mb-6 bg-gray-700 rounded-lg border-2 border-gray-600 focus:border-yellow-400 text-white text-lg">
+    <select id="goal-category" class="w-full p-4 mb-8 bg-gray-700 rounded-lg border-2 border-gray-600 text-white text-lg">
+      <option value="work">WORK</option>
+      <option value="health">HEALTH</option>
+      <option value="family">FAMILY</option>
+      <option value="financial">FINANCIAL</option>
+      <option value="spiritual">SPIRITUAL</option>
+      <option value="social">SOCIAL</option>
+      <option value="marital">MARITAL</option>
+      <option value="hobby">HOBBY</option>
+    </select>
+    <div class="flex gap-6">
+      <button onclick="saveGoal()" class="flex-1 bg-green-600 hover:bg-green-500 text-black font-bold text-xl py-4 rounded-lg transition-all hover:scale-105">SAVE</button>
+      <button onclick="closeModal()" class="flex-1 bg-gray-600 hover:bg-gray-500 text-white font-bold text-xl py-4 rounded-lg transition-all hover:scale-105">CANCEL</button>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+<!-- ALL JS LOADED AT BOTTOM — TENET #1 OBEYED ETERNALLY -->
+{% block scripts %}
 <script src="{{ url_for('static', filename='js/lib/sortable.min.js') }}"></script>
 <script src="{{ url_for('static', filename='js/goals_kanban.js') }}"></script>
 {% endblock %}

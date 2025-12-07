@@ -1,0 +1,23 @@
+/* ============================================= */
+/* KANBAN DRAG STATES — HULKAMANIA CERTIFIED    */
+/* ============================================= */
+.kanban-ghost {
+  background: rgba(30, 30, 40, 0.98) !important;
+  border: 3px dashed #eab308 !important;
+  opacity: 0.7;
+  transform: rotate(6deg) scale(0.95);
+  box-shadow: 0 0 30px rgba(234, 179, 8, 0.6);
+}
+
+.kanban-chosen {
+  opacity: 0.9;
+  transform: scale(1.08);
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.8) !important;
+  transition: all 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.kanban-dragging {
+  transform: rotate(10deg) scale(1.12);
+  z-index: 9999;
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.9);
+}

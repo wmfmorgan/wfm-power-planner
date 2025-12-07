@@ -17,7 +17,9 @@ from .models.user import User
 
 
 def create_app():
-    app = Flask(__name__)
+    app = Flask(__name__, template_folder='templates')
+    app.config['TEMPLATES_AUTO_RELOAD'] = True   # ← THIS LINE
+    app.jinja_env.auto_reload = True             # ← AND THIS LINE
     app.config.from_object(Config)
 
     # === EXTENSIONS ===

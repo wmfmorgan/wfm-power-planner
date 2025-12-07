@@ -24,22 +24,18 @@ def goals_page():
 @goals_bp.route('/api/goals')
 @login_required
 def api_goals():
+    
     goals = Goal.query.filter_by(user_id=current_user.id).all()
     
-    def build_node(goal):
-        node = {
-            'id': goal.id,
-            'title': goal.title,
-            'category': goal.category.value,
-            'status': goal.status.value,
-            'progress': goal.progress
-        }
-        children = [build_node(g) for g in goals if g.parent_id == goal.id]
-        if children:
-            node['children'] = children
-        return node
+    # Build proper nested tree
+    goal_map = {goal.id: goal_to_dict(goal) for goal in goals}
     
-    tree = [build_node(g) for g in goals if g.parent_id is None]
+    for goal in goals:
+        if goal.parent_id and goal.parent_id in goal_map:
+            parent = goal_map[goal.parent_id]
+            parent.setdefault('children', []).append(goal_map[goal.id])
+    
+    tree = [goal_map[goal.id] for goal in goals if goal.parent_id is None]
     return jsonify(tree)
 
 def goal_to_dict(goal):
@@ -48,7 +44,7 @@ def goal_to_dict(goal):
         'title': goal.title,
         'category': goal.category.value,
         'status': goal.status.value,
-        'progress': goal.progress
+        'progress': goal.progress or 0
     }
 
 @goals_bp.route('/api/goals', methods=['POST'])

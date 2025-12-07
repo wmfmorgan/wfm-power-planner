@@ -10,11 +10,12 @@ from app.models.goal import Goal, GoalStatus, GoalCategory
 from sqlalchemy_utils.types.ltree import Ltree
 
 def create_goal(user_id: int, title: str, category: str, status: str = "todo", parent_id: int | None = None) -> Goal:
+    
     goal = Goal(
         user_id=user_id,
         title=title,
-        category=GoalCategory[category.upper()],
-        status=GoalStatus[status.upper()],
+        category=GoalCategory[category.upper()].value,
+        status=GoalStatus[status.upper()].value,
         path=Ltree('root') if parent_id is None else _get_child_path(parent_id)
     )
     db.session.add(goal)

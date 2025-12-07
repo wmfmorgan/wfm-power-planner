@@ -57,8 +57,14 @@ class Goal(db.Model):
     description = db.Column(db.Text, comment="Why this goal matters — the fire behind it")
     
     # Sacred category — color-coded in UI
-    category = db.Column(SQLEnum(GoalCategory), nullable=False, default=GoalCategory.WORK,
-                        comment="One of the 8 life domains")
+    category = db.Column(SQLEnum(
+        GoalCategory,
+        name="goalcategory",
+        values_callable=lambda enum: [e.value for e in enum],
+        native_enum=True,  # keep using PostgreSQL enum type
+        ), 
+        nullable=False, default=GoalCategory.WORK,
+        comment="One of the 8 life domains")
     
     # Optional due date — inherited by children
     due_date = db.Column(db.Date, nullable=True, comment="When this goal should be complete")
@@ -76,7 +82,12 @@ class Goal(db.Model):
                      comment="Materialized path: 1.3.2 — enables O(1) subtree queries")
     
     # Kanban column
-    status = db.Column(SQLEnum(GoalStatus), nullable=False, default=GoalStatus.TODO,
+    status = db.Column(SQLEnum(
+        GoalStatus,
+        name="goalstatus",
+        values_callable=lambda enum: [e.value for e in enum],
+        native_enum=True,
+        ), nullable=False, default=GoalStatus.TODO,
                       comment="Current column: backlog → todo → doing → blocked → done")
     
     # Manual ordering within same parent
