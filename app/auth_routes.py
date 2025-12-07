@@ -2,7 +2,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_login import login_user, logout_user, login_required, current_user
 from app.models.user import User
-from app.auth.utils import check_password
+from app.extensions import bcrypt
 
 auth_bp = Blueprint('auth', __name__)
 
@@ -13,7 +13,7 @@ def login():
     
     if request.method == 'POST':
         user = User.query.filter_by(username=request.form['username']).first()
-        if user and check_password(request.form['password'], user.password_hash):
+        if user and bcrypt.check_password_hash(user.password_hash, request.form['password']):
             login_user(user)
             return redirect(url_for('index'))  # Fixed: was 'main.index'
         flash('Invalid username or password', 'danger')

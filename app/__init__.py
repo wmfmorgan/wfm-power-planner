@@ -1,51 +1,43 @@
 # app/__init__.py
+# THE ONE AND ONLY APP FACTORY — CLEAN, ETERNAL, CHAMPIONSHIP-CALIBER
 from flask import Flask, render_template
+from flask import Flask
 from flask_login import LoginManager, login_required, current_user
+from flask_migrate import Migrate
+
 from .config import Config
 from .extensions import db, login_manager, bcrypt
-from .auth.routes import auth_bp
+
+# BLUEPRINTS — IMPORTED ONCE, REGISTERED ONCE
+from .auth_routes import auth_bp
+from .goals_routes import goals_bp
+
+# MODELS — ONLY FOR USER LOADER
 from .models.user import User
-from flask_migrate import Migrate
 
 
 def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
 
-    # Extensions
+    # === EXTENSIONS ===
     db.init_app(app)
     login_manager.init_app(app)
-    migrate = Migrate(app, db)
     bcrypt.init_app(app)
+    Migrate(app, db)
 
-    # Blueprints
-    app.register_blueprint(auth_bp, url_prefix='/auth')
+    # === BLUEPRINT REGISTRATION — THE ETERNAL ORDER ===
+    app.register_blueprint(auth_bp)      # /auth/login, /auth/logout
+    app.register_blueprint(goals_bp)     # /goals, /api/goals
 
-    # Create tables + warrior on first run
-    with app.app_context():
-        db.create_all()
-        if not User.query.first():
-            from app.auth.utils import hash_password
-            hashed = hash_password('whc2025!')
-            warrior = User(username='hulkster', password_hash=hashed)
-            db.session.add(warrior)
-            db.session.commit()
-            print("\n" + "="*70)
-            print("WFM-POWER-PLANNER WARRIOR CREATED — POSTGRES IS ALIVE!")
-            print("Username: hulkster")
-            print("Password: whc2025!")
-            print("Database: wfm_power_planner on localhost:5432")
-            print("ltree extension ENABLED — HIERARCHY READY!")
-            print("="*70 + "\n")
-
-    # DASHBOARD ROUTE — TENET-COMPLIANT, NO EXTRA FOLDERS!
+    # === DASHBOARD ROUTE ===
     @app.route('/')
     @app.route('/index')
     @login_required
     def index():
         return render_template('index.html')
 
-    # User loader
+    # === USER LOADER ===
     @login_manager.user_loader
     def load_user(user_id):
         return User.query.get(int(user_id))

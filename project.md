@@ -48,48 +48,49 @@ graph TD
 ```
 wfm-power-planner/
 ├── .gitignore
-├── alembic.ini
 ├── changelog.md
 ├── PROJECT.md                  ← This sacred document
 ├── requirements.txt
 ├── run.py                      ← flask run entry point
 │
 ├── app/
-│   ├── init.py             ← App factory + dashboard route
+│   ├── __init__.py             ← App factory + blueprint registration ONLY
 │   ├── config.py               ← Config (PostgreSQL URI + secrets)
 │   ├── extensions.py           ← db, login_manager, bcrypt
 │   │
-│   ├── auth/
-│   │   ├── init.py
-│   │   ├── routes.py           ← /auth/login + logout
-│   │   └── utils.py            ← bcrypt helpers
+│   ├── auth_routes.py          ← All auth routes (login/logout)
+│   ├── goals_routes.py         ← All goal + Kanban routes + API
+│   ├── tasks_routes.py         ← Future: ad-hoc tasks
+│   ├── calendar_routes.py      ← Future: calendar views
 │   │
 │   ├── models/
-│   │   ├── init.py
+│   │   ├── __init__.py
 │   │   ├── user.py             ← User model (Single Warrior Mode)
-│   │   ├── goal.py             ← Ready for Phase 1
-│   │   └── task.py             ← Ready for Phase 1
+│   │   ├── goal.py             ← ltree hierarchy + ENUMs
+│   │   └── task.py             ← Future: ad-hoc tasks
 │   │
 │   ├── services/
-│   │   ├── init.py
-│   │   ├── goal_service.py     ← Future home of all Goal writes (Tenet #17)
-│   │   └── task_service.py
+│   │   ├── __init__.py
+│   │   ├── goal_service.py     ← ALL Goal DB writes (Tenet #17)
+│   │   └── task_service.py     ← Future: task writes
 │   │
 │   ├── static/
 │   │   ├── css/
 │   │   │   └── main.css        ← Pure hand-rolled, dark-mode glory
 │   │   └── js/
-│   │       ├── constants.js   ← Future enum mirror (Tenet #3)
+│   │       ├── goals_kanban.js ← Kanban logic (Tenet #1: no inline JS)
+│   │       ├── constants.js    ← Future enum mirror (Tenet #3)
 │   │       └── lib/
 │   │           └── sortable.min.js   ← ONLY allowed 3rd-party lib (Tenet #30)
 │   │
 │   └── templates/
-│       ├── base.html           ← Dark mode, hamburger menu, block structure
+│       ├── base.html           ← Dark mode, hamburger menu
 │       ├── index.html          ← Dashboard (Phase 0 victory screen)
+│       ├── goals.html          ← Kanban + Tree view (Phase 1+)
 │       └── auth/
 │           └── login.html      ← The gate to the fortress
 │
-├── migrations/                 ← Alembic lives here (ready for Phase 1)
+├── migrations/                 ← Flask-Migrate lives here
 └── venv/                       ← Your virtual environment
 ```
 
@@ -193,7 +194,7 @@ wfm-power-planner/
 31b. **When in doubt — ask: "What would Miguel Grinberg do?"**
     (Or Corey Schafer, or the official docs.)
     If the answer is "use the extension" → we obey.
-    
+
 **Break any of these and the Hulkster will personally leg-drop your PR.**
 
 ## 7. Database Schema Preview (First Blood)
