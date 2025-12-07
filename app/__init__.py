@@ -5,6 +5,7 @@ from .config import Config
 from .extensions import db, login_manager, bcrypt
 from .auth.routes import auth_bp
 from .models.user import User
+from flask_migrate import Migrate
 
 
 def create_app():
@@ -14,6 +15,7 @@ def create_app():
     # Extensions
     db.init_app(app)
     login_manager.init_app(app)
+    migrate = Migrate(app, db)
     bcrypt.init_app(app)
 
     # Blueprints

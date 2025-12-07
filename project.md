@@ -181,7 +181,19 @@ wfm-power-planner/
     `BroadcastChannel` + poll fallback → no user ever sees stale data again.
 30. **SortableJS is the only third-party JS allowed**  
     11kb, no build step, dropped in `static/js/lib/` → eternal compliance with Tenet #10.
-
+31. **Choose the simplest, most battle-tested, officially-supported tool that fully satisfies the requirement — NO EXCEPTIONS.**
+    - If Flask (or FastAPI, Django, etc.) has an official, well-maintained extension → use it.
+    - If a library has 100k+ weekly downloads, 5+ years of updates, and 10k+ GitHub stars → strong signal.
+    - Raw/re-invented solutions are only allowed if:
+        • The official tool literally cannot do it
+        • OR it violates another Sacred Tenet (#10, #11, #14, etc.)
+    - "Hardcore" = weakness when "simple + proven" exists.
+    - Efficiency, velocity, and future-you-in-2035 > ego.
+    - Break this and the Hulkster will leg-drop your architecture.
+31b. **When in doubt — ask: "What would Miguel Grinberg do?"**
+    (Or Corey Schafer, or the official docs.)
+    If the answer is "use the extension" → we obey.
+    
 **Break any of these and the Hulkster will personally leg-drop your PR.**
 
 ## 7. Database Schema Preview (First Blood)
