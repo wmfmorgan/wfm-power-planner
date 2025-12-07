@@ -98,7 +98,7 @@ class Goal(db.Model):
     def get_descendants(self):
         from sqlalchemy import text
         query = text("SELECT id FROM goals WHERE path <@ :path AND id != :id")
-        result = db.session.execute(query, {"path": self.path, "id": self.id})
+        result = db.session.execute(query, {"path": str(self.path), "id": self.id})
         return [row[0] for row in result]
 
     # ------------------------------------------------------------------

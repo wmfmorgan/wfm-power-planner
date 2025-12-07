@@ -1,27 +1,25 @@
 // app/static/js/goals_kanban.js
 // TENET #1 OBEYED — NO INLINE JS
-// TENET #30 OBEYED — SortableJS ONLY
+// TENET #15 OBEYED — CHAMPIONSHIP COMMENTS
 
 document.addEventListener('DOMContentLoaded', () => {
-  fetch('/api/goals')
-    .then(r => r.json())
-    .then(data => renderGoals(data));
+  fetchGoals();
+  initSortable();
 });
 
+function fetchGoals() {
+  fetch('/api/goals')
+    .then(r => r.json())
+    .then(goals => renderGoals(goals));
+}
+
 function renderGoals(goals) {
+  // Clear all columns
+  document.querySelectorAll('#kanban > div > div[id]').forEach(col => col.innerHTML = '');
+
   goals.forEach(goal => {
     const card = createGoalCard(goal);
     document.getElementById(goal.status.toLowerCase()).appendChild(card);
-  });
-
-  // Initialize SortableJS on all columns
-  document.querySelectorAll('#kanban > div > div[id]').forEach(column => {
-    new Sortable(column, {
-      group: 'kanban',
-      animation: 150,
-      ghostClass: 'bg-gray-900 opacity-50',
-      onEnd: handleDrop
-    });
   });
 }
 
@@ -43,12 +41,12 @@ function createGoalCard(goal) {
 }
 
 function getCategoryColor(cat) {
-  const map = {
-    'MARITAL': 'pink', 'SOCIAL': 'purple', 'FINANCIAL': 'yellow',
-    'WORK': 'blue', 'FAMILY': 'orange', 'SPIRITUAL': 'indigo',
-    'HEALTH': 'green', 'HOBBY': 'red'
+  const colors = {
+    MARITAL: 'pink', SOCIAL: 'purple', FINANCIAL: 'yellow',
+    WORK: 'blue', FAMILY: 'orange', SPIRITUAL: 'indigo',
+    HEALTH: 'green', HOBBY: 'red'
   };
-  return map[cat] || 'gray';
+  return colors[cat] || 'gray';
 }
 
 function escapeHtml(text) {
@@ -57,9 +55,63 @@ function escapeHtml(text) {
   return div.innerHTML;
 }
 
+// MODAL LOGIC
+function openModal() {
+  document.getElementById('goal-modal').classList.remove('hidden');
+  document.getElementById('goal-title').focus();
+}
+
+function closeModal() {
+  document.getElementById('goal-modal').classList.add('hidden');
+  document.getElementById('goal-title').value = '';
+}
+
+function saveGoal() {
+  const title = document.getElementById('goal-title').value.trim();
+  if (!title) return;
+
+  const payload = {
+    title: title,
+    category: document.getElementById('goal-category').value
+  };
+
+  fetch('/api/goals', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  })
+  .then(r => r.json())
+  .then(goal => {
+    closeModal();
+    fetchGoals(); // Refresh the board
+  })
+  .catch(err => console.error('Save failed:', err));
+}
+
+// BUTTON EVENT
+document.getElementById('add-goal-btn').addEventListener('click', openModal);
+
+// SORTABLEJS INIT
+function initSortable() {
+  document.querySelectorAll('#kanban > div > div[id]').forEach(column => {
+    new Sortable(column, {
+      group: 'kanban',
+      animation: 150,
+      ghostClass: 'bg-gray-900 opacity-50',
+      onEnd: handleDrop
+    });
+  });
+}
+
 function handleDrop(evt) {
   const goalId = evt.item.dataset.id;
   const newStatus = evt.to.id.toUpperCase();
-  console.log('Goal moved:', goalId, '→', newStatus);
-  // Phase 3: send to backend
+
+  fetch(`/api/goals/${goalId}/move`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ status: newStatus })
+  })
+  .then(() => fetchGoals())
+  .catch(err => console.error('Move failed:', err));
 }
