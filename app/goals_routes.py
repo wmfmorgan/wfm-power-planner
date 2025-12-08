@@ -4,12 +4,10 @@ GOALS API & VIEWS — TENET-COMPLIANT, CLEAN, ETERNAL
 All goal-related routes live here — no clutter in __init__.py
 """
 
-from app.models.goal import Goal, GoalCategory, GoalStatus
-from flask import Blueprint, render_template, jsonify, request, abort
+from app.models.goal import Goal, GoalStatus, GoalCategory
+from flask import Blueprint, render_template, jsonify, request
 from flask_login import login_required, current_user
 from app.extensions import db
-from sqlalchemy_utils import LtreeType
-from sqlalchemy_utils.types.ltree import Ltree
 from app.services.goal_service import create_goal, move_goal
 
 goals_bp = Blueprint('goals', __name__)
@@ -18,7 +16,13 @@ goals_bp = Blueprint('goals', __name__)
 @goals_bp.route('/goals')
 @login_required
 def goals_page():
-    return render_template('goals.html')
+    return render_template(
+        'goals.html',
+        goal_statuses=GoalStatus,           # pass the enum itself
+        goal_categories=GoalCategory,        # pass the enum itself
+        # NO MORE status_display OR category_display DICTIONARIES
+        # WE LET JINJA + ENUM DO THE WORK
+    )
 
 # API: Full goal tree as JSON
 @goals_bp.route('/api/goals')
@@ -42,20 +46,29 @@ def goal_to_dict(goal):
     return {
         'id': goal.id,
         'title': goal.title,
+        'description': goal.description or '',
         'category': goal.category.value,
         'status': goal.status.value,
-        'progress': goal.progress or 0
+        'progress': goal.progress or 0,
+        'due_date': goal.due_date.isoformat() if goal.due_date else None,
+        'is_habit': goal.is_habit
     }
 
 @goals_bp.route('/api/goals', methods=['POST'])
 @login_required
 def api_create_goal():
     data = request.get_json()
+    
     goal = create_goal(
         user_id=current_user.id,
         title=data['title'],
-        category=data['category']
+        description=data.get('description', ''),
+        category=data['category'],
+        due_date=data.get('due_date'),
+        is_habit=data.get('is_habit', False),
+        status=data.get('status', 'todo')  # optional override
     )
+    
     return jsonify(goal_to_dict(goal))
 
 @goals_bp.route('/api/goals/<int:goal_id>/move', methods=['POST'])

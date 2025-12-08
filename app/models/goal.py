@@ -15,7 +15,6 @@ Tenet #31: Using official Flask extensions — fulfilled.
 This model will dominate 2025 and beyond.
 """
 
-from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy_utils import LtreeType
 from sqlalchemy import Enum as SQLEnum
 from enum import Enum

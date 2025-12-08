@@ -17,47 +17,58 @@
   <!-- KANBAN BOARD -->
   <h2 class="text-3xl font-bold text-gray-200 mb-8">Kanban</h2>
   <div id="kanban" class="grid grid-cols-1 md:grid-cols-5 gap-8">
-    <div class="bg-gray-900 rounded-xl p-6 border-2 border-gray-800 shadow-xl">
-      <h3 class="text-2xl font-bold text-center mb-6 text-gray-400">BACKLOG</h3>
-      <div id="backlog" class="space-y-4 min-h-96"></div>
-    </div>
-    <div class="bg-gray-900 rounded-xl p-6 border-2 border-gray-800 shadow-xl">
-      <h3 class="text-2xl font-bold text-center mb-6 text-gray-400">TODO</h3>
-      <div id="todo" class="space-y-4 min-h-96"></div>
-    </div>
-    <div class="bg-gray-900 rounded-xl p-6 border-2 border-gray-800 shadow-xl">
-      <h3 class="text-2xl font-bold text-center mb-6 text-yellow-400">DOING</h3>
-      <div id="doing" class="space-y-4 min-h-96"></div>
-    </div>
-    <div class="bg-gray-900 rounded-xl p-6 border-2 border-gray-800 shadow-xl">
-      <h3 class="text-2xl font-bold text-center mb-6 text-red-400">BLOCKED</h3>
-      <div id="blocked" class="space-y-4 min-h-96"></div>
-    </div>
-    <div class="bg-gray-900 rounded-xl p-6 border-2 border-gray-800 shadow-xl">
-      <h3 class="text-2xl font-bold text-center mb-6 text-green-400">DONE</h3>
-      <div id="done" class="space-y-4 min-h-96"></div>
-    </div>
+    {% for status in goal_statuses %}
+      <div class="bg-gray-900 rounded-xl p-6 border-2 border-gray-800 shadow-xl">
+        <h3 class="text-2xl font-bold text-center mb-6
+          {% if status.value == 'doing' %}text-yellow-400
+          {% elif status.value == 'blocked' %}text-red-400
+          {% elif status.value == 'done' %}text-green-400
+          {% else %}text-gray-400{% endif %}">
+          {{ status.name }}  <!-- AUTO UPPERCASE: backlog → BACKLOG -->
+        </h3>
+        <div id="{{ status.value }}" class="space-y-4 min-h-96"></div>
+      </div>
+    {% endfor %}
   </div>
 </div>
 
 <!-- ADD GOAL MODAL -->
+<!-- UPGRADED GOAL MODAL — PHASE 1 WEAPONIZED -->
 <div id="goal-modal" class="hidden fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50">
-  <div class="bg-gray-800 p-10 rounded-2xl shadow-3xl w-96 border-4 border-yellow-500">
-    <h2 class="text-4xl font-black text-yellow-400 mb-8 text-center">CREATE NEW GOAL</h2>
-    <input type="text" id="goal-title" placeholder="Goal title..." class="w-full p-4 mb-6 bg-gray-700 rounded-lg border-2 border-gray-600 focus:border-yellow-400 text-white text-lg">
-    <select id="goal-category" class="w-full p-4 mb-8 bg-gray-700 rounded-lg border-2 border-gray-600 text-white text-lg">
-      <option value="work">WORK</option>
-      <option value="health">HEALTH</option>
-      <option value="family">FAMILY</option>
-      <option value="financial">FINANCIAL</option>
-      <option value="spiritual">SPIRITUAL</option>
-      <option value="social">SOCIAL</option>
-      <option value="marital">MARITAL</option>
-      <option value="hobby">HOBBY</option>
-    </select>
+  <div class="bg-gray-800 p-10 rounded-2xl shadow-3xl w-full max-w-2xl border-4 border-yellow-500">
+    <h2 class="text-4xl font-black text-yellow-400 mb-8 text-center">FORGE A NEW GOAL</h2>
+    
+    <input type="text" id="goal-title" placeholder="Goal title (e.g. Bench 405 by July)" 
+           class="w-full p-4 mb-6 bg-gray-700 rounded-lg border-2 border-gray-600 focus:border-yellow-400 text-white text-lg font-bold">
+
+    <textarea id="goal-description" placeholder="Why this goal? What’s the mission?" 
+              class="w-full p-4 mb-6 bg-gray-700 rounded-lg border-2 border-gray-600 focus:border-yellow-400 text-white text-base h-32 resize-none"></textarea>
+
+    <div class="grid grid-cols-2 gap-6 mb-6">
+      <select id="goal-category" class="p-4 bg-gray-700 rounded-lg border-2 border-gray-600 text-white text-lg">
+        {% for cat in goal_categories %}
+          <option value="{{ cat.value }}">{{ cat.name }}</option>
+        {% endfor %}
+      </select>
+
+      <input type="date" id="goal-due-date" 
+             class="p-4 bg-gray-700 rounded-lg border-2 border-gray-600 text-white text-lg">
+    </div>
+
+    <div class="flex items-center mb-8">
+      <input type="checkbox" id="goal-is-habit" class="w-8 h-8 text-yellow-400 bg-gray-700 border-gray-600 rounded focus:ring-yellow-500">
+      <label for="goal-is-habit" class="ml-4 text-xl text-yellow-400 font-bold">This is a DAILY HABIT</label>
+    </div>
+
     <div class="flex gap-6">
-      <button onclick="saveGoal()" class="flex-1 bg-green-600 hover:bg-green-500 text-black font-bold text-xl py-4 rounded-lg transition-all hover:scale-105">SAVE</button>
-      <button onclick="closeModal()" class="flex-1 bg-gray-600 hover:bg-gray-500 text-white font-bold text-xl py-4 rounded-lg transition-all hover:scale-105">CANCEL</button>
+      <button onclick="saveGoal()" 
+              class="flex-1 bg-green-600 hover:bg-green-500 text-black font-bold text-xl py-5 rounded-lg transition-all hover:scale-105 shadow-lg">
+        SAVE GOAL
+      </button>
+      <button onclick="closeModal()" 
+              class="flex-1 bg-gray-600 hover:bg-gray-500 text-white font-bold text-xl py-5 rounded-lg transition-all hover:scale-105 shadow-lg">
+        CANCEL
+      </button>
     </div>
   </div>
 </div>
@@ -65,6 +76,7 @@
 
 <!-- ALL JS LOADED AT BOTTOM — TENET #1 OBEYED ETERNALLY -->
 {% block scripts %}
-<script src="{{ url_for('static', filename='js/lib/sortable.min.js') }}"></script>
-<script src="{{ url_for('static', filename='js/goals_kanban.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/lib/sortable.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/constants.js') }}"></script>       
+  <script src="{{ url_for('static', filename='js/goals_kanban.js') }}"></script>   
 {% endblock %}

@@ -73,22 +73,11 @@ function renderKanban(goals) {
 
   console.log(`Rendering ${flatList.length} goals into Kanban...`);
 
-  const categoryColors = {
-    'work': 'blue',
-    'health': 'green',
-    'family': 'orange',
-    'financial': 'yellow',
-    'spiritual': 'indigo',
-    'social': 'purple',
-    'marital': 'pink',
-    'hobby': 'red'
-  };
-
   flatList.forEach(goal => {
     // CRITICAL FIX: status comes from ENUM as lowercase string already!
-    const statusKey = goal.status.toLowerCase(); // 'doing', 'todo', etc.
+    const statusKey = goal.status; // 'doing', 'todo', etc.
     const column = document.getElementById(statusKey);
-    console.log('Goal:', goal.title, '→ Status:', statusKey, '→ Column exists:', !!column);
+    
     if (!column) {
       console.warn(`No column found for status: ${statusKey}`, goal);
       return;
@@ -98,13 +87,10 @@ function renderKanban(goals) {
     card.className = 'goal-card bg-gray-800 p-5 rounded-xl cursor-move shadow-lg border-l-4 transition-all hover:scale-105 hover:shadow-2xl';
     card.dataset.id = goal.id;
 
-    // FORCE CORRECT COLOR — NO MISTAKES
-    const catKey = goal.category.toLowerCase();
-    const colorMap = {
-    work: 'blue', health: 'green', family: 'orange', financial: 'yellow',
-    spiritual: 'indigo', social: 'purple', marital: 'pink', hobby: 'red'
-    };
-    card.classList.add(`border-${colorMap[catKey] || 'gray'}-500`);
+    // TENET #3 OBEYED — COLOR COMES FROM SINGLE SOURCE OF TRUTH
+    // NO MORE DUPLICATE OBJECTS. NO MORE MAGIC KEYS. NO MORE DRIFT.
+    const color = window.CATEGORY_COLORS[goal.category] || 'gray';
+    card.classList.add(`border-${color}-500`);
 
     card.innerHTML = `
     <div class="font-bold text-white text-xl mb-2">${escapeHtml(goal.title)}</div>
@@ -142,21 +128,32 @@ function closeModal() {
 
 function saveGoal() {
   const title = document.getElementById('goal-title').value.trim();
-  if (!title) return;
-alert(document.getElementById('goal-category').value);
+  if (!title) {
+    alert("BROTHER — A GOAL WITHOUT A TITLE IS WEAKNESS!");
+    return;
+  }
+
+  const payload = {
+    title: title,
+    description: document.getElementById('goal-description').value.trim(),
+    category: document.getElementById('goal-category').value,
+    due_date: document.getElementById('goal-due-date').value || null,
+    is_habit: document.getElementById('goal-is-habit').checked
+  };
+
   fetch('/api/goals', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      title: title,
-      category: document.getElementById('goal-category').value
-      
-    })
+    body: JSON.stringify(payload)
   })
   .then(r => r.json())
   .then(() => {
     closeModal();
     fetchGoals();
+  })
+  .catch(err => {
+    console.error("GOAL CREATION FAILED:", err);
+    alert("SOMETHING WENT WRONG BROTHER — CHECK THE CONSOLE!");
   });
 }
 
@@ -182,7 +179,9 @@ function initSortable() {
         if (evt.from === evt.to && evt.oldIndex === evt.newIndex) return;
 
         const goalId = evt.item.dataset.id;
-        const newStatus = evt.to.id.toUpperCase();  // 'todo' → 'TODO'
+        const newStatus = Object.keys(GOAL_STATUS).find(
+          key => key.toLowerCase() === evt.to.id
+        ); // 'todo' → 'TODO'
 
         fetch(`/api/goals/${goalId}/move`, {
           method: 'POST',

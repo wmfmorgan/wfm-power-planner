@@ -9,17 +9,59 @@ from app.extensions import db
 from app.models.goal import Goal, GoalStatus, GoalCategory
 from sqlalchemy_utils.types.ltree import Ltree
 
-def create_goal(user_id: int, title: str, category: str, status: str = "todo", parent_id: int | None = None) -> Goal:
-    
+def create_goal(
+    user_id: int,
+    title: str,
+    category: str,
+    description: str = "",
+    due_date: str | None = None,
+    is_habit: bool = False,
+    status: str = "todo",
+    parent_id: int | None = None
+) -> Goal:
+    """
+    FORGE A NEW GOAL — FULLY WEAPONIZED FOR 2025 DOMINATION
+    Tenet #17: All DB writes go through service layer — OBEYED
+    """
+    from datetime import datetime
+
+    # Convert due_date string (YYYY-MM-DD) → date object
+    due_date_obj = None
+    if due_date:
+        try:
+            due_date_obj = datetime.strptime(due_date, "%Y-%m-%d").date()
+        except ValueError:
+            raise ValueError("Invalid due date format — must be YYYY-MM-DD")
+
+    # Determine ltree path
+    if parent_id is None:
+        path = Ltree('root')
+    else:
+        parent = Goal.query.get_or_404(parent_id)
+        path = parent.path + Ltree(str(parent.id))
+
     goal = Goal(
         user_id=user_id,
-        title=title,
-        category=GoalCategory[category.upper()].value,
-        status=GoalStatus[status.upper()].value,
-        path=Ltree('root') if parent_id is None else _get_child_path(parent_id)
+        title=title.strip(),
+        description=description.strip() if description else None,
+        category=GoalCategory[category.upper()],
+        status=GoalStatus[status.upper()],
+        due_date=due_date_obj,
+        is_habit=is_habit,
+        path=path
     )
+
     db.session.add(goal)
     db.session.commit()
+    
+    # Refresh to get updated path with new ID
+    db.session.refresh(goal)
+    
+    # If has parent, update path to include self (ltree requires final ID)
+    if parent_id is not None:
+        goal.path = path + Ltree(str(goal.id))
+        db.session.commit()
+
     return goal
 
 def move_goal(goal_id: int, new_status: str, new_parent_id: int | None = None):
