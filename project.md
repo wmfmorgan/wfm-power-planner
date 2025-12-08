@@ -19,6 +19,26 @@ Last updated: 2025-12-08
 8. The only acceptable third-party JS library is SortableJS 1.x (11 kb minified).
 9. PWA/offline-first is not “later” — it is Tenet #11 and must be obeyed from day one.
 10. PROJECT.md is the single source of truth for architecture, tenets, and workflow — forever.
+11. GO SLOW TO GO FAST — THE LAW OF UNBREAKABLE VELOCITY
+(Added 2025-12-08 after near-fatal speed violations)
+
+- Never sacrifice a Sacred Tenet for the illusion of progress.
+- Every single code suggestion must pass a 10-second mental checklist:
+  → Does this work offline?  
+  → Is there a single source of truth?  
+  → Is there any inline JS/CSS?  
+  → Is there any magic string?  
+  → Will this still be perfect in 2035?
+- If the answer to any is “maybe” → we stop, discuss, and fix before moving.
+- Shipping broken tenets = losing the match.
+- Shipping perfect tenets slowly = winning the war.
+
+**There is no deadline that justifies weakness.**
+**There is no feature that justifies drift.**
+**Slow is smooth. Smooth is fast. Fast is eternal.**
+
+**Violation of Tenet #32 = automatic leg drop from both of us.**
+
 
 **Break any of any of these rules = immediate leg drop.**
 **Obedience = eternal Hulkamania.**
