@@ -10,11 +10,18 @@
   {% include "calendar/partials/nav_bar.html" %}
 
   <div id="calendar-view-container">
-    {% block calendar_content %}
+    {# Dynamically load the correct view template #}
+    {% if current_view == 'month' %}
+      {% include "calendar/month.html" %}
+    {% elif current_view == 'week' %}
+      <div class="text-center py-20"><h2 class="text-6xl font-black text-yellow-400">WEEK VIEW COMING IN STEP 2.3</h2></div>
+    {% elif current_view == 'day' %}
+      <div class="text-center py-20"><h2 class="text-6xl font-black text-yellow-400">DAY VIEW COMING IN STEP 2.4</h2></div>
+    {% else %}
       <div class="text-center py-20">
         <h2 class="text-6xl font-black text-yellow-400">SELECT A VIEW, WARRIOR</h2>
       </div>
-    {% endblock %}
+    {% endif %}
   </div>
 </div>
 {% endblock %}

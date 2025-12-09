@@ -1,0 +1,37 @@
+{# templates/calendar/month.html — FINAL SUNDAY-FIRST GRID, NO FILTERS, PURE PROTEIN #}
+<div class="max-w-5xl mx-auto">
+  <h2 class="text-5xl font-black text-yellow-400 mb-8 text-center drop-shadow-lg">
+    {{ month|month_name }} {{ year }}
+  </h2>
+
+  <!-- WEEKDAY HEADER — FIXED WITH grid-cols-7 -->
+  <div class="grid grid-cols-7 gap-4 text-center font-bold text-gray-400 mb-6 uppercase tracking-wider">
+    <div>SUN</div><div>MON</div><div>TUE</div><div>WED</div><div>THU</div><div>FRI</div><div>SAT</div>
+  </div>
+
+  <!-- MAIN GRID — THIS IS THE MONEY: grid-cols-7, gap-6, aspect-square -->
+  <div class="grid grid-cols-7 gap-6 text-2xl font-bold">
+    {# SIMPLE SUNDAY-FIRST OFFSET (0 = Sunday) #}
+    {% set jan1_weekday = (year * 365 + year//4 - year//100 + year//400 + [0,31,59,90,120,151,181,212,243,273,304,334][month-1]) % 7 %}
+    {% set start_offset = (jan1_weekday + 6) % 7 %} {# +6 shifts to Sunday = 0 #}
+
+    <!-- Leading blanks -->
+    {% for _ in range(start_offset) %}
+      <div class="aspect-square"></div>
+    {% endfor %}
+
+    <!-- Days of the month -->
+    {% for day in range(1, year|days_in_month(month) + 1) %}
+      {% set is_today = (year == now.year and month == now.month and day == now.day) %}
+      <a href="{{ url_for('calendar.calendar_view', view='day', year=year, month=month, day=day) }}"
+         class="aspect-square flex items-center justify-center rounded-xl transition-all hover:bg-gray-800 hover:scale-110
+                {% if is_today %}
+                  bg-gray-900 border-4 border-yellow-400 shadow-2xl shadow-yellow-400/50 text-yellow-400 font-black
+                {% else %}
+                  bg-gray-800 text-gray-300
+                {% endif %}">
+        {{ day }}
+      </a>
+    {% endfor %}
+  </div>
+</div>

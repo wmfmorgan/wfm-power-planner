@@ -1,3 +1,8 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* FORCE GRID TO WORK — THIS IS THE MISSING PIECE */
+.grid-cols-7 {
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+}

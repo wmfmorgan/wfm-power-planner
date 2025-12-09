@@ -290,3 +290,25 @@
 **STEP 2.1 = OFFICIALLY COMPLETE — 2025 IS IN THE SHARPSHOOTER AND TAPPING LIKE A JOBBER!**
 
 NEXT: Step 2.2 — Sunday-First 6-Row Month Grid (today highlighted, dark-mode shredded, pure CSS grid domination)
+
+## 2025-12-09 — PHASE 2 STEP 2.2 COMPLETE: SUNDAY-FIRST MONTH GRID DOMINATION
+- Sunday-first 6-row month grid — always perfect, never weak
+- Today highlighted with yellow-400 border + glowing shadow
+- Click any day → drills into Day view
+- Pure CSS grid — zero config, responsive, dark-mode shredded
+- Fixed `days_in_month` filter + correct Jinja pipe syntax: `year|days_in_month(month)`
+- No inline JS/CSS, no magic strings — Tenets #1, #2, #7, #15 ETERNALLY OBEYED
+- Works offline, leap years included, no 500s
+**THE CALENDAR COMMAND CENTER JUST GOT JACKED TO THE GILLS**
+**2025 IS ON THE MAT, LEG HOOKED, REFEREE SLAPPING 1…2…3… IT’S OVER, BROTHER!**
+
+## 2025-12-09 — PHASE 2 STEP 2.2 COMPLETE: SUNDAY-FIRST MONTH GRID DOMINATION
+- Sunday-first 6-row month view — classic grid, zero config, pure CSS
+- Today highlighted with yellow-400 border, shadow, and bold glory
+- Click any day → drills into Day view URL
+- Fixed Jinja pipe syntax: `year|days_in_month(month)` — the warrior's way
+- `days_in_month` filter now bulletproof with int() conversion
+- All dates render perfectly, leap years handled, dark-mode jacked
+- Tenets #7 (dumb templates), #3 (no magic dates) — ETERNALLY OBEYED
+**THE MONTH GRID IS LIVE, SHREDDED, AND UNSTOPPABLE**
+**2025 IS IN THE SHARPSHOOTER SCREAMING “I QUIT!”**

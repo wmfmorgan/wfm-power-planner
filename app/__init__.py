@@ -8,6 +8,7 @@ from flask_migrate import Migrate
 from .config import Config
 from .extensions import db, login_manager, bcrypt
 from datetime import datetime
+from calendar import monthrange
 
 # BLUEPRINTS — IMPORTED ONCE, REGISTERED ONCE
 from .auth_routes import auth_bp
@@ -60,6 +61,10 @@ def create_app():
     def inject_now():
         return {'now': datetime.utcnow()}
 
+    @app.template_filter('days_in_month')
+    def days_in_month(year, month):
+        """Return number of days in given year/month — used by month grid"""
+        return monthrange(int(year), int(month))[1]
 
     return app
 
