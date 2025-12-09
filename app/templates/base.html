@@ -22,18 +22,46 @@
 </head>
 <body class="font-sans">
     <header class="bg-black border-b-4 border-yellow-400 p-6 sticky top-0 z-40 shadow-2xl">
-        <div class="max-w-7xl mx-auto flex justify-between items-center">
-            <h1 class="text-5xl font-black text-yellow-400 tracking-tighter drop-shadow-lg">
-                WFM POWER PLANNER
-            </h1>
-            <div class="text-xl">
-                {% if current_user.is_authenticated %}
-                    <span class="text-yellow-300">Warrior:</span>
-                    <span class="font-bold text-white ml-2">{{ current_user.username }}</span>
-                    <a href="{{ url_for('auth.logout') }}" class="ml-6 text-red-400 hover:text-red-300 font-bold">Logout</a>
-                {% endif %}
-            </div>
+        <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-4">
+        <h1 class="text-5xl font-black text-yellow-400 tracking-tighter drop-shadow-lg">
+            WFM POWER PLANNER
+        </h1>
+        
+        <!-- DATA OWNERSHIP — NOW UNBREAKABLE -->
+        <div class="flex items-center gap-4 order-2 lg:order-none">
+                <!-- EXPORT EMPIRE -->
+                <a href="/api/export"
+                class="group flex items-center gap-2 bg-green-600 hover:bg-green-500 text-white font-bold py-2 px-5 rounded-lg shadow-lg transition-all hover:scale-105 text-sm whitespace-nowrap">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                        d="M12 10v6m0 0l-3-3m3 3l3-3m-9 8h12a1 1 0 001-1v-12a1 1 0 00-1-1H5a1 1 0 00-1 1v12a1 1 0 001 1z" />
+                </svg>
+                <span class="text-xs sm:text-sm font-bold">EXPORT</span>
+                </a>
+
+                <!-- IMPORT EMPIRE — NOW WITH GROUP HOVER -->
+                <div class="group inline-block">
+                <!-- <label class="flex items-center gap-2 bg-purple-600 group-hover:bg-purple-500 text-white font-bold py-2 px-5 rounded-lg shadow-lg cursor-pointer transition-all group-hover:scale-105 text-sm whitespace-nowrap"> -->
+                <label class="flex items-center gap-2 bg-green-600 hover:bg-green-500 text-white font-bold py-2 px-5 rounded-lg shadow-lg transition-all hover:scale-105 text-sm whitespace-nowrap">
+
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                            d="M12 14l-3-3m3 3l3-3m-9-4h12a1 1 0 011 1v12a1 1 0 01-1 1H5a1 1 0 01-1-1V8a1 1 0 011-1z" />
+                    </svg>
+                    <span class="text-xs sm:text-sm font-bold">IMPORT</span>
+                    <input type="file" accept=".json" id="header-import-input" class="hidden">
+                </label>
+                </div>
+        
+        <div class="text-xl order-1 lg:order-none">
+            {% if current_user.is_authenticated %}
+            <span class="text-yellow-300">Warrior:</span>
+            <span class="font-bold text-white ml-2">{{ current_user.username }}</span>
+            <a href="{{ url_for('auth.logout') }}" class="ml-6 text-red-400 hover:text-red-300 font-bold">Logout</a>
+            {% endif %}
         </div>
+        </div>    
+
     </header>
 
     <main class="max-w-7xl mx-auto p-6">
@@ -51,6 +79,12 @@
     </main>
 
     <!-- ALL JS LOADED AT BOTTOM — TENET #1 OBEYED FOREVER -->
-    {% block scripts %}{% endblock %}
+    {% block scripts %}
+   
+    <script src="{{ url_for('static', filename='js/constants.js') }}"></script>
+    
+    <!-- DATA OWNERSHIP — HEADER-LEVEL DOMINATION — GLOBAL -->
+    <script src="{{ url_for('static', filename='js/import_export.js') }}"></script>
+    {% endblock %}
 </body>
 </html>

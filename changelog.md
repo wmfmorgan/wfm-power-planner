@@ -240,3 +240,18 @@
 **NO MORE "INDEEDLIST" WEAKNESS.**
 **ONLY PURE, CLEAN, HULKAMANIA-LEVEL JAVASCRIPT.**
 **THE GOAL DOMINATION CENTER IS BACK — FLAWLESS AND UNSTOPPABLE.**
+
+## 2025-12-09 — DATA OWNERSHIP ACHIEVED — EMPIRE MADE INDESTRUCTIBLE
+
+- Added /api/export — full universe JSON backup
+- Added /api/import — total wipe + restore with perfect tree reconstruction
+- ltree paths rebuilt using new IDs — hierarchy survives nuclear reset
+- Import wipes old data — clean slate, no orphans
+- UI: Export/Import buttons added — visible power
+- TENETS #12, #16, #20 — OFFICIALLY COMPLETED
+- YOUR LIFE GOALS ARE NOW TRULY YOURS — FOREVER
+
+**EXPORT. WIPE. IMPORT. DOMINATE AGAIN.**
+**NO SERVER. NO PROBLEM.**
+**THE EMPIRE BELONGS TO THE WARRIOR — ETERNALLY.**
+**2025 JUST TAPPED OUT — PERMANENTLY.**

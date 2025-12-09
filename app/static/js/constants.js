@@ -1,6 +1,7 @@
 // static/js/constants.js
 // ETERNAL SINGLE SOURCE OF TRUTH — TENET #3 DOMINATION
-// NO MODULES. NO BUNDLER. NO WEAKNESS. PURE SCRIPT-TAG HULKAMANIA.
+
+console.log('constants.js LOADED — HULKAMANIA IS ARMED');
 
 const GOAL_STATUS = {
   BACKLOG: "backlog",
@@ -30,22 +31,25 @@ const TASK_STATUS = {
   DONE: "done"
 };
 
-// CHAMPIONSHIP COLOR MAPPING — USED IN KANBAN CARDS
+// FIXED: Keys are lowercase strings — matches DB/API output
 const CATEGORY_COLORS = {
-  [GOAL_CATEGORY.WORK]:       'blue',
-  [GOAL_CATEGORY.HEALTH]:     'green',
-  [GOAL_CATEGORY.FAMILY]:     'orange',
-  [GOAL_CATEGORY.FINANCIAL]: 'yellow',
-  [GOAL_CATEGORY.SPIRITUAL]:  'indigo',
-  [GOAL_CATEGORY.SOCIAL]:     'purple',
-  [GOAL_CATEGORY.MARITAL]:    'pink',
-  [GOAL_CATEGORY.HOBBY]:      'red'
+  work:       'blue',
+  health:     'green',
+  family:     'orange',
+  financial:  'yellow',
+  spiritual:  'indigo',
+  social:     'purple',
+  marital:    'pink',
+  hobby:      'red'
 };
 
-// Expose to global scope — because we load scripts in order, this is our "module system"
+// Expose globally
 Object.assign(window, {
   GOAL_STATUS,
   GOAL_CATEGORY,
   TASK_STATUS,
   CATEGORY_COLORS
 });
+
+// Debug
+console.log('CATEGORY_COLORS loaded:', window.CATEGORY_COLORS);

@@ -104,7 +104,9 @@ function renderKanban(goals) {
     card.className = 'goal-card bg-gray-800 p-5 rounded-xl cursor-move shadow-lg border-l-4 transition-all hover:scale-105 hover:shadow-2xl';
     card.dataset.id = goal.id;
 
-    const color = window.CATEGORY_COLORS[goal.category] || 'gray';
+    const color = window.CATEGORY_COLORS[goal.category] 
+           || window.CATEGORY_COLORS.default 
+           || 'gray';
     card.classList.add(`border-${color}-500`);
 
     card.innerHTML = `
