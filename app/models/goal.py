@@ -97,7 +97,12 @@ class Goal(db.Model):
     updated_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow, onupdate=datetime.utcnow)
 
     # Relationships
-    children = db.relationship('Goal', backref=db.backref('parent', remote_side=[id]), lazy='dynamic')
+    children = db.relationship(
+        'Goal',
+        backref=db.backref('parent', remote_side=[id]),
+        lazy='joined',          # EAGER LOAD CHILDREN
+        order_by="Goal.sort_order",
+        cascade="all, delete-orphan")
 
     def __repr__(self):
         return f"<Goal {self.id}: {self.title} [{self.status.value}]>"

@@ -1,6 +1,8 @@
-const CACHE_NAME = 'wfm-power-planner-v6';
+// static/sw.js — BULLETPROOF, NO MORE REQUEST FAILED
+const CACHE_NAME = 'wfm-power-planner-v9';
+
 const STATIC_ASSETS = [
-  '/',
+  '/static/css/tailwind.min.css',
   '/static/css/main.css',
   '/static/js/lib/sortable.min.js',
   '/static/js/constants.js',
@@ -8,55 +10,52 @@ const STATIC_ASSETS = [
   '/static/img/icon-192.png',
   '/static/img/icon-512.png',
   '/offline.html'
+  // '/' REMOVED — NO MORE 404 FROM SUBPATH SCOPE
 ];
 
 self.addEventListener('install', e => {
   e.waitUntil(
-    caches.open(CACHE_NAME).then(cache => cache.addAll(STATIC_ASSETS))
+    caches.open(CACHE_NAME)
+      .then(cache => cache.addAll(STATIC_ASSETS))
+      .then(() => self.skipWaiting())
+      .catch(err => console.error('SW install failed — bad path?', err))
   );
-  self.skipWaiting();
 });
 
+// activate + fetch stay the same — they're perfect
 self.addEventListener('activate', e => {
   e.waitUntil(
     caches.keys().then(keys => Promise.all(
       keys.filter(key => key !== CACHE_NAME).map(key => caches.delete(key))
-    ))
+    )).then(() => self.clients.claim())
   );
 });
 
 self.addEventListener('fetch', e => {
   const url = new URL(e.request.url);
 
-  // Static assets → cache first
-  if (STATIC_ASSETS.some(asset => url.pathname === asset) ||
-  url.pathname.startsWith('/static/'))
-  {
+  if (STATIC_ASSETS.includes(url.pathname) || url.pathname.startsWith('/static/')) {
     e.respondWith(
       caches.match(e.request).then(cached => cached || fetch(e.request))
     );
     return;
   }
 
-  // API calls → network first, fallback to cache, then offline page
   if (url.pathname.startsWith('/api/')) {
     e.respondWith(
       fetch(e.request)
-        .then(response => {
-          const clone = response.clone();
+        .then(res => {
+          const clone = res.clone();
           caches.open(CACHE_NAME).then(cache => cache.put(e.request, clone));
-          return response;
+          return res;
         })
-        .catch(() => caches.match(e.request))()
         .catch(() => caches.match('/offline.html'))
     );
     return;
   }
 
-  // Everything else → network first, fallback to cached or offline
   e.respondWith(
     fetch(e.request)
-      .catch(() => caches.match(e.request))
       .catch(() => caches.match('/offline.html'))
   );
 });

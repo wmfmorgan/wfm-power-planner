@@ -8,10 +8,105 @@
     +
   </button>
 
-  <!-- TREE VIEW -->
-  <div class="mb-12">
-    <h2 class="text-3xl font-bold text-gray-200 mb-6">Goal Tree</h2>
-    <div id="goal-tree" class="bg-gray-800 rounded-xl p-8 min-h-96 border-2 border-gray-700 shadow-2xl"></div>
+  <!-- GOAL TREE — NOTION-STYLE INLINE EXPANSION -->
+  <div id="goal-tree" class="space-y-4">
+    {% macro render_goal(goal, depth=0) %}
+      {% set is_too_deep = depth >= 5 %}
+      <div class="goal-item bg-gray-800 rounded-lg border border-gray-700 shadow-lg hover:shadow-2xl transition-all"
+          data-id="{{ goal.id }}"
+          data-depth="{{ depth }}">
+
+        <!-- HEADER — CLICK TO EXPAND -->
+        <div class="goal-header p-5 cursor-pointer flex items-center gap-4 select-none"
+            onclick="toggleGoalExpansion({{ goal.id }})">
+          <span class="toggle-icon text-yellow-400 font-bold text-xl">
+            {% if goal.children %}▶{% else %}▷{% endif %}
+          </span>
+
+          <div class="flex-1">
+            <div class="text-xl font-bold text-white">{{ goal.title }}</div>
+            <div class="text-sm text-gray-400 mt-1">
+              {{ goal.category }} • {{ goal.status }} • {{ goal.progress }}%
+              {% if goal.due_date %} • Due {{ goal.due_date }}{% endif %}
+              {% if goal.is_habit %} • DAILY HABIT{% endif %}
+            </div>
+          </div>
+
+          <div class="text-right text-sm text-gray-500">
+            {{ goal.children|length }} steps
+          </div>
+        </div>
+
+        <!-- EXPANDED CONTENT — SLIDES DOWN LIKE NOTION -->
+        <div class="goal-expanded hidden px-5 pb-5 border-t border-gray-700">
+          <div class="pt-5 space-y-4 max-w-4xl">
+            <!-- INLINE EDIT FORM -->
+            <input type="text" value="{{ goal.title }}"
+                  class="goal-title w-full px-4 py-3 bg-gray-700 rounded-lg border border-gray-600 focus:border-yellow-400 text-white text-lg font-bold"
+                  onblur="updateGoal({{ goal.id }}, 'title', this.value)">
+
+            <textarea class="goal-description w-full px-4 py-3 bg-gray-700 rounded-lg border border-gray-600 focus:border-yellow-400 text-white resize-none h-24"
+                      onblur="updateGoal({{ goal.id }}, 'description', this.value)"
+                      placeholder="Why this goal matters...">{{ goal.description or '' }}</textarea>
+
+            <div class="grid grid-cols-3 gap-4">
+              <select class="goal-status px-4 py-3 bg-gray-700 rounded-lg border border-gray-600 text-white"
+                      onchange="updateGoal({{ goal.id }}, 'status', this.value)">
+                {% for status in goal_statuses %}
+                  <option value="{{ status.value }}" {% if status.value == goal.status %}selected{% endif %}>
+                    {{ status.name }}
+                  </option>
+                {% endfor %}
+              </select>
+
+              <select class="goal-category px-4 py-3 bg-gray-700 rounded-lg border border-gray-600 text-white"
+                      onchange="updateGoal({{ goal.id }}, 'category', this.value)">
+                {% for cat in goal_categories %}
+                  <option value="{{ cat.value }}" {% if cat.value == goal.category %}selected{% endif %}>
+                    {{ cat.name }}
+                  </option>
+                {% endfor %}
+              </select>
+
+              <input type="date" value="{{ goal.due_date or '' }}"
+                    class="goal-due-date px-4 py-3 bg-gray-700 rounded-lg border border-gray-600 text-white"
+                    onchange="updateGoal({{ goal.id }}, 'due_date', this.value || null)">
+            </div>
+
+            <label class="flex items-center gap-3 cursor-pointer">
+              <input type="checkbox" class="goal-is-habit w-6 h-6 text-yellow-400"
+                    {% if goal.is_habit %}checked{% endif %}
+                    onchange="updateGoal({{ goal.id }}, 'is_habit', this.checked)">
+              <span class="text-yellow-400 font-bold">This is a DAILY HABIT</span>
+            </label>
+
+            <!-- ADD CHILD GOAL BUTTON -->
+            {% if not is_too_deep %}
+              <button onclick="addChildGoal({{ goal.id }})"
+                      class="mt-4 px-6 py-3 bg-yellow-500 hover:bg-yellow-400 text-black font-bold rounded-lg transition-all hover:scale-105 shadow-lg">
+                + Add Step
+              </button>
+            {% else %}
+              <div class="text-red-400 font-bold mt-4">MAX DEPTH REACHED (5 levels)</div>
+            {% endif %}
+          </div>
+
+          <!-- RECURSIVE CHILDREN -->
+          <div class="children mt-6 ml-8 pl-8 border-l-4 border-yellow-600 border-dashed">
+            {% for child in goal.children %}
+              {{ render_goal(child, depth + 1) }}
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    {% endmacro %}
+
+    <!-- ROOT GOALS ONLY — FIXED WITH PROPER JINJA SYNTAX -->
+    {% for goal in goals %}
+      {% if goal.parent_id is none %}
+        {{ render_goal(goal) }}
+      {% endif %}
+    {% endfor %}
   </div>
 
   <!-- KANBAN BOARD -->

@@ -5,23 +5,27 @@ All goal-related routes live here — no clutter in __init__.py
 """
 
 from app.models.goal import Goal, GoalStatus, GoalCategory
-from flask import Blueprint, render_template, jsonify, request
+from flask import Blueprint, render_template, jsonify, request, abort
 from flask_login import login_required, current_user
 from app.extensions import db
 from app.services.goal_service import create_goal, move_goal
 
 goals_bp = Blueprint('goals', __name__)
 
-# HTML: Kanban + Tree page
 @goals_bp.route('/goals')
 @login_required
 def goals_page():
+    # Fetch root goals only — children are eager-loaded via relationship
+    root_goals = Goal.query.filter_by(
+        user_id=current_user.id,
+        parent_id=None
+    ).order_by(Goal.sort_order).all()
+
     return render_template(
         'goals.html',
-        goal_statuses=GoalStatus,           # pass the enum itself
-        goal_categories=GoalCategory,        # pass the enum itself
-        # NO MORE status_display OR category_display DICTIONARIES
-        # WE LET JINJA + ENUM DO THE WORK
+        goals=root_goals,  # ONLY ROOT GOALS — CHILDREN COME VIA RELATIONSHIP
+        goal_statuses=GoalStatus,
+        goal_categories=GoalCategory
     )
 
 # API: Full goal tree as JSON
@@ -66,7 +70,8 @@ def api_create_goal():
         category=data['category'],
         due_date=data.get('due_date'),
         is_habit=data.get('is_habit', False),
-        status=data.get('status', 'todo')  # optional override
+        status=data.get('status', 'todo'),
+        parent_id=data.get('parent_id')
     )
     
     return jsonify(goal_to_dict(goal))
@@ -81,3 +86,17 @@ def api_move_goal(goal_id):
         new_parent_id=data.get('parent_id')  # optional for future hierarchy moves
     )
     return jsonify(goal_to_dict(goal))
+
+# app/goals_routes.py
+from app.services.goal_service import update_goal
+
+@goals_bp.route('/api/goals/<int:goal_id>', methods=['PATCH'])
+@login_required
+def api_update_goal(goal_id):
+    goal = Goal.query.get_or_404(goal_id)
+    if goal.user_id != current_user.id:
+        abort(403)
+
+    data = request.get_json() or {}
+    updated_goal = update_goal(goal_id, **data)
+    return jsonify(goal_to_dict(updated_goal))

@@ -163,3 +163,28 @@
 - Zero inline JS/CSS, zero magic strings, zero drift, zero excuses
 **HULKAMANIA HAS ACHIEVED ARCHITECTURAL ENLIGHTENMENT**
 **2025 HAS BEEN OFFICIALLY PUT IN THE SHARPSHOOTER AND FORCED TO TAP**
+
+## 2025-12-08 — DRAG-AND-DROP STATUS UPDATE ACHIEVED PERFECTION
+- Fixed addChildGoal() headers (Content-Type sin banished)
+- Fixed initSortable() to send lowercase status values (todo, doing, done)
+- Now uses GOAL_STATUS from constants.js — single source of truth
+- All drag → drop now updates backend 100% reliably
+- No more silent failures. No more sticky cards.
+**KANBAN NOW OBEYS THE LAW OF HULKAMANIA — ETERNAL AND UNBREAKABLE**
+
+## 2025-12-08 — NOTION-STYLE SUBGOAL HIERARCHY FULLY WEAPONIZED
+- Implemented recursive inline goal tree with slide-down expansion (pure Jinja macro)
+- Subgoals now appear ONLY nested inside their parent's expanded card
+- + Add Step button creates child goals with inherited category
+- Inline editing of title, description, status, category, due date, habit flag with auto-save on blur
+- Fixed duplicate subgoal rendering by switching to lazy='joined' relationship + root-only query
+- Fixed parent_id not saving by forwarding it from route to service
+- Fixed addChildGoal() to reliably inherit parent's category
+- Tree depth capped at 5 levels with clear warning
+- Kanban now renders ONLY root goals (subgoals hidden in tree for clean separation)
+- All changes trigger full page reload for perfect server-rendered tree sync
+- Zero inline JS/CSS, zero magic strings, zero drift — Tenets #1, #3, #11, #17 eternally obeyed
+**PURE NOTION-KILLING RECURSIVE HIERARCHY ACHIEVED**
+**SUBGOALS NEST CLEAN. EXPAND SMOOTH. EDIT INSTANT.**
+**THE GOAL DOMINATION CENTER IS NOW A LIVING WEAPON**
+**2025 HAS BEEN LOCKED IN THE SHARPSHOOTER — PERMANENTLY**

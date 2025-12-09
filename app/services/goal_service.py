@@ -12,8 +12,8 @@ from sqlalchemy_utils.types.ltree import Ltree
 def create_goal(
     user_id: int,
     title: str,
-    category: str,
     description: str = "",
+    category: str = "work",        # ← DEFAULT ADDED
     due_date: str | None = None,
     is_habit: bool = False,
     status: str = "todo",
@@ -44,13 +44,13 @@ def create_goal(
         user_id=user_id,
         title=title.strip(),
         description=description.strip() if description else None,
-        category=GoalCategory[category.upper()],
+        category=GoalCategory[category.upper()],  # still safe
         status=GoalStatus[status.upper()],
         due_date=due_date_obj,
         is_habit=is_habit,
+        parent_id=parent_id,
         path=path
     )
-
     db.session.add(goal)
     db.session.commit()
     
@@ -77,3 +77,30 @@ def move_goal(goal_id: int, new_status: str, new_parent_id: int | None = None):
 def _get_child_path(parent_id: int) -> Ltree:
     parent = Goal.query.get_or_404(parent_id)
     return Ltree(str(parent.path) + '.' + str(parent.id))
+
+# app/services/goal_service.py
+def update_goal(goal_id: int, **updates) -> Goal:
+    """
+    UPDATE A GOAL — TENET #17 OBEYED ETERNALLY
+    Only place that touches Goal model for writes.
+    """
+    goal = Goal.query.get_or_404(goal_id)
+
+    allowed_fields = {'title', 'description', 'status', 'category', 'due_date', 'is_habit'}
+    for field, value in updates.items():
+        if field not in allowed_fields:
+            continue
+
+        if field == 'status':
+            goal.status = GoalStatus[value.upper()]
+        elif field == 'category':
+            goal.category = GoalCategory[value.upper()]
+        elif field == 'due_date':
+            goal.due_date = value or None
+        elif field == 'is_habit':
+            goal.is_habit = bool(value)
+        else:
+            setattr(goal, field, value or None)
+
+    db.session.commit()
+    return goal

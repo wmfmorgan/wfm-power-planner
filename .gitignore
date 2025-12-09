@@ -8,6 +8,7 @@ static/css/input.css
 tailwind.config.js
 
 # PYTHON CACHE WEAKNESS
+app/__pycache__/
 __pycache__/
 *.pyc
 venv/
