@@ -1,0 +1,22 @@
+# NODE BLOAT — BANISHED FOREVER
+node_modules/
+npm-debug.log
+package-lock.json  # optional — keep if you want reproducible installs
+
+# TAILWIND BUILD ARTIFACTS (we commit the output, not the source)
+static/css/input.css
+tailwind.config.js
+
+# PYTHON CACHE WEAKNESS
+__pycache__/
+*.pyc
+venv/
+.env
+instance/
+
+# VS CODE WEAKNESS
+.vscode/settings.json  # optional — keep personal settings local
+
+# FLASK / MISC
+.flaskenv
+.DS_Store
