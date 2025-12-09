@@ -6,3 +6,10 @@
 .grid-cols-7 {
   grid-template-columns: repeat(7, minmax(0, 1fr));
 }
+
+/* FORCE TAILWIND TO KEEP OUR HEIGHTS AND BORDERS — HULKAMANIA STYLE */
+.h-16 { height: 4rem; }
+.h-24 { height: 6rem; }
+.border-r-4 { border-right-width: 4px; }
+.border-b { border-bottom-width: 1px; }
+.border-r { border-right-width: 1px; }

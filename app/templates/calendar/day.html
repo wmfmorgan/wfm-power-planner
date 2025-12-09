@@ -1,0 +1,56 @@
+{# templates/calendar/day.html — FINAL, 12-HOUR CLOCK, PERFECT ALIGNMENT #}
+<div class="max-w-7xl mx-auto">
+  <h2 class="text-6xl font-black text-yellow-400 mb-8 text-center drop-shadow-lg">
+    {{ month|month_name }} {{ day }}, {{ year }}
+  </h2>
+
+  <div class="grid grid-cols-12 gap-0 border-4 border-yellow-400 rounded-xl overflow-hidden shadow-2xl bg-black">
+    
+    <!-- LEFT: TIME LABELS — 12-HOUR FORMAT -->
+    <!-- LEFT: TIME LABELS — PERFECT SPACING, READABLE, CHAMPIONSHIP STYLE -->
+    <div class="col-span-1 bg-gray-900">
+    {% for slot in range(38) %}
+        {% set hour = 5 + (slot // 2) %}
+        {% set minute = (slot % 2) * 30 %}
+        {% set hour_12 = ((hour - 1) % 12) + 1 %}
+        {% set am_pm = 'AM' if hour < 12 else 'PM' %}
+
+        <div class="h-24 border-b border-gray-700 flex items-center justify-end pr-5">
+        {% if minute == 0 %}
+            <span class="text-yellow-400 font-black text-xl tracking-wide">
+            {{ "%d:00"|format(hour_12) }}
+            </span>
+            <span class="text-yellow-300 text-sm font-bold ml-3">{{ am_pm }}</span>
+        {% else %}
+            <span class="text-gray-400 text-sm">{{ "%d:%02d"|format(hour_12, minute) }}</span>
+        {% endif %}
+        </div>
+    {% endfor %}
+    </div>
+
+    <!-- RIGHT: 38 TIME SLOTS — 12-HOUR HOVER TEXT -->
+    <div class="col-span-11 bg-gray-950">
+      <div class="grid grid-rows-38 h-full">
+        {% for slot in range(38) %}
+          {% set hour = 5 + (slot // 2) %}
+          {% set minute = (slot % 2) * 30 %}
+          {% set hour_12 = ((hour - 1) % 12) + 1 %}
+          {% set am_pm = 'AM' if hour < 12 else 'PM' %}
+
+          <div class="border-b border-gray-700 hover:bg-yellow-900/30 hover:border-l-4 hover:border-l-yellow-500 transition-all cursor-pointer relative group">
+            <div class="absolute inset-0"></div>
+            <div class="opacity-0 group-hover:opacity-100 transition-opacity text-gray-400 text-lg font-mono absolute inset-0 flex items-center justify-center">
+              {{ "%d:%02d %s"|format(hour_12, minute, am_pm) }}
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  <div class="mt-12 text-center">
+    <p class="text-2xl text-yellow-400 font-bold">
+      Event creation coming in Step 2.7 — the Daily Page Layout Assembly!
+    </p>
+  </div>
+</div>

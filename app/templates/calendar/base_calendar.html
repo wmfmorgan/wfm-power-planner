@@ -16,7 +16,7 @@
     {% elif current_view == 'week' %}
       {% include "calendar/week.html" %}
     {% elif current_view == 'day' %}
-      <div class="text-center py-20"><h2 class="text-6xl font-black text-yellow-400">DAY VIEW COMING IN STEP 2.4</h2></div>
+      {% include "calendar/day.html" %}
     {% else %}
       <div class="text-center py-20">
         <h2 class="text-6xl font-black text-yellow-400">SELECT A VIEW, WARRIOR</h2>
