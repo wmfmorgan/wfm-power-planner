@@ -18,7 +18,7 @@
 
         <!-- HEADER — CLICK TO EXPAND -->
         <div class="goal-header p-5 cursor-pointer flex items-center gap-4 select-none"
-            onclick="toggleGoalExpansion({{ goal.id }})">
+          data-action="toggle">
           <span class="toggle-icon text-yellow-400 font-bold text-xl">
             {% if goal.children %}▶{% else %}▷{% endif %}
           </span>
@@ -43,15 +43,18 @@
             <!-- INLINE EDIT FORM -->
             <input type="text" value="{{ goal.title }}"
                   class="goal-title w-full px-4 py-3 bg-gray-700 rounded-lg border border-gray-600 focus:border-yellow-400 text-white text-lg font-bold"
-                  onblur="updateGoal({{ goal.id }}, 'title', this.value)">
+                  data-field="title"
+                  data-id="{{ goal.id }}">
 
             <textarea class="goal-description w-full px-4 py-3 bg-gray-700 rounded-lg border border-gray-600 focus:border-yellow-400 text-white resize-none h-24"
-                      onblur="updateGoal({{ goal.id }}, 'description', this.value)"
+                      data-field="description"
+                      data-id="{{ goal.id }}"
                       placeholder="Why this goal matters...">{{ goal.description or '' }}</textarea>
 
             <div class="grid grid-cols-3 gap-4">
               <select class="goal-status px-4 py-3 bg-gray-700 rounded-lg border border-gray-600 text-white"
-                      onchange="updateGoal({{ goal.id }}, 'status', this.value)">
+                      data-field="status"
+                      data-id="{{ goal.id }}">
                 {% for status in goal_statuses %}
                   <option value="{{ status.value }}" {% if status.value == goal.status %}selected{% endif %}>
                     {{ status.name }}
@@ -60,7 +63,8 @@
               </select>
 
               <select class="goal-category px-4 py-3 bg-gray-700 rounded-lg border border-gray-600 text-white"
-                      onchange="updateGoal({{ goal.id }}, 'category', this.value)">
+                      data-field="category"
+                      data-id="{{ goal.id }}">
                 {% for cat in goal_categories %}
                   <option value="{{ cat.value }}" {% if cat.value == goal.category %}selected{% endif %}>
                     {{ cat.name }}
@@ -70,19 +74,22 @@
 
               <input type="date" value="{{ goal.due_date or '' }}"
                     class="goal-due-date px-4 py-3 bg-gray-700 rounded-lg border border-gray-600 text-white"
-                    onchange="updateGoal({{ goal.id }}, 'due_date', this.value || null)">
+                    data-field="due_date"
+                    data-id="{{ goal.id }}">
             </div>
 
             <label class="flex items-center gap-3 cursor-pointer">
               <input type="checkbox" class="goal-is-habit w-6 h-6 text-yellow-400"
                     {% if goal.is_habit %}checked{% endif %}
-                    onchange="updateGoal({{ goal.id }}, 'is_habit', this.checked)">
+                    data-field="is_habit"
+                    data-id="{{ goal.id }}">
               <span class="text-yellow-400 font-bold">This is a DAILY HABIT</span>
             </label>
 
             <!-- ADD CHILD GOAL BUTTON -->
             {% if not is_too_deep %}
-              <button onclick="addChildGoal({{ goal.id }})"
+              <button data-action="add-child"
+                      data-goal-id="{{ goal.id }}"
                       class="mt-4 px-6 py-3 bg-yellow-500 hover:bg-yellow-400 text-black font-bold rounded-lg transition-all hover:scale-105 shadow-lg">
                 + Add Step
               </button>
@@ -156,11 +163,11 @@
     </div>
 
     <div class="flex gap-6">
-      <button onclick="saveGoal()" 
+      <button data-action="save-goal" 
               class="flex-1 bg-green-600 hover:bg-green-500 text-black font-bold text-xl py-5 rounded-lg transition-all hover:scale-105 shadow-lg">
         SAVE GOAL
       </button>
-      <button onclick="closeModal()" 
+      <button data-action="close-modal" 
               class="flex-1 bg-gray-600 hover:bg-gray-500 text-white font-bold text-xl py-5 rounded-lg transition-all hover:scale-105 shadow-lg">
         CANCEL
       </button>
