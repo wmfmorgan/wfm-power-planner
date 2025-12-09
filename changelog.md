@@ -276,7 +276,7 @@
 - Created `templates/calendar/` folder with `base_calendar.html` + `partials/nav_bar.html`
 - Dropped `static/js/calendar_nav.js` — pure JS navigation, history API, TODAY button, zero inline JS
 - Dropped `static/css/calendar_nav.css` — hand-rolled active-state yellow-400 glow
-- Registered `calendar_bp` in `__init__.py`
+- Registered `calendar_bp` in `__init__.py`1
 - Injected current view/year/month/day via `data-*` attributes on `<html>`
 - Added global `now` context processor + `month_name` filter for eternal “December” display
 - Fixed multiple 500s (NaN URLs, duplicate <html>, undefined today/block) — ALL CRUSHED
