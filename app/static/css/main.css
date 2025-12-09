@@ -1,7 +1,7 @@
 /* ===================================================== */
 /* WFM POWER PLANNER — main.css                          */
 /* TENET #2 ENFORCED: PURE CSS. NO INLINE. NO DRIFT.     */
-/* LAST UPDATED: 2025-12-09 — VERTICAL DENSITY SUPLEX    */
+/* LAST UPDATED: 2025-12-09 — MODAL SUPLEX + DENSITY     */
 /* HULKAMANIA CERTIFIED — ETERNAL DOMINATION EDITION     */
 /* ===================================================== */
 
@@ -53,12 +53,11 @@
 #kanban {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 2rem;                    /* Breathing room preserved — Tenet #14 obeyed */
+  gap: 2rem;
   padding-bottom: 2rem;
   overflow-x: auto;
 }
 
-/* Mobile: Horizontal scroll with snap — smooth like the Warrior */
 @media (max-width: 768px) {
   #kanban {
     grid-template-columns: repeat(5, 320px);
@@ -71,7 +70,6 @@
   }
 }
 
-/* Column styling — tall, proud, controlled */
 #kanban [id] {
   min-height: 70vh;
   max-height: 82vh;
@@ -84,23 +82,11 @@
   scrollbar-color: #facc15 #1f2937;
 }
 
-/* Custom scrollbar — yellow like the Hulkster’s tights */
-#kanban [id]::-webkit-scrollbar {
-  width: 10px;
-}
-#kanban [id]::-webkit-scrollbar-track {
-  background: #1f2937;
-  border-radius: 6px;
-}
-#kanban [id]::-webkit-scrollbar-thumb {
-  background: #facc15;
-  border-radius: 6px;
-}
-#kanban [id]::-webkit-scrollbar-thumb:hover {
-  background: #ca8a04;
-}
+#kanban [id]::-webkit-scrollbar { width: 10px; }
+#kanban [id]::-webkit-scrollbar-track { background: #1f2937; border-radius: 6px; }
+#kanban [id]::-webkit-scrollbar-thumb { background: #facc15; border-radius: 6px; }
+#kanban [id]::-webkit-scrollbar-thumb:hover { background: #ca8a04; }
 
-/* Column headers — Macho Man levels of flair */
 #kanban h3 {
   font-size: 1.5rem !important;
   font-weight: 900 !important;
@@ -122,32 +108,46 @@
   flex-direction: column;
   hyphens: auto;
   height: fit-content;
-  padding: 1rem !important;           /* Tighter but still touch-friendly */
+  padding: 1rem !important;
   gap: 0.5rem;
 }
 
-/* Card spacing — crush vertical waste, not horizontal glory */
 #kanban [id] .goal-card + .goal-card {
   margin-top: 1rem;
 }
 
-/* Title — bold, readable, disciplined (2 lines max) */
 .goal-card > div:first-child {
   font-size: 1.05rem !important;
   line-height: 1.35 !important;
   margin-bottom: 0.5rem !important;
   overflow: hidden;
-  display: -webkit-box;           /* Safari + older browsers */
-  display: box;                   /* Ancient fallback (harmless) */
-  line-clamp: 2;                  /* Standard property — 2025+ */
-  -webkit-line-clamp: 2;          /* WebKit fallback */
-  -webkit-box-orient: vertical;   /* Required for WebKit */
-  box-orient: vertical;           /* Ancient spec */
+  display: -webkit-box;
+  display: box;
+  line-clamp: 2;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  box-orient: vertical;
   text-overflow: ellipsis;
 }
 
-/* Progress section — compact but proud */
 .goal-card .mt-4 {
   margin-top: 0.75rem !important;
   padding-top: 0.75rem !important;
+}
+
+/* ============================================= */
+/* 6. MODAL TRANSITIONS — CLEAN, ETERNAL, FLAWLESS */
+/* ============================================= */
+#goal-modal {
+  transition: opacity 0.32s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.32s;
+}
+
+/* Default closed state — matches HTML class */
+#goal-modal.invisible {
+  visibility: hidden;
+}
+
+/* Open state — applied by JS */
+#goal-modal.visible {
+  visibility: visible;
 }

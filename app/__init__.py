@@ -15,7 +15,6 @@ from .goals_routes import goals_bp
 # MODELS — ONLY FOR USER LOADER
 from .models.user import User
 
-
 def create_app():
     app = Flask(__name__, template_folder='templates')
     app.config['TEMPLATES_AUTO_RELOAD'] = True   # ← THIS LINE
@@ -44,4 +43,11 @@ def create_app():
     def load_user(user_id):
         return User.query.get(int(user_id))
 
+    @app.template_filter('date_format')
+    def date_format(value):
+        if value is None:
+            return ""
+        return value.strftime('%Y-%m-%d')
+
     return app
+

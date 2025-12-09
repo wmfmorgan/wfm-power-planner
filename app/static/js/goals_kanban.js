@@ -131,12 +131,20 @@ function escapeHtml(text) {
 }
 
 function openModal() {
-  document.getElementById('goal-modal').classList.remove('hidden');
+  const modal = document.getElementById('goal-modal');
+  modal.classList.remove('invisible', 'opacity-0');
+  modal.classList.add('visible', 'opacity-100');
+  modal.dataset.state = 'open';
   document.getElementById('goal-title').focus();
 }
 
 function closeModal() {
-  document.getElementById('goal-modal').classList.add('hidden');
+  const modal = document.getElementById('goal-modal');
+  modal.classList.remove('visible', 'opacity-100');
+  modal.classList.add('invisible', 'opacity-0');
+  modal.dataset.state = 'closed';
+  
+  // Clear form
   document.getElementById('goal-title').value = '';
   document.getElementById('goal-description').value = '';
   document.getElementById('goal-due-date').value = '';
@@ -212,8 +220,12 @@ function toggleGoalExpansion(goalId) {
   const expanded = item.querySelector('.goal-expanded');
   const icon = item.querySelector('.toggle-icon');
 
+  const isOpen = !expanded.classList.contains('hidden');
+  
+  // CHEVRON ICONS ONLY — NO WORDS, BROTHER!
+  icon.textContent = isOpen ? '▼' : '▶';
+
   expanded.classList.toggle('hidden');
-  icon.textContent = expanded.classList.contains('hidden') ? 'Right Arrow' : 'Down Arrow';
 }
 
 function updateGoal(goalId, field, value) {
