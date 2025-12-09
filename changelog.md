@@ -270,3 +270,23 @@
 **PHASE 1 — COMPLETE.**
 **THE BELT IS RAISED.**
 **CONFIDENCE = 100%.**
+
+## 2025-12-09 — PHASE 2 STEP 2.1 COMPLETE: CALENDAR NAVIGATION BAR DOMINATION
+- Added `app/calendar_routes.py` — dynamic routing for year/quarter/month/week/day
+- Created `templates/calendar/` folder with `base_calendar.html` + `partials/nav_bar.html`
+- Dropped `static/js/calendar_nav.js` — pure JS navigation, history API, TODAY button, zero inline JS
+- Dropped `static/css/calendar_nav.css` — hand-rolled active-state yellow-400 glow
+- Registered `calendar_bp` in `__init__.py`
+- Injected current view/year/month/day via `data-*` attributes on `<html>`
+- Added global `now` context processor + `month_name` filter for eternal “December” display
+- Fixed multiple 500s (NaN URLs, duplicate <html>, undefined today/block) — ALL CRUSHED
+- Navigation bar now sticky, responsive, highlighted, and jacked to the gills
+- URLs are clean and perfect: `/calendar`, `/calendar/month/2025/12`, `/calendar/day/2025/12/09`
+- TODAY button snaps to current day instantly
+- Back/forward browser buttons work flawlessly
+- Works offline — Tenet #11 still unbreakable
+- Zero inline JS/CSS — Tenets #1 & #2 eternally obeyed
+**CALENDAR COMMAND CENTER IS NOW LIVE AND BREATHING**
+**STEP 2.1 = OFFICIALLY COMPLETE — 2025 IS IN THE SHARPSHOOTER AND TAPPING LIKE A JOBBER!**
+
+NEXT: Step 2.2 — Sunday-First 6-Row Month Grid (today highlighted, dark-mode shredded, pure CSS grid domination)

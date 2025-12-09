@@ -7,6 +7,7 @@ from flask_migrate import Migrate
 
 from .config import Config
 from .extensions import db, login_manager, bcrypt
+from datetime import datetime
 
 # BLUEPRINTS — IMPORTED ONCE, REGISTERED ONCE
 from .auth_routes import auth_bp
@@ -14,6 +15,7 @@ from .goals_routes import goals_bp
 
 # MODELS — ONLY FOR USER LOADER
 from .models.user import User
+from .calendar_routes import calendar_bp
 
 def create_app():
     app = Flask(__name__, template_folder='templates')
@@ -30,6 +32,7 @@ def create_app():
     # === BLUEPRINT REGISTRATION — THE ETERNAL ORDER ===
     app.register_blueprint(auth_bp)      # /auth/login, /auth/logout
     app.register_blueprint(goals_bp)     # /goals, /api/goals
+    app.register_blueprint(calendar_bp)
 
     # === DASHBOARD ROUTE ===
     @app.route('/')
@@ -48,6 +51,15 @@ def create_app():
         if value is None:
             return ""
         return value.strftime('%Y-%m-%d')
+    
+    @app.template_filter('month_name')
+    def month_name(month_number):
+        return datetime(2000, month_number, 1).strftime('%B')
+    
+    @app.context_processor
+    def inject_now():
+        return {'now': datetime.utcnow()}
+
 
     return app
 

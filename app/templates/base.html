@@ -1,6 +1,12 @@
 <!-- app/templates/base.html — ETERNAL, TENET-COMPLIANT, UNBREAKABLE -->
 <!DOCTYPE html>
-<html lang="en" class="dark bg-gray-950 text-gray-100 min-h-screen">
+<!DOCTYPE html>
+<html lang="en" 
+      class="dark bg-gray-950 text-gray-100 min-h-screen"
+      data-current-view="{% block current_view %}month{% endblock %}"
+      data-year="{% block year %}{{ now.year }}{% endblock %}"
+      data-month="{% block month %}{{ now.month }}{% endblock %}"
+      data-day="{% block day %}{{ now.day }}{% endblock %}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">

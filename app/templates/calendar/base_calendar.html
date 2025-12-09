@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block current_view %}{{ current_view }}{% endblock %}
+{% block year %}{{ year }}{% endblock %}
+{% block month %}{{ month }}{% endblock %}
+{% block day %}{{ day }}{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto p-6">
+  {% include "calendar/partials/nav_bar.html" %}
+
+  <div id="calendar-view-container">
+    {% block calendar_content %}
+      <div class="text-center py-20">
+        <h2 class="text-6xl font-black text-yellow-400">SELECT A VIEW, WARRIOR</h2>
+      </div>
+    {% endblock %}
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script src="{{ url_for('static', filename='js/calendar_nav.js') }}"></script>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/calendar_nav.css') }}">
+{% endblock %}
