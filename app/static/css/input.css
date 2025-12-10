@@ -6,6 +6,9 @@
 .grid-cols-7 {
   grid-template-columns: repeat(7, minmax(0, 1fr));
 }
+.grid-cols-8 {
+  grid-template-columns: repeat(8, minmax(0, 1fr));
+}
 
 /* FORCE TAILWIND TO KEEP OUR HEIGHTS AND BORDERS — HULKAMANIA STYLE */
 .h-16 { height: 4rem; }
@@ -17,3 +20,6 @@
 /* FORCE TAILWIND TO KEEP OUR SPACING — NO PURGE, NO WEAKNESS! */
 .space-y-32 { --tw-space-y-reverse: 0; margin-top: calc(8rem * calc(1 - var(--tw-space-y-reverse))); margin-bottom: calc(8rem * var(--tw-space-y-reverse)); }
 .space-y-16 { --tw-space-y-reverse: 0; margin-top: calc(4rem * calc(1 - var(--tw-space-y-reverse))); margin-bottom: calc(4rem * var(--tw-space-y-reverse)); }
+
+/* KEEP THESE CLASSES — NO PURGE */
+.hidden { display: none !important; }

@@ -1,0 +1,63 @@
+/* static/css/calendar.css — PURE CSS, NO INLINE, TENET #2 ETERNALLY OBEYED */
+.month-grid {
+  display: grid;
+  grid-template-columns: 70px repeat(7, 1fr);
+  gap: 16px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.month-header {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: 70px repeat(7, 1fr);
+  gap: 16px;
+  text-align: center;
+  font-weight: bold;
+  color: #9ca3af;
+  text-transform: uppercase;
+  font-size: 0.9rem;
+  letter-spacing: 1px;
+  margin-bottom: 12px;
+}
+
+.month-cell {
+  aspect-ratio: 1;
+  background: #1f2937;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 1.6rem;
+  color: #9ca3af;
+  transition: all 0.25s ease;
+}
+
+.month-cell:hover {
+  background: #374151;
+  transform: scale(1.08);
+  cursor: pointer;
+}
+
+.week-number {
+  background: #1f2937;
+  color: #06b6d4;
+  font-weight: 900;
+  font-size: 1.4rem;
+  border: 2px solid transparent;
+}
+
+.week-number:hover {
+  background: #374151;
+  border-color: #06b6d4;
+  color: #06b6d4;
+}
+
+.today {
+  background: #111827 !important;
+  border: 4px solid #eab308 !important;
+  color: #eab308 !important;
+  box-shadow: 0 0 30px rgba(250, 204, 21, 0.6);
+  font-weight: 900;
+}
