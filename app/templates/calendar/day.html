@@ -5,9 +5,9 @@
   </h2>
 
   <!-- 2. ICS EVENTS + 3. 38-ROW GRID -->
-  <div class="mt-16 grid grid-cols-1 lg:grid-cols-3 gap-12">
+  <div class="mt-24 grid grid-cols-1 lg:grid-cols-4 gap-16">
     <!-- LEFT: TIME GRID WITH EVENTS -->
-    <div class="lg:col-span-2">
+    <div class="lg:col-span-3">
         <!-- LEFT + RIGHT TIME GRID — PERFECT ALIGNMENT, HOVER TIME, NO SPACER -->
         <div class="grid grid-cols-12 gap-0 border-4 border-yellow-400 rounded-xl overflow-hidden shadow-2xl bg-black">
           <!-- LEFT: TIME LABELS — NO SPACER! -->
@@ -18,9 +18,13 @@
               {% set hour_12 = ((hour - 1) % 12) + 1 %}
               {% set am_pm = 'AM' if hour < 12 else 'PM' %}
 
-              <div class="h-24 border-b border-gray-700 flex items-center justify-end pr-5 
-                          {% if minute == 0 %}text-yellow-400 font-black text-lg{% else %}text-gray-500 text-sm{% endif %}">
-                {{ "%d:%02d %s"|format(hour_12, minute, am_pm) }}
+              <div class="h-32 border-b border-gray-700 flex items-center justify-end pr-5"> 
+                {% if minute == 0 %}
+                  <span class="text-yellow-400 text-lg">{{ "%d:00"|format(hour_12) }}</span>
+                  <span class="text-yellow-400 text-sm ml-2">{{ am_pm }}</span>
+                {% else %}
+                  <span class="text-gray-500 text-lg">{{ "%d:%02d"|format(hour_12, minute) }}</span>
+                {% endif %}
               </div>
             {% endfor %}
           </div>
@@ -53,7 +57,7 @@
     </div>
 
     <!-- RIGHT: GOALS + TASKS KANBAN -->
-    <div class="space-y-12">
+    <div class="space-y-20">
       <!-- GOALS KANBAN -->
       <div class="bg-gray-900 border-4 border-cyan-500 rounded-2xl p-8 shadow-2xl">
         <h3 class="text-4xl font-black text-cyan-400 mb-6">TODAY'S GOALS</h3>
