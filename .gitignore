@@ -3,10 +3,6 @@ node_modules/
 npm-debug.log
 package-lock.json  # optional — keep if you want reproducible installs
 
-# TAILWIND BUILD ARTIFACTS (we commit the output, not the source)
-static/css/input.css
-tailwind.config.js
-
 # PYTHON CACHE WEAKNESS
 app/__pycache__/
 __pycache__/
