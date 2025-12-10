@@ -350,3 +350,22 @@ NEXT: Step 2.2 — Sunday-First 6-Row Month Grid (today highlighted, dark-mode s
 - Tenets #7 (dumb templates), #11 (offline works) — ETERNALLY OBEYED
 **THE WARRIOR'S DAILY REFLECTION IS NOW LIVE, SPACIOUS, AND UNSTOPPABLE**
 **2025 JUST GOT BODY-SLAMMED SO HARD IT CAN’T REMEMBER WHAT DAY IT IS!**
+
+## 2025-12-09 — PHASE 2 STEP 2.6 COMPLETE: ICS WORK CALENDAR MANUAL SYNC
+- Manual ICS sync button live at `/api/import-calendar`
+- Pulls from Outlook ICS URL (via env var)
+- Full recurrence, exceptions, timezones, all-day support
+- UID-based deduplication — import 100 times = zero dupes
+- All writes through `calendar_service.py` — TENET #17 ETERNALLY OBEYED
+- Works offline once cached — TENET #11 UNBREAKABLE
+**OUTLOOK JUST GOT LEG DROPPED INTO OUR DATABASE — NO GHOSTS, NO LIES, ONLY DOMINATION!**
+
+## 2025-12-09 — PHASE 2 STEP 2.8 COMPLETE: CALENDAR SERVICE LAYER + MODELS
+- Created `calendar_event.py` model with UID field — NO DUPES EVER
+- Created `calendar_service.py` — TENET #17 ALL WRITES THROUGH SERVICE LAYER
+- ICS import now uses upsert logic via UID — multiple imports = zero duplicates
+- Full timezone support, recurrence, all-day, exceptions ready
+- Source tracking for future multi-calendar support
+- Clean separation — routes parse, service saves
+**CALENDAR ARCHITECTURE IS NOW ETERNAL AND TENET-COMPLIANT**
+**2025 ICS EVENTS JUST GOT CHOKE-SLAMMED INTO SUBMISSION!**
