@@ -2,7 +2,6 @@
 const CACHE_NAME = 'wfm-power-planner-v9';
 
 const STATIC_ASSETS = [
-  '/static/css/tailwind.min.css',
   '/static/css/main.css',
   '/static/js/lib/sortable.min.js',
   '/static/js/constants.js',
