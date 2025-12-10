@@ -6,7 +6,7 @@
 {% block day %}{{ day }}{% endblock %}
 
 {% block content %}
-<div class="max-w-7xl mx-auto p-6">
+<div class="max-w-7xl mx-auto pad-lg">
 
 
   <div id="calendar-view-container">
@@ -19,7 +19,7 @@
       {% include "calendar/day.html" %}
     {% else %}
       <div class="text-center py-20">
-        <h2 class="text-6xl font-black text-yellow-400">SELECT A VIEW, WARRIOR</h2>
+        <h2 class="text-6xl font-black text-gold">SELECT A VIEW, WARRIOR</h2>
       </div>
     {% endif %}
   </div>

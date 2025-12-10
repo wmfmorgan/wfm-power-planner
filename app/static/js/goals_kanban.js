@@ -101,7 +101,7 @@ function renderKanban(goals) {
     if (!column) return;
 
     const card = document.createElement('div');
-    card.className = 'goal-card bg-gray-800 p-5 rounded-xl cursor-move shadow-lg border-l-4 transition-all hover:scale-105 hover:shadow-2xl';
+    card.className = 'goal-card bg-card p-5 rounded-xl cursor-move shadow-lg border-l-4 transition-all hover-grow hover:shadow-heavy';
     card.dataset.id = goal.id;
 
     const color = window.CATEGORY_COLORS[goal.category] 
@@ -111,7 +111,7 @@ function renderKanban(goals) {
 
     card.innerHTML = `
     <div class="font-bold text-white text-xl mb-2">${escapeHtml(goal.title)}</div>
-    <div class="text-sm text-gray-400 uppercase tracking-wider mb-3">${goal.category}</div>
+    <div class="text-sm text-muted uppercase tracking-wider mb-3">${goal.category}</div>
     <div class="mt-4">
         <div class="bg-gray-700 rounded-full h-4 overflow-hidden border border-gray-600">
         <div class="bg-gradient-to-r from-green-500 to-emerald-600 h-full transition-all duration-700" style="width: ${goal.progress}%"></div>

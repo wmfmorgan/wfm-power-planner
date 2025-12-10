@@ -151,3 +151,20 @@
 #goal-modal.visible {
   visibility: visible;
 }
+
+/* TAILWIND PURGE — ETERNAL REPLACEMENTS (add once, win forever) */
+.pad { padding: 1rem; }
+.pad-lg { padding: 1.5rem; }
+.pad-xl { padding: 2rem; }
+.pad-x { padding-left: 1rem; padding-right: 1rem; }
+.pad-y { padding-top: 1rem; padding-bottom: 1rem; }
+.bg-dark { background: #111827; }
+.bg-card { background: #1f2937; }
+.text-gold { color: #facc15; }
+.text-muted { color: #9ca3af; }
+.rounded { border-radius: 0.5rem; }
+.rounded-xl { border-radius: 1rem; }
+.shadow-heavy { box-shadow: 0 25px 50px -12px rgba(0,0,0,0.8); }
+.hover-grow:hover { transform: scale(1.05); transition: transform 0.2s; }
+.week-grid { display: grid; grid-template-columns: repeat(7,minmax(0,1fr)); gap: 1.5rem; }
+.week-grid-8 { display: grid; grid-template-columns: repeat(8,minmax(0,1fr)); gap: 1.5rem; }

@@ -1,11 +1,11 @@
 {# templates/calendar/week.html — SUN→SAT HORIZONTAL DOMINATION — FINAL FINAL #}
 <div class="max-w-7xl mx-auto">
-  <h2 class="text-5xl font-black text-yellow-400 mb-8 text-center drop-shadow-lg">
+  <h2 class="text-5xl font-black text-gold mb-8 text-center drop-shadow-lg">
     Week of {{ month|month_name }} {{ day }}, {{ year }}
   </h2>
 
   <!-- FULL WEEKDAY NAMES -->
-  <div class="grid grid-cols-7 gap-6 text-center font-bold text-gray-400 mb-6 uppercase tracking-wider text-sm">
+  <div class="week-grid gap-6 text-center font-bold text-muted mb-6 uppercase tracking-wider text-sm">
     <div>SUNDAY</div>
     <div>MONDAY</div>
     <div>TUESDAY</div>
@@ -15,7 +15,7 @@
     <div>SATURDAY</div>
   </div>
 
-  <div class="grid grid-cols-7 gap-6">
+  <div class="week-grid gap-6">
     {# === PURE JINJA MATH — NO FILTERS, NO SLICE, NO ERRORS === #}
     {% set total_days = year * 365 + year//4 - year//100 + year//400 %}
     {% for m in range(1, month) %}
@@ -49,13 +49,13 @@
       {% set is_current_month = (current_month == month) %}
 
       <a href="{{ url_for('calendar.calendar_view', view='day', year=current_year, month=current_month, day=current_day) }}"
-         class="aspect-square rounded-2xl flex flex-col items-center justify-center transition-all hover:scale-105
+         class="aspect-square rounded-2xl flex flex-col items-center justify-center transition-all hover-grow
                 {% if is_today %}
-                  bg-black border-4 border-yellow-400 shadow-2xl shadow-yellow-400/60 ring-4 ring-yellow-400/30 text-yellow-400 font-black text-5xl
+                  bg-black border-4 border-yellow-400 shadow-heavy shadow-yellow-400/60 ring-4 ring-yellow-400/30 text-gold font-black text-5xl
                 {% elif is_current_month %}
-                  bg-gray-800 text-white text-4xl
+                  bg-card text-white text-4xl
                 {% else %}
-                  bg-gray-900/50 text-gray-500 text-3xl opacity-70
+                  bg-dark/50 text-gray-500 text-3xl opacity-70
                 {% endif %}">
         <div>{{ current_day }}</div>
       </a>

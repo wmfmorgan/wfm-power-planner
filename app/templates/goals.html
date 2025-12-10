@@ -1,10 +1,10 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="max-w-7xl mx-auto p-6">
-  <h1 class="text-4xl font-bold text-yellow-400 mb-8 drop-shadow-lg">GOAL DOMINATION CENTER</h1>
+<div class="max-w-7xl mx-auto pad-lg">
+  <h1 class="text-4xl font-bold text-gold mb-8 drop-shadow-lg">GOAL DOMINATION CENTER</h1>
 
   <!-- + ADD GOAL BUTTON -->
-  <button id="add-goal-btn" class="fixed bottom-8 right-8 bg-yellow-500 hover:bg-yellow-400 text-black font-bold text-5xl w-20 h-20 rounded-full shadow-2xl z-50 transition-all hover:scale-110">
+  <button id="add-goal-btn" class="fixed bottom-8 right-8 bg-yellow-500 hover:bg-yellow-400 text-black font-bold text-5xl w-20 h-20 rounded-full shadow-heavy z-50 transition-all hover:scale-110">
     +
   </button>
 
@@ -12,20 +12,20 @@
   <div id="goal-tree" class="space-y-4">
     {% macro render_goal(goal, depth=0) %}
       {% set is_too_deep = depth >= 5 %}
-      <div class="goal-item bg-gray-800 rounded-lg border border-gray-700 shadow-lg hover:shadow-2xl transition-all"
+      <div class="goal-item bg-card rounded border border-gray-700 shadow-lg hover:shadow-heavy transition-all"
           data-id="{{ goal.id }}"
           data-depth="{{ depth }}">
 
         <!-- HEADER — CLICK TO EXPAND -->
         <div class="goal-header p-5 cursor-pointer flex items-center gap-4 select-none"
           data-action="toggle">
-          <span class="toggle-icon text-yellow-400 font-bold text-xl">
+          <span class="toggle-icon text-gold font-bold text-xl">
             {% if goal.children %}▶{% else %}▷{% endif %}
           </span>
 
           <div class="flex-1">
             <div class="text-xl font-bold text-white">{{ goal.title }}</div>
-            <div class="text-sm text-gray-400 mt-1">
+            <div class="text-sm text-muted mt-1">
               {{ goal.category.name|upper }} • {{ goal.status.name|upper }} • {{ goal.progress }}%
               {% if goal.due_date %} • Due {{ goal.due_date }}{% endif %}
               {% if goal.is_habit %} • DAILY HABIT{% endif %}
@@ -42,17 +42,17 @@
           <div class="pt-5 space-y-4 max-w-4xl">
             <!-- INLINE EDIT FORM -->
             <input type="text" value="{{ goal.title }}"
-                  class="goal-title w-full px-4 py-3 bg-gray-700 rounded-lg border border-gray-600 focus:border-yellow-400 text-white text-lg font-bold"
+                  class="goal-title w-full pad-x py-3 bg-gray-700 rounded border border-gray-600 focus:border-yellow-400 text-white text-lg font-bold"
                   data-field="title"
                   data-id="{{ goal.id }}">
 
-            <textarea class="goal-description w-full px-4 py-3 bg-gray-700 rounded-lg border border-gray-600 focus:border-yellow-400 text-white resize-none h-24"
+            <textarea class="goal-description w-full pad-x py-3 bg-gray-700 rounded border border-gray-600 focus:border-yellow-400 text-white resize-none h-24"
                       data-field="description"
                       data-id="{{ goal.id }}"
                       placeholder="Why this goal matters...">{{ goal.description or '' }}</textarea>
 
             <div class="grid grid-cols-3 gap-4">
-              <select class="goal-status px-4 py-3 bg-gray-700 rounded-lg border border-gray-600 text-white"
+              <select class="goal-status pad-x py-3 bg-gray-700 rounded border border-gray-600 text-white"
                       data-field="status"
                       data-id="{{ goal.id }}">
                 {% for status in goal_statuses %}
@@ -62,7 +62,7 @@
                 {% endfor %}
               </select>
 
-              <select class="goal-category px-4 py-3 bg-gray-700 rounded-lg border border-gray-600 text-white"
+              <select class="goal-category pad-x py-3 bg-gray-700 rounded border border-gray-600 text-white"
                       data-field="category"
                       data-id="{{ goal.id }}">
                 {% for cat in goal_categories %}
@@ -73,24 +73,24 @@
               </select>
 
               <input type="date" value="{{ goal.due_date or '' }}"
-                    class="goal-due-date px-4 py-3 bg-gray-700 rounded-lg border border-gray-600 text-white"
+                    class="goal-due-date pad-x py-3 bg-gray-700 rounded border border-gray-600 text-white"
                     data-field="due_date"
                     data-id="{{ goal.id }}">
             </div>
 
             <label class="flex items-center gap-3 cursor-pointer">
-              <input type="checkbox" class="goal-is-habit w-6 h-6 text-yellow-400"
+              <input type="checkbox" class="goal-is-habit w-6 h-6 text-gold"
                     {% if goal.is_habit %}checked{% endif %}
                     data-field="is_habit"
                     data-id="{{ goal.id }}">
-              <span class="text-yellow-400 font-bold">This is a DAILY HABIT</span>
+              <span class="text-gold font-bold">This is a DAILY HABIT</span>
             </label>
 
             <!-- ADD CHILD GOAL BUTTON -->
             {% if not is_too_deep %}
               <button data-action="add-child"
                       data-goal-id="{{ goal.id }}"
-                      class="mt-4 px-6 py-3 bg-yellow-500 hover:bg-yellow-400 text-black font-bold rounded-lg transition-all hover:scale-105 shadow-lg">
+                      class="mt-4 px-6 py-3 bg-yellow-500 hover:bg-yellow-400 text-black font-bold rounded transition-all hover-grow shadow-lg">
                 + Add Step
               </button>
             {% else %}
@@ -120,12 +120,12 @@
   <h2 class="text-3xl font-bold text-gray-200 mb-8">Kanban</h2>
   <div id="kanban" class="grid grid-cols-1 md:grid-cols-5 gap-8">
     {% for status in goal_statuses %}
-      <div class="bg-gray-900 rounded-xl p-6 border-2 border-gray-800 shadow-xl">
+      <div class="bg-dark rounded-xl pad-lg border-2 border-gray-800 shadow-xl">
         <h3 class="text-2xl font-bold text-center mb-6
-          {% if status.value == 'doing' %}text-yellow-400
+          {% if status.value == 'doing' %}text-gold
           {% elif status.value == 'blocked' %}text-red-400
           {% elif status.value == 'done' %}text-green-400
-          {% else %}text-gray-400{% endif %}">
+          {% else %}text-muted{% endif %}">
           {{ status.name }}  <!-- AUTO UPPERCASE: backlog → BACKLOG -->
         </h3>
         <div id="{{ status.value }}" class="space-y-4 min-h-96"></div>
@@ -138,38 +138,38 @@
 <!-- UPGRADED GOAL MODAL — PHASE 1 WEAPONIZED -->
 <div id="goal-modal" class="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50 invisible opacity-0 transition-all duration-300"
      data-state="closed">
-  <div class="bg-gray-800 p-10 rounded-2xl shadow-3xl w-full max-w-2xl border-4 border-yellow-500">
-    <h2 class="text-4xl font-black text-yellow-400 mb-8 text-center">FORGE A NEW GOAL</h2>
+  <div class="bg-card p-10 rounded-2xl shadow-3xl w-full max-w-2xl border-4 border-yellow-500">
+    <h2 class="text-4xl font-black text-gold mb-8 text-center">FORGE A NEW GOAL</h2>
     
     <input type="text" id="goal-title" placeholder="Goal title (e.g. Bench 405 by July)" 
-           class="w-full p-4 mb-6 bg-gray-700 rounded-lg border-2 border-gray-600 focus:border-yellow-400 text-white text-lg font-bold">
+           class="w-full pad mb-6 bg-gray-700 rounded border-2 border-gray-600 focus:border-yellow-400 text-white text-lg font-bold">
 
     <textarea id="goal-description" placeholder="Why this goal? What’s the mission?" 
-              class="w-full p-4 mb-6 bg-gray-700 rounded-lg border-2 border-gray-600 focus:border-yellow-400 text-white text-base h-32 resize-none"></textarea>
+              class="w-full pad mb-6 bg-gray-700 rounded border-2 border-gray-600 focus:border-yellow-400 text-white text-base h-32 resize-none"></textarea>
 
     <div class="grid grid-cols-2 gap-6 mb-6">
-      <select id="goal-category" class="p-4 bg-gray-700 rounded-lg border-2 border-gray-600 text-white text-lg">
+      <select id="goal-category" class="p-4 bg-gray-700 rounded border-2 border-gray-600 text-white text-lg">
         {% for cat in goal_categories %}
           <option value="{{ cat.value }}">{{ cat.name }}</option>
         {% endfor %}
       </select>
 
       <input type="date" id="goal-due-date" 
-             class="p-4 bg-gray-700 rounded-lg border-2 border-gray-600 text-white text-lg">
+             class="p-4 bg-gray-700 rounded border-2 border-gray-600 text-white text-lg">
     </div>
 
     <div class="flex items-center mb-8">
-      <input type="checkbox" id="goal-is-habit" class="w-8 h-8 text-yellow-400 bg-gray-700 border-gray-600 rounded focus:ring-yellow-500">
-      <label for="goal-is-habit" class="ml-4 text-xl text-yellow-400 font-bold">This is a DAILY HABIT</label>
+      <input type="checkbox" id="goal-is-habit" class="w-8 h-8 text-gold bg-gray-700 border-gray-600 rounded focus:ring-yellow-500">
+      <label for="goal-is-habit" class="ml-4 text-xl text-gold font-bold">This is a DAILY HABIT</label>
     </div>
 
     <div class="flex gap-6">
       <button data-action="save-goal" 
-              class="flex-1 bg-green-600 hover:bg-green-500 text-black font-bold text-xl py-5 rounded-lg transition-all hover:scale-105 shadow-lg">
+              class="flex-1 bg-green-600 hover:bg-green-500 text-black font-bold text-xl py-5 rounded transition-all hover-grow shadow-lg">
         SAVE GOAL
       </button>
       <button data-action="close-modal" 
-              class="flex-1 bg-gray-600 hover:bg-gray-500 text-white font-bold text-xl py-5 rounded-lg transition-all hover:scale-105 shadow-lg">
+              class="flex-1 bg-gray-600 hover:bg-gray-500 text-white font-bold text-xl py-5 rounded transition-all hover-grow shadow-lg">
         CANCEL
       </button>
     </div>

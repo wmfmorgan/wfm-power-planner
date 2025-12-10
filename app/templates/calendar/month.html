@@ -1,16 +1,16 @@
 {# templates/calendar/month.html — FINAL SUNDAY-FIRST GRID, NO FILTERS, PURE PROTEIN #}
 <div class="max-w-5xl mx-auto">
-  <h2 class="text-5xl font-black text-yellow-400 mb-8 text-center drop-shadow-lg">
+  <h2 class="text-5xl font-black text-gold mb-8 text-center drop-shadow-lg">
     {{ month|month_name }} {{ year }}
   </h2>
 
   <!-- WEEKDAY HEADER — FIXED WITH grid-cols-7 -->
-  <div class="grid grid-cols-8 gap-4 text-center font-bold text-gray-400 mb-6 uppercase tracking-wider">
+  <div class="week-grid-8 gap-4 text-center font-bold text-muted mb-6 uppercase tracking-wider">
     <div>WK</div><div>SUN</div><div>MON</div><div>TUE</div><div>WED</div><div>THU</div><div>FRI</div><div>SAT</div>
   </div>
 
   <!-- MAIN GRID — THIS IS THE MONEY: grid-cols-7, gap-6, aspect-square -->
-  <div class="grid grid-cols-8 gap-6 text-2xl font-bold">
+  <div class="week-grid-8 gap-6 text-2xl font-bold">
     {# SIMPLE SUNDAY-FIRST OFFSET (0 = Sunday) #}
     {# CORRECT: Check if the 1st of THIS month is Sunday #}
     {% set jan1_weekday = (year * 365 + year//4 - year//100 + year//400 + [0,31,59,90,120,151,181,212,243,273,304,334][month-1]) % 7 %}
@@ -21,7 +21,7 @@
       {% set dow_offset = start_offset - 2 %}
 
         <a href="{{ url_for('calendar.calendar_view', view='week', year=year, month=month, day=day) }}"
-              class="aspect-square flex items-center justify-center rounded-xl bg-gray-800 hover:bg-gray-700 transition-all hover:scale-105 text-cyan-400 font-black border-2 border-transparent hover:border-cyan-500">
+              class="aspect-square flex items-center justify-center rounded-xl bg-card hover:bg-gray-700 transition-all hover-grow text-cyan-400 font-black border-2 border-transparent hover:border-cyan-500">
               {{ year|iso_week(month, 1) }}
         </a>
 
@@ -45,7 +45,7 @@
       {% if day_of_week == 0 %}
         
         <a href="{{ url_for('calendar.calendar_view', view='week', year=year, month=month, day=day) }}"
-           class="aspect-square flex items-center justify-center rounded-xl bg-gray-800 hover:bg-gray-700 transition-all hover:scale-105 text-cyan-400 font-black border-2 border-transparent hover:border-cyan-500">
+           class="aspect-square flex items-center justify-center rounded-xl bg-card hover:bg-gray-700 transition-all hover-grow text-cyan-400 font-black border-2 border-transparent hover:border-cyan-500">
           {{ year|iso_week(month, day + 1) }}
         </a>
       
@@ -53,11 +53,11 @@
 
       {% set is_today = (year == now.year and month == now.month and day == now.day) %}
       <a href="{{ url_for('calendar.calendar_view', view='day', year=year, month=month, day=day) }}"
-         class="aspect-square flex items-center justify-center rounded-xl transition-all hover:bg-gray-800 hover:scale-110
+         class="aspect-square flex items-center justify-center rounded-xl transition-all hover:bg-card hover:scale-110
                 {% if is_today %}
-                  bg-gray-900 border-4 border-yellow-400 shadow-2xl shadow-yellow-400/50 text-yellow-400 font-black
+                  bg-dark border-4 border-yellow-400 shadow-heavy shadow-yellow-400/50 text-gold font-black
                 {% else %}
-                  bg-gray-800 text-gray-300
+                  bg-card text-gray-300
                 {% endif %}">
         {{ day }}
       </a>
