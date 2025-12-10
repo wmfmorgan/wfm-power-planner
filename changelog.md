@@ -336,3 +336,17 @@ NEXT: Step 2.2 — Sunday-First 6-Row Month Grid (today highlighted, dark-mode s
 - Tenets #7 (dumb templates), #11 (offline works), #15 (championship comments) — ETERNALLY OBEYED
 **THE DAILY TIME GRID IS LIVE AND READY TO DOMINATE**
 **2025 JUST GOT POWERBOMBED THROUGH THE RING!**
+
+## 2025-12-09 — PHASE 2 STEP 2.5 COMPLETE: DAILY REFLECTION ZONES DOMINATION
+- Four sacred reflection zones now live on every horizon (Month, Week, Day)
+- PREP → green-400 | WINS → yellow-400 | IMPROVE → red-400 | NOTES → purple-400
+- Unified championship yellow-400 borders on every card
+- Massive breathing room — mt-40, space-y-32, p-12, h-64, text-xl
+- Dark gray textareas (`bg-gray-800/90`) — no more white glare
+- Bigger headers (`text-4xl`) + huge emojis (`text-7xl`)
+- Hover glow effects + focus rings in zone color
+- One source of truth — single `zones.html` included via `base_calendar.html`
+- Responsive stacked layout — perfect on mobile and desktop
+- Tenets #7 (dumb templates), #11 (offline works) — ETERNALLY OBEYED
+**THE WARRIOR'S DAILY REFLECTION IS NOW LIVE, SPACIOUS, AND UNSTOPPABLE**
+**2025 JUST GOT BODY-SLAMMED SO HARD IT CAN’T REMEMBER WHAT DAY IT IS!**
