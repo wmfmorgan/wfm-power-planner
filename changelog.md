@@ -358,6 +358,8 @@ NEXT: Step 2.2 — Sunday-First 6-Row Month Grid (today highlighted, dark-mode s
 - UID-based deduplication — import 100 times = zero dupes
 - All writes through `calendar_service.py` — TENET #17 ETERNALLY OBEYED
 - Works offline once cached — TENET #11 UNBREAKABLE
+- “SYNC THIS DAY” button now passes current calendar date to import route
+- Only imports events for the visible day — lightning fast, no bloat
 **OUTLOOK JUST GOT LEG DROPPED INTO OUR DATABASE — NO GHOSTS, NO LIES, ONLY DOMINATION!**
 
 ## 2025-12-09 — PHASE 2 STEP 2.8 COMPLETE: CALENDAR SERVICE LAYER + MODELS

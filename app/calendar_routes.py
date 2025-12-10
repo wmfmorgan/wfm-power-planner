@@ -50,6 +50,7 @@ def calendar_view(view='month', year=None, month=None, day=None):
 @calendar_bp.route('/api/import-calendar', defaults={'datestr': None})
 @calendar_bp.route('/api/import-calendar/<datestr>')
 def import_calendar(datestr):
+    print(datestr)
     target_date = date.today()
     if datestr and len(datestr) == 8 and datestr.isdigit():
         try:

@@ -23,6 +23,11 @@
       <button id="nav-today" class="bg-yellow-500 hover:bg-yellow-400 text-black font-bold py-3 px-8 rounded-lg shadow-lg transition-all hover:scale-105">
         TODAY
       </button>
+      <!-- SMART ICS SYNC BUTTON — USES CURRENT DATE + YOUR EXISTING datestr LOGIC -->
+      <a href="{{ url_for('calendar.import_calendar', datestr=year ~ '%02d'|format(month) ~ '%02d'|format(day)) }}"
+        class="bg-purple-600 hover:bg-purple-500 text-white font-black py-3 px-8 rounded-lg shadow-2xl transition-all hover:scale-105 flex items-center gap-3 text-lg">
+        <span class="text-2xl">SYNC THIS DAY</span>
+      </a>
     </div>
   </div>
 </nav>
