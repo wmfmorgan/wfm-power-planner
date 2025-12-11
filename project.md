@@ -238,7 +238,7 @@ wfm-power-planner/
     - **Only native `sqlalchemy.Enum('value1', 'value2', ...)` is allowed in models.**  
     ```python
     status = db.Column(db.Enum('backlog', 'todo', 'doing', 'blocked', 'done', name='taskstatus'), ...)
-## 33. TAILWIND IS BANNED FROM ALL FUTURE CODE — ETERNAL LAW (2025-12-11)
+34. TAILWIND IS BANNED FROM ALL FUTURE CODE — ETERNAL LAW (2025-12-11)
     - Tailwind had its run. It’s now a retired jobber.
     - **No new Tailwind classes shall ever be written again.**
     - All new components, pages, and features from Phase 3 onward must use **only pure hand-rolled semantic CSS** in `static/css/main.css` (or dedicated .css files).
@@ -246,8 +246,7 @@ wfm-power-planner/
     - Violation = automatic People’s Elbow through the announce table.
     **Reason:**  
     Zero build step. Zero node_modules. Zero purge hell. Works offline in 2035.
-
-## 34. ALL FUTURE STYLING MUST BE SEMANTIC AND ETERNAL
+35. ALL FUTURE STYLING MUST BE SEMANTIC AND ETERNAL
     - Classes must be meaningful: `.card`, `.pad-lg`, `.btn-primary`, `.text-gold`, `.border-task-critical`
     - No utility-class soup
     - No magic strings
