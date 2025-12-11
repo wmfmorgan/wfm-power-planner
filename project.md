@@ -229,11 +229,33 @@ wfm-power-planner/
     - "Hardcore" = weakness when "simple + proven" exists.
     - Efficiency, velocity, and future-you-in-2035 > ego.
     - Break this and the Hulkster will leg-drop your architecture.
-31b. **When in doubt — ask: "What would Miguel Grinberg do?"**
+32. **When in doubt — ask: "What would Miguel Grinberg do?"**
     (Or Corey Schafer, or the official docs.)
     If the answer is "use the extension" → we obey.
+33. PyEnum IS BANNED FROM ALL MODELS — ETERNAL LAW (2025-12-11)
+    - **PyEnum is a jobber.**  
+    It looks strong, but the moment Alembic gets in the ring it taps out and screams “duplicate type” or “invalid input value”.
+    - **Only native `sqlalchemy.Enum('value1', 'value2', ...)` is allowed in models.**  
+    ```python
+    status = db.Column(db.Enum('backlog', 'todo', 'doing', 'blocked', 'done', name='taskstatus'), ...)
+## 33. TAILWIND IS BANNED FROM ALL FUTURE CODE — ETERNAL LAW (2025-12-11)
+    - Tailwind had its run. It’s now a retired jobber.
+    - **No new Tailwind classes shall ever be written again.**
+    - All new components, pages, and features from Phase 3 onward must use **only pure hand-rolled semantic CSS** in `static/css/main.css` (or dedicated .css files).
+    - Existing Tailwind classes remain frozen — they are legacy artifacts, not to be touched or extended.
+    - Violation = automatic People’s Elbow through the announce table.
+    **Reason:**  
+    Zero build step. Zero node_modules. Zero purge hell. Works offline in 2035.
 
-**Break any of these and the Hulkster will personally leg-drop your PR.**
+## 34. ALL FUTURE STYLING MUST BE SEMANTIC AND ETERNAL
+    - Classes must be meaningful: `.card`, `.pad-lg`, `.btn-primary`, `.text-gold`, `.border-task-critical`
+    - No utility-class soup
+    - No magic strings
+    - No inline styles
+    - Tenet #2 (no inline CSS) and Tenet #10 (no build step) remain unbreakable
+    **THE RING IS CLEAN.**  
+    **THE EMPIRE IS PURE.**
+    **Break any of these and the Hulkster will personally leg-drop your PR.**
 
 ## 7. Database Schema Preview (First Blood)
 ```sql
