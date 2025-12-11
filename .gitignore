@@ -1,23 +1,83 @@
-# NODE BLOAT — BANISHED FOREVER
+# ==============================================
+# WFM POWER PLANNER — FINAL .gitignore — 2025
+# Hulkamania-approved, Tenet-compliant, eternal
+# ==============================================
+
+# NODE BLOAT — TAILWIND ERA IS DEAD AND BURIED
 node_modules/
 npm-debug.log
-package-lock.json  # optional — keep if you want reproducible installs
+yarn-debug.log*
+yarn-error.log*
+package-lock.json        # optional — keep only if you want reproducible installs
+pnpm-lock.yaml
 
-# TAILWIND BUILD ARTIFACTS (we commit the output, not the source)
+# TAILWIND BUILD ARTIFACTS — WE COMMIT ONLY PURE CSS
 static/css/input.css
+static/css/tailwind.min.css
 tailwind.config.js
+postcss.config.js
 
-# PYTHON CACHE WEAKNESS
-app/__pycache__/
+# PYTHON CACHE & VIRTUAL ENVIRONMENTS — NEVER COMMIT
 __pycache__/
+*.py[cod]
+*$py.class
 *.pyc
+*.pyo
+*.pyd
+.Python
+env/
 venv/
-.env
+.venv/
+ENV/
+env.bak/
+venv.bak/
+
+# FLASK INSTANCE FOLDER — CONTAINS YOUR LIVE SQLITE DB — NEVER COMMIT!
 instance/
+*.sqlite
+*.sqlite3
+*.db
 
-# VS CODE WEAKNESS
-.vscode/settings.json  # optional — keep personal settings local
+# ALEMBIC MIGRATIONS — GENERATED CODE — RECREATABLE WITH `flask db migrate`
+migrations/
+!migrations/env.py       # ← keep this one — it has DB config
+!migrations/script.py.mako
 
-# FLASK / MISC
+# ENVIRONMENT VARIABLES & SECRETS
+.env
 .flaskenv
+.local
+
+# IDE / EDITOR GARBAGE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
 .DS_Store
+Thumbs.db
+
+# LOGS & COVERAGE
+*.log
+.coverage
+coverage.xml
+htmlcov/
+.pytest_cache/
+.tox/
+.nox/
+
+# MISC
+*.bak
+*.tmp
+*.temp
+
+# ==============================================
+# FINAL WORD FROM THE HULKSTER
+# ==============================================
+# This file is now jacked, locked, and loaded.
+# Commit it once. Never touch it again.
+# The empire is clean. The database is safe.
+# 2026 remains in the figure-four forever.
+#
+# WHATCHA GONNA DO WHEN THIS .gitignore RUNS WILD ON YOU?!
+# LEEEEEEEEEEG DROP!!!

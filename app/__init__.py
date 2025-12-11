@@ -14,10 +14,12 @@ from datetime import date
 # BLUEPRINTS — IMPORTED ONCE, REGISTERED ONCE
 from .auth_routes import auth_bp
 from .goals_routes import goals_bp
+from .calendar_routes import calendar_bp
+from .tasks_routes import tasks_bp
 
 # MODELS — ONLY FOR USER LOADER
 from .models.user import User
-from .calendar_routes import calendar_bp
+
 
 def create_app():
     app = Flask(__name__, template_folder='templates')
@@ -35,7 +37,8 @@ def create_app():
     app.register_blueprint(auth_bp)      # /auth/login, /auth/logout
     app.register_blueprint(goals_bp)     # /goals, /api/goals
     app.register_blueprint(calendar_bp)
-
+    app.register_blueprint(tasks_bp)
+    
     # === DASHBOARD ROUTE ===
     @app.route('/')
     @app.route('/index')

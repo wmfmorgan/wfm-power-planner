@@ -1,0 +1,75 @@
+{# templates/tasks/tasks.html — PHASE 3.1 TASKS ENGINE — FULL CRUD + READY FOR KANBAN #}
+{% extends "base.html" %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto p-6">
+  <div class="flex items-center justify-between mb-12">
+    <h1 class="text-6xl font-black text-gold drop-shadow-lg">TASKS ENGINE</h1>
+    <button id="add-task-btn"
+            class="bg-yellow-500 hover:bg-yellow-400 text-black font-bold text-4xl w-20 h-20 rounded-full shadow-2xl transition-all hover:scale-110 fixed bottom-8 right-8 z-50">
+      +
+    </button>
+  </div>
+
+  <!-- TASKS KANBAN BOARD — READY FOR SORTABLEJS -->
+  <div id="tasks-kanban" class="grid grid-cols-1 md:grid-cols-5 gap-8">
+    {% for status in ['backlog', 'todo', 'doing', 'blocked', 'done'] %}
+      <div class="bg-dark border-4 border-gray-700 rounded-500 rounded-2xl pad-xl shadow-heavy min-h-96">
+        <h3 class="text-4xl font-black text-center mb-6
+             {% if status == 'doing' %}text-yellow-400
+             {% elif status == 'blocked' %}text-red-400
+             {% elif status == 'done' %}text-green-400
+             {% else %}text-gray-300{% endif %}">
+          {{ status|upper }}
+        </h3>
+        <div id="column-{{ status }}" class="space-y-4 min-h-96">
+          <p class="text-gray-500 text-center py-8">Loading {{ status }} tasks...</p>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
+<!-- ADD/EDIT TASK MODAL -->
+<div id="task-modal" class="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50 invisible opacity-0 transition-all duration-300">
+  <div class="bg-dark border-4 border-yellow-400 rounded-2xl pad-xl shadow-2xl w-full max-w-2xl">
+    <h2 class="text-5xl font-black text-gold text-center mb-8">FORGE A NEW TASK</h2>
+
+    <form id="task-form">
+      <input type="text" id="task-title" placeholder="Task title (e.g. Bench 405 by July)" required
+             class="w-full pad-lg bg-gray-800 rounded-lg border border-gray-600 focus:border-yellow-400 text-white text-xl font-bold mb-6">
+
+      <textarea id="task-description" placeholder="Description (optional)"
+                class="w-full pad-lg bg-gray-800 rounded-lg border border-gray-600 focus:border-yellow-400 text-white h-32 resize-none mb-6"></textarea>
+
+      <div class="grid grid-cols-2 gap-6 mb-6">
+        <input type="date" id="task-due-date" class="pad-lg bg-gray-800 rounded-lg border border-gray-600 text-white">
+        <select id="task-priority" class="pad-lg bg-gray-800 rounded-lg border border-gray-600 text-white">
+          {% for p in ['low', 'medium', 'high', 'critical'] %}
+            <option value="{{ p }}">{{ p|upper }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <input type="text" id="task-tags" placeholder="Tags (comma-separated)" 
+             class="w-full pad-lg bg-gray-800 rounded-lg border border-gray-600 text-white mb-8">
+
+      <div class="flex gap-6">
+        <button type="submit" class="flex-1 bg-green-600 hover:bg-green-500 text-black font-bold text-xl pad-lg rounded-lg transition-all hover:scale-105 shadow-lg">
+          SAVE TASK
+        </button>
+        <button type="button" id="close-modal" class="flex-1 bg-gray-600 hover:bg-gray-500 text-white font-bold text-xl pad-lg rounded-lg transition-all hover:scale-105 shadow-lg">
+          CANCEL
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script src="{{ url_for('static', filename='js/lib/sortable.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/tasks_kanban.js') }}"></script>
+{% endblock %}

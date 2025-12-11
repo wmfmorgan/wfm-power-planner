@@ -168,3 +168,11 @@
 .hover-grow:hover { transform: scale(1.05); transition: transform 0.2s; }
 .week-grid { display: grid; grid-template-columns: repeat(7,minmax(0,1fr)); gap: 1.5rem; }
 .week-grid-8 { display: grid; grid-template-columns: repeat(8,minmax(0,1fr)); gap: 1.5rem; }
+/* EMERGENCY FLEX RESCUE — 2025-12-10 */
+.flex { display: flex; }
+.flex-col { flex-direction: column; }
+.items-center { align-items: center; }
+.justify-center { justify-content: center; }
+.gap-4 { gap: 1rem; }
+.gap-6 { gap: 1.5rem; }
+.gap-8 { gap: 2rem; }

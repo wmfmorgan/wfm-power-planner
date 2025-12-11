@@ -1,25 +1,21 @@
-# app/models/task.py
-"""
-Ad-Hoc Tasks — the Honey-Do list, the one-offs, the quick hits.
-No hierarchy, no progress rollup, no bloat.
-Separate from Goals — keeps the Goal Tree pure.
-NOW UPGRADED: Native PostgreSQL ENUMs just like Goal model → TENET #21 ETERNAL COMPLIANCE
-"""
+# app/models/task.py — PHASE 3.1 TASKS ENGINE — TENET-COMPLIANT ETERNAL DOMINATION
 from app.extensions import db
 from datetime import date
-from enum import Enum as PyEnum
+from enum import Enum
 from sqlalchemy import Enum as SQLEnum
 
-# ------------------------------------------------------------------
-# ENUMS — TENET #21: "Enums are MANDATORY" — NATIVE POSTGRESQL STYLE
-# ------------------------------------------------------------------
-class TaskStatus(PyEnum):
+class TaskPriority(Enum):
+    LOW = "low"
+    MEDIUM = "medium"
+    HIGH = "high"
+    CRITICAL = "critical"
+
+class TaskStatus(Enum):
     BACKLOG = "backlog"
     TODO = "todo"
     DOING = "doing"
     BLOCKED = "blocked"
     DONE = "done"
-
 
 class Task(db.Model):
     __tablename__ = 'tasks'
@@ -29,28 +25,38 @@ class Task(db.Model):
 
     title = db.Column(db.Text, nullable=False)
     description = db.Column(db.Text)
+    
+    # PHASE 3.1 CORE FIELDS
+    due_date = db.Column(db.Date)                    # Optional due date
 
-    # Optional due date
-    due_date = db.Column(db.Date)
-
-    # Kanban column — NOW USING NATIVE POSTGRESQL ENUM
-    status = db.Column(
-        SQLEnum(
-            TaskStatus,
-            name="taskstatus",
-            values_callable=lambda enum: [e.value for e in enum],
-            native_enum=True,  # This is the money
-            create_type=True   # Auto-creates the type on migrate
+    priority = db.Column(SQLEnum(
+        TaskPriority, 
+        name="taskpriority", 
+        values_callable=lambda enum: [e.value for e in enum],
+        native_enum=True,
         ),
         nullable=False,
-        default=TaskStatus.TODO,
-        comment="Current column: backlog → todo → doing → blocked → done"
+        default=TaskPriority.MEDIUM
     )
+    
+    tags = db.Column(db.Text, default="")             # Comma-separated, e.g. "work,urgent"
 
-    # For daily planner pages (Phase 2)
-    day_date = db.Column(db.Date, comment="If this task is pinned to a specific calendar day")
+    # Kanban column
+    status = db.Column(SQLEnum(
+        TaskStatus, 
+        name="taskstatus", 
+        values_callable=lambda enum: [e.value for e in enum],
+        native_enum=True,
+        ),
+        nullable=False,
+        default=TaskStatus.BACKLOG
+    )
+    # Manual ordering within same status (for future Kanban reordering)
+    sort_order = db.Column(db.Integer, nullable=False, default=0)
+    # Optional tie to a specific calendar day (for day view)
+    day_date = db.Column(db.Date)
 
-    # Timestamps — using server_default for eternal consistency
+    # Timestamps
     created_at = db.Column(db.DateTime, nullable=False, server_default=db.func.now())
     updated_at = db.Column(db.DateTime, nullable=False, server_default=db.func.now(), onupdate=db.func.now())
 
