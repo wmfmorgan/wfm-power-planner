@@ -5,7 +5,6 @@ const STATIC_ASSETS = [
   '/static/css/tailwind.min.css',
   '/static/css/main.css',
   '/static/js/lib/sortable.min.js',
-  '/static/js/constants.js',
   '/static/js/goals_kanban.js',
   '/static/img/icon-192.png',
   '/static/img/icon-512.png',

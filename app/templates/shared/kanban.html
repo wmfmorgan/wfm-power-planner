@@ -1,0 +1,17 @@
+{# shared/kanban.html — REUSABLE KANBAN — USED BY GOALS AND TASKS #}
+<div id="{{ kanban_id }}" class="grid grid-cols-1 md:grid-cols-5 gap-8">
+  {% for status in kanban_statuses %}
+    <div class="bg-dark border-4 border-gray-700 rounded-2xl pad-xl shadow-heavy min-h-96">
+      <h3 class="text-4xl font-black text-center mb-6
+           {% if status == kanban_statuses.DOING %}text-yellow-400
+           {% elif status == kanban_statuses.BLOCKED %}text-red-400
+           {% elif status == kanban_statuses.DONE %}text-green-400
+           {% else %}text-gray-300{% endif %}">
+        {{ status.value|upper }}
+      </h3>
+      <div id="column-{{ status.value }}" class="space-y-4 min-h-96">
+        <p class="text-gray-500 text-center py-8">Loading {{ status.value }} {{ kanban_type }}s...</p>
+      </div>
+    </div>
+  {% endfor %}
+</div>

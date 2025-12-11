@@ -347,8 +347,9 @@ CREATE TABLE goal_events (
 | 4     | **Habit Streaks & Fire**    | Habit-flagged goals auto-track<br>Streak counters + fire emojis<br>Calendar heat map<br>Daily/weekly/monthly habit widgets | **Jan 25 2026** | Momentum becomes UNSTOPPABLE |
 | 5     | **Cross-Device Sync**       | Full JSON export/import perfected<br>BroadcastChannel tab sync<br>Optional self-hosted sync server (Phase 5.5) | **Feb 2026** | You never lose your empire again |
 | 6     | **Goal Updates        **    | Pull goals into specific days/months                              | **2026 and beyond** | The belt is raised. Confetti falls. 2025 is in the figure-four forever. |
-| 7     | **Calendar Updates    **    | Import ICS events into daily calendar + add events manually to day calendar + add events to month/week calendar  | **2026 and beyond** | The belt is raised. Confetti falls. 2025 is in the figure-four forever. |
-| 6     | **Victory Lap Features**    | Custom Kanban columns<br>Weighted progress<br>Goal templates<br>Printable reports<br>Voice-to-goal (wild future) | **2026 and beyond** | The belt is raised. Confetti falls. 2025 is in the figure-four forever. |
+| 7     | **Task Updates        **    | Pull tasks into specific days/months                              | **2026 and beyond** | The belt is raised. Confetti falls. 2025 is in the figure-four forever. |
+| 8     | **Calendar Updates    **    | Import ICS events into daily calendar + add events manually to day calendar + add events to month/week calendar  | **2026 and beyond** | The belt is raised. Confetti falls. 2025 is in the figure-four forever. |
+| 9     | **Victory Lap Features**    | Custom Kanban columns<br>Weighted progress<br>Goal templates<br>Printable reports<br>Voice-to-goal (wild future) | **2026 and beyond** | The belt is raised. Confetti falls. 2025 is in the figure-four forever. |
 
 ### CURRENT STATUS — 2025-12-06
 

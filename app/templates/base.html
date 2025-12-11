@@ -69,6 +69,11 @@
                       GOALS
                     </a>
                     <span class="text-gold mx-4">•</span>
+                    <a href="{{ url_for('tasks.tasks_page') }}" 
+                       class="text-gold hover:text-white transition-all {% if request.path.startswith('/tasks') %}text-white underline decoration-4 underline-offset-4{% endif %}">
+                      TASKS
+                    </a>
+                    <span class="text-gold mx-4">•</span>
                     <a href="{{ url_for('calendar.calendar_view') }}" 
                        class="text-gold hover:text-white transition-all {% if request.path.startswith('/calendar') %}text-white underline decoration-4 underline-offset-4{% endif %}">
                       CALENDAR
@@ -133,8 +138,6 @@
     <!-- ALL JS LOADED AT BOTTOM — TENET #1 OBEYED FOREVER -->
     {% block scripts %}
    
-    <script src="{{ url_for('static', filename='js/constants.js') }}"></script>
-    
     <!-- DATA OWNERSHIP — HEADER-LEVEL DOMINATION — GLOBAL -->
     <script src="{{ url_for('static', filename='js/import_export.js') }}"></script>
 
