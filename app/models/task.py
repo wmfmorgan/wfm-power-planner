@@ -84,6 +84,13 @@ class Task(db.Model):
     is_instance = db.Column(db.Boolean, nullable=False, default=False)  # true = spawned instance
     original_due_date = db.Column(db.Date, nullable=True)  # for monthly "day 15" logic
 
+    # === PHASE 3.3 — HABIT STREAKS & FIRE ===
+    is_habit = db.Column(db.Boolean, nullable=False, default=False)
+    current_streak = db.Column(db.Integer, nullable=False, default=0)
+    longest_streak = db.Column(db.Integer, nullable=False, default=0)
+    last_completed_date = db.Column(db.Date, nullable=True)
+    total_completions = db.Column(db.Integer, nullable=False, default=0)
+
     def __repr__(self):
         return (f"<Task {self.id}: {self.title} | "
                 f"Recur: {self.is_recurring} {self.recurrence_type} every {self.recurrence_interval} | "
