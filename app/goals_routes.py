@@ -288,3 +288,13 @@ def api_get_goal(goal_id):
     if goal.user_id != current_user.id:
         return jsonify({"error": "Not authorized"}), 403
     return jsonify(goal_to_dict(goal))
+
+@goals_bp.route('/api/goals/<int:goal_id>/children')
+@login_required
+def api_goal_children(goal_id):
+    goal = Goal.query.get_or_404(goal_id)
+    if goal.user_id != current_user.id:
+        return jsonify({"error": "Unauthorized"}), 403
+    
+    children = Goal.query.filter_by(parent_id=goal_id).order_by(Goal.sort_order).all()
+    return jsonify([goal_to_dict(g) for g in children])

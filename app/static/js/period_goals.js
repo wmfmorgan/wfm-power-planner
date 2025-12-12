@@ -157,6 +157,29 @@ function openGoalModal(goalId) {
       document.getElementById('goal-due-date').value = goal.due_date || '';
       document.getElementById('goal-is-habit').checked = goal.is_habit;
 
+    fetch(`/api/goals/${goal.id}/children`)
+    .then(r => r.json())
+    .then(children => {
+        const container = document.getElementById('modal-goal-tree');
+        container.innerHTML = '';
+
+        if (children.length === 0) {
+        container.innerHTML = '<p class="text-gray-500 text-center">No steps yet — add one above!</p>';
+        return;
+        }
+
+        children.forEach(child => {
+        const div = document.createElement('div');
+        div.className = 'bg-gray-800 rounded-lg p-4 mb-4 cursor-pointer hover:bg-gray-700 transition-all border-l-4 border-yellow-400';
+        div.innerHTML = `
+            <div class="font-bold text-white">${child.title}</div>
+            <div class="text-sm text-gray-400">${child.timeframe} • ${child.status}</div>
+        `;
+        div.onclick = () => openGoalModal(child.id); // RECURSIVE — CLICK TO EDIT
+        container.appendChild(div);
+        });
+    });
+
       const saveBtn = document.getElementById('save-goal-btn');
       saveBtn.onclick = () => updateGoal(goal.id);
 
