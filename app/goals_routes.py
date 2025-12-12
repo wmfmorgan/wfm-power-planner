@@ -86,7 +86,7 @@ def goal_to_dict(goal):
 @login_required
 def api_create_goal():
     data = request.get_json()
-    
+
     goal = create_goal(
         user_id=current_user.id,
         title=data['title'],
@@ -215,3 +215,76 @@ def import_data():
     except Exception as e:
         current_app.logger.error(f"Import failed: {e}")
         return jsonify({"error": "Backup corrupted or incompatible"}), 500
+    
+# goals_routes.py
+from flask import request, jsonify
+from app.models.goal import Goal, GoalTimeframe
+from sqlalchemy import extract
+from datetime import date
+from app.date_utils import get_iso_week_for_goal, get_iso_year_for_goal
+
+@goals_bp.route('/api/goals/period/<string:timeframe_str>/<int:year>/<int:month>/<int:day>', methods=['GET'])
+@goals_bp.route('/api/goals/period/<string:timeframe_str>/<int:year>/<int:month>', methods=['GET'])  # Optional day for monthly/weekly
+@goals_bp.route('/api/goals/period/<string:timeframe_str>/<int:year>', methods=['GET'])  # Optional month/day for quarterly/yearly
+@login_required
+def api_goals_from_date(timeframe_str, year, month=None, day=None):
+    # TENET #21 — ENUMS MANDATORY, NO MAGIC STRINGS
+    try:
+        timeframe = GoalTimeframe(timeframe_str)
+    except ValueError:
+        return jsonify({"error": "Invalid timeframe"}), 400
+
+    target_date = date(year, month or 1, day or 1) if month else date(year, 1, 1)
+
+    query = Goal.query.filter_by(user_id=current_user.id, timeframe=timeframe)
+
+    if timeframe == GoalTimeframe.DAILY:
+        if not month or not day:
+            return jsonify({"error": "Month and day required for daily"}), 400
+        query = query.filter(db.func.date(Goal.due_date) == target_date)
+
+    elif timeframe == GoalTimeframe.WEEKLY:
+        if not month or not day:
+            return jsonify({"error": "Month and day required for weekly"}), 400
+        
+        target_date = date(year, month, day)
+        target_week = get_iso_week_for_goal(year, month, day)
+        target_year = get_iso_year_for_goal(year, month, day)
+
+        # Filter in Python using the sacred function
+        goals = Goal.query.filter(
+            Goal.user_id == current_user.id,
+            Goal.timeframe == GoalTimeframe.WEEKLY,
+            Goal.due_date.is_not(None)
+        ).all()
+
+        filtered_goals = [
+            g for g in goals
+            if g.due_date and 
+            get_iso_week_for_goal(g.due_date.year, g.due_date.month, g.due_date.day) == target_week
+        ]
+        
+        goals = filtered_goals
+    # Don't touch `query` — it stays a Query object for other branches
+
+    elif timeframe == GoalTimeframe.MONTHLY:
+        if not month:
+            return jsonify({"error": "Month required for monthly"}), 400
+        query = query.filter(
+            extract('year', Goal.due_date) == year,
+            extract('month', Goal.due_date) == month
+        )
+
+    elif timeframe in (GoalTimeframe.QUARTERLY, GoalTimeframe.YEARLY):
+        query = query.filter(extract('year', Goal.due_date) == year)
+
+    goals = query.order_by(Goal.sort_order).all()
+    return jsonify([goal_to_dict(g) for g in goals]) 
+
+@goals_bp.route('/api/goals/<int:goal_id>', methods=['GET'])
+@login_required
+def api_get_goal(goal_id):
+    goal = Goal.query.get_or_404(goal_id)
+    if goal.user_id != current_user.id:
+        return jsonify({"error": "Not authorized"}), 403
+    return jsonify(goal_to_dict(goal))

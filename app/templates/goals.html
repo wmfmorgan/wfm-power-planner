@@ -1,5 +1,8 @@
 {% extends "base.html" %}
 {% block content %}
+
+{% include "shared/goal_modal.html" %}
+
 <div class="max-w-7xl mx-auto pad-lg">
   <h1 class="text-4xl font-bold text-gold mb-8 drop-shadow-lg">GOAL DOMINATION CENTER</h1>
 
@@ -73,7 +76,7 @@
               </select>
 
               <input type="date" value="{{ goal.due_date or '' }}"
-                    class="goal-due-date pad-x py-3 bg-gray-700 rounded border border-gray-600 text-white"
+                    required class="goal-due-date pad-x py-3 bg-gray-700 rounded border border-gray-600 text-white"
                     data-field="due_date"
                     data-id="{{ goal.id }}">
             </div>
@@ -149,59 +152,6 @@
   </div>
 </div>
 
-<!-- ADD GOAL MODAL -->
-<!-- UPGRADED GOAL MODAL — PHASE 1 WEAPONIZED -->
-<div id="goal-modal" class="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50 invisible opacity-0 transition-all duration-300"
-     data-state="closed">
-  <div class="bg-card p-10 rounded-2xl shadow-3xl w-full max-w-2xl border-4 border-yellow-500">
-    <h2 class="text-4xl font-black text-gold mb-8 text-center">FORGE A NEW GOAL</h2>
-    
-    <input type="text" id="goal-title" placeholder="Goal title (e.g. Bench 405 by July)" 
-           class="w-full pad mb-6 bg-gray-700 rounded border-2 border-gray-600 focus:border-yellow-400 text-white text-lg font-bold">
-
-    <textarea id="goal-description" placeholder="Why this goal? What’s the mission?" 
-              class="w-full pad mb-6 bg-gray-700 rounded border-2 border-gray-600 focus:border-yellow-400 text-white text-base h-32 resize-none"></textarea>
-
-    <div class="grid grid-cols-2 gap-6 mb-6">
-      <select id="goal-category" class="p-4 bg-gray-700 rounded border-2 border-gray-600 text-white text-lg focus:border-yellow-400">
-        {% for cat in goal_categories %}
-          <option value="{{ cat.value }}">{{ cat.name }}</option>
-        {% endfor %}
-      </select>
-
-      <input type="date" id="goal-due-date" 
-             class="pad-lg bg-gray-700 rounded border-2 border-gray-600 text-white text-lg focus:border-yellow-400">
-    </div>
-
-    <div class="flex items-center mb-8">
-      <input type="checkbox" id="goal-is-habit" class="w-8 h-8 text-gold bg-gray-700 border-gray-600 rounded focus:ring-yellow-500">
-      <label for="goal-is-habit" class="ml-4 text-xl text-gold font-bold">This is a DAILY HABIT</label>
-    </div>
-
-    <div class="gap-6 mb-6">
-      <select 
-        id="goal-timeframe" 
-        class="w-full pad-lg bg-gray-700 rounded border-2 border-gray-600 focus:border-yellow-400 text-white text-lg">
-        {% for tf in goal_timeframes %}
-          <option value="{{ tf.value }}" {% if tf.value == 'monthly' %}selected{% endif %}>
-            {{ tf.value|title }}
-          </option>
-        {% endfor %}
-      </select>
-    </div>
-
-    <div class="flex gap-6">
-      <button data-action="save-goal" 
-              class="flex-1 bg-green-600 hover:bg-green-500 text-black font-bold text-xl py-5 rounded transition-all hover-grow shadow-lg">
-        SAVE GOAL
-      </button>
-      <button data-action="close-modal" 
-              class="flex-1 bg-gray-600 hover:bg-gray-500 text-white font-bold text-xl py-5 rounded transition-all hover-grow shadow-lg">
-        CANCEL
-      </button>
-    </div>
-  </div>
-</div>
 {% endblock %}
 
 <!-- ALL JS LOADED AT BOTTOM — TENET #1 OBEYED ETERNALLY -->

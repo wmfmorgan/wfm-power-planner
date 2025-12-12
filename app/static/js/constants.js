@@ -43,13 +43,31 @@ const CATEGORY_COLORS = {
   hobby:      'red'
 };
 
+const GOAL_TIMEFRAMES = {
+  yearly:     'yearly',
+  quarterly:  'quarterly',
+  monthly:    'monthly',
+  weekly:     'weekly',
+  daily:      'daily'
+};
+
 // Expose globally
 Object.assign(window, {
   GOAL_STATUS,
   GOAL_CATEGORY,
   TASK_STATUS,
+  GOAL_TIMEFRAMES,
   CATEGORY_COLORS
 });
+
+
+Date.prototype.getWeek = function() {
+  const d = new Date(this);
+  d.setHours(0,0,0,0);
+  d.setDate(d.getDate() + 4 - (d.getDay() || 7));
+  const yearStart = new Date(d.getFullYear(),0,1);
+  return Math.ceil((((d - yearStart) / 86400000) + 1)/7);
+};
 
 // Debug
 console.log('CATEGORY_COLORS loaded:', window.CATEGORY_COLORS);

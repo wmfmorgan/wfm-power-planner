@@ -15,50 +15,45 @@
     <div>SATURDAY</div>
   </div>
 
-  <div class="week-grid gap-6">
-    {# === PURE JINJA MATH — NO FILTERS, NO SLICE, NO ERRORS === #}
-    {% set total_days = year * 365 + year//4 - year//100 + year//400 %}
-    {% for m in range(1, month) %}
-      {% set total_days = total_days + year|days_in_month(m) %}
-    {% endfor %}
-    {% set total_days = total_days + day - 1 %}
-    {% set weekday = total_days % 7 %} {# 0 = Sunday #}
-    {% set week_start_day = day - weekday %}
+<div class="week-grid gap-6">
+  {# SUNDAY-FIRST WEEK — PERFECT, CLEAN, ETERNAL #}
+  {% set target_date = datetime(year, month, day) %}
+  {% set week_start_day = day - target_date.weekday() - 1 %}
 
-    {% set month_abbr = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'] %}
+  {% set month_abbr = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'] %}
 
-    {% for offset in range(7) %}
-      {% set current_day = week_start_day + offset %}
-      {% set current_month = month %}
-      {% set current_year = year %}
+  {% for offset in range(7) %}
+    {% set current_day = week_start_day + offset %}
+    {% set current_month = month %}
+    {% set current_year = year %}
 
-      {# Previous month rollover #}
-      {% if current_day <= 0 %}
-        {% set prev_month = month - 1 if month > 1 else 12 %}
-        {% set prev_year = year if month > 1 else year - 1 %}
-        {% set days_in_prev = prev_year|days_in_month(prev_month) %}
-        {% set current_day = current_day + days_in_prev %}
-        {% set current_month = prev_month %}
-        {% set current_year = prev_year %}
-      {% elif current_day > year|days_in_month(month) %}
-        {% set current_day = current_day - year|days_in_month(month) %}
-        {% set current_month = month + 1 %}
-      {% endif %}
+    {# Previous month rollover #}
+    {% if current_day <= 0 %}
+      {% set prev_month = month - 1 if month > 1 else 12 %}
+      {% set prev_year = year if month > 1 else year - 1 %}
+      {% set days_in_prev = prev_year|days_in_month(prev_month) %}
+      {% set current_day = current_day + days_in_prev %}
+      {% set current_month = prev_month %}
+      {% set current_year = prev_year %}
+    {% elif current_day > year|days_in_month(month) %}
+      {% set current_day = current_day - year|days_in_month(month) %}
+      {% set current_month = month + 1 %}
+    {% endif %}
 
-      {% set is_today = (current_year == now.year and current_month == now.month and current_day == now.day) %}
-      {% set is_current_month = (current_month == month) %}
+    {% set is_today = (current_year == now.year and current_month == now.month and current_day == now.day) %}
+    {% set is_current_month = (current_month == month) %}
 
-      <a href="{{ url_for('calendar.calendar_view', view='day', year=current_year, month=current_month, day=current_day) }}"
-         class="aspect-square rounded-2xl flex flex-col items-center justify-center transition-all hover-grow
-                {% if is_today %}
-                  bg-black border-4 border-yellow-400 shadow-heavy shadow-yellow-400/60 ring-4 ring-yellow-400/30 text-gold font-black text-5xl
-                {% elif is_current_month %}
-                  bg-card text-white text-4xl
-                {% else %}
-                  bg-dark/50 text-gray-500 text-3xl opacity-70
-                {% endif %}">
-        <div>{{ current_day }}</div>
-      </a>
-    {% endfor %}
-  </div>
+    <a href="{{ url_for('calendar.calendar_view', view='day', year=current_year, month=current_month, day=current_day) }}"
+       class="aspect-square rounded-2xl flex flex-col items-center justify-center transition-all hover-grow
+              {% if is_today %}
+                bg-black border-4 border-yellow-400 shadow-heavy shadow-yellow-400/60 ring-4 ring-yellow-400/30 text-gold font-black text-5xl
+              {% elif is_current_month %}
+                bg-card text-white text-4xl
+              {% else %}
+                bg-dark/50 text-gray-500 text-3xl opacity-70
+              {% endif %}">
+      <div>{{ current_day }}</div>
+    </a>
+  {% endfor %}
+</div>
 </div>

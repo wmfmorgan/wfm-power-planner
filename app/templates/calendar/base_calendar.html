@@ -6,11 +6,20 @@
 {% block day %}{{ day }}{% endblock %}
 
 {% block content %}
+
+{% include "shared/goal_modal.html" %}
 <div class="max-w-7xl mx-auto pad-lg">
 
+  <div id="calendar-app"
+     data-current-view="{{ current_view }}"
+     data-year="{{ year }}"
+     data-month="{{ month }}"
+     data-day="{{ day|default('') }}">
+  </div>
 
   <div id="calendar-view-container">
     {# Dynamically load the correct view template #}
+    
     {% if current_view == 'month' %}
       {% include "calendar/month.html" %}
     {% elif current_view == 'week' %}
@@ -22,6 +31,36 @@
         <h2 class="text-6xl font-black text-gold">SELECT A VIEW, WARRIOR</h2>
       </div>
     {% endif %}
+  </div>
+  <!-- GOALS FOR THIS PERIOD — REUSABLE KANBAN -->
+  
+  {% set calendar_statuses = [] %}
+  {% for s in goal_statuses %}
+    {% if s.value != 'backlog' %}
+      {% set _ = calendar_statuses.append(s) %}
+    {% endif %}
+  {% endfor %}
+
+  <div class="mt-20">
+    <h2 class="text-4xl font-black text-gold text-center mb-12 drop-shadow-lg">
+      {% if current_view == 'day' %}
+        TODAY'S GOALS
+      {% elif current_view == 'week' %}
+        THIS WEEK'S GOALS
+      {% elif current_view == 'month' %}
+        THIS MONTH'S GOALS
+      {% else %}
+        THIS QUARTER'S GOALS
+      {% endif %}
+    </h2>
+
+    {% with
+      kanban_id="period-goals-kanban",
+      kanban_statuses=calendar_statuses,
+      kanban_type="goal"
+    %}
+      {% include "shared/kanban.html" %}
+    {% endwith %}
   </div>
   {% include "calendar/zones.html" %}
 </div>

@@ -22,6 +22,9 @@ calendar_bp = Blueprint('calendar', __name__, template_folder='templates/calenda
 @calendar_bp.route('/calendar/<view>/<int:year>/<int:month>/<int:day>')
 @login_required
 def calendar_view(view='month', year=None, month=None, day=None):
+
+    from app.models.goal import GoalStatus, GoalCategory, GoalTimeframe
+
     today = datetime.today()
     year = year or today.year
     month = month or today.month
@@ -38,6 +41,9 @@ def calendar_view(view='month', year=None, month=None, day=None):
         'day': day,
         'today': today,
         'datetime': datetime,
+        'goal_statuses': GoalStatus,
+        'goal_categories': GoalCategory,    # ← ADD THIS
+        'goal_timeframes': GoalTimeframe,
     }
     # ADD THESE LINES — THIS IS THE FIX
     response = make_response(render_template('calendar/base_calendar.html', **context))

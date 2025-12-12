@@ -16,7 +16,6 @@ from .auth_routes import auth_bp
 from .goals_routes import goals_bp
 from .calendar_routes import calendar_bp
 from .tasks_routes import tasks_bp
-
 # MODELS — ONLY FOR USER LOADER
 from .models.user import User
 
@@ -70,22 +69,11 @@ def create_app():
         """Return number of days in given year/month — used by month grid"""
         return monthrange(int(year), int(month))[1]
     
+    from app.date_utils import get_iso_week_for_goal, get_iso_year_for_goal
+
     @app.template_filter('iso_week')
-    def iso_week_filter(year, month, day):      
-        """Return ISO week number, but prefer current-year bias (Dec 29-31 = week 53, not 1)"""
-        from datetime import date
-
-        d = date(int(year), int(month), int(day))
-        iso_year, iso_week, _ = d.isocalendar()
-
-        # If it's Dec 29-31 and ISO says next year → use previous week (53)
-        if month == 12 and day >= 29 and iso_year == year + 1:
-            return 53
-        # If it's Jan 1-3 and ISO says previous year → use week 1 of current year
-        elif month == 1 and day <= 3 and iso_year == year - 1:
-            return 1
-
-        return iso_week
+    def iso_week_filter(year, month, day):
+        return get_iso_week_for_goal(int(year), int(month), int(day))
 
     @app.template_filter('first_day_weekday')
     def first_day_weekday_filter(year, month):
