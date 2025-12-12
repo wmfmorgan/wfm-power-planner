@@ -351,6 +351,11 @@ CREATE TABLE goal_events (
 | 8     | **Calendar Updates    **    | Import ICS events into daily calendar + add events manually to day calendar + add events to month/week calendar  | **2026 and beyond** | The belt is raised. Confetti falls. 2025 is in the figure-four forever. |
 | 9     | **Victory Lap Features**    | Custom Kanban columns<br>Weighted progress<br>Goal templates<br>Printable reports<br>Voice-to-goal (wild future) | **2026 and beyond** | The belt is raised. Confetti falls. 2025 is in the figure-four forever. |
 
+### Backlog
+- Add health check endpoint (/api/health)
+- Remove tailwind
+- cleanup dead code
+
 ### CURRENT STATUS — 2025-12-06
 
 | Milestone                     | Status       | Notes |
