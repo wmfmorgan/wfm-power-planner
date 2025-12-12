@@ -17,7 +17,7 @@ from datetime import datetime
 import json
 
 # MODELS
-from app.models.goal import Goal, GoalStatus, GoalCategory
+from app.models.goal import Goal, GoalStatus, GoalCategory, GoalTimeframe
 
 # EXTENSIONS
 from app.extensions import db
@@ -47,7 +47,8 @@ def goals_page():
         'goals.html',
         goals=root_goals,  # ONLY ROOT GOALS — CHILDREN COME VIA RELATIONSHIP
         goal_statuses=GoalStatus,
-        goal_categories=GoalCategory
+        goal_categories=GoalCategory,
+        goal_timeframes=GoalTimeframe
     )
 
 # API: Full goal tree as JSON
@@ -77,7 +78,8 @@ def goal_to_dict(goal):
         'status': goal.status.value,
         'progress': goal.progress or 0,
         'due_date': goal.due_date.isoformat() if goal.due_date else None,
-        'is_habit': goal.is_habit
+        'is_habit': goal.is_habit,
+        'timeframe': goal.timeframe.value
     }
 
 @goals_bp.route('/api/goals', methods=['POST'])
@@ -93,7 +95,8 @@ def api_create_goal():
         due_date=data.get('due_date'),
         is_habit=data.get('is_habit', False),
         status=data.get('status', 'todo'),
-        parent_id=data.get('parent_id')
+        parent_id=data.get('parent_id'),
+        timeframe=data.get('timeframe', 'monthly')
     )
     
     return jsonify(goal_to_dict(goal))
@@ -142,6 +145,7 @@ def export_data():
             "path": str(g.path),  # ltree → string
             "parent_id": g.parent_id,
             "progress": g.progress,
+            "timeframe": g.timeframe.value,
             "children": [serialize_goal(c) for c in (g.children or [])]
         }
 
@@ -195,7 +199,8 @@ def import_data():
                 status=goal_dict["status"],
                 due_date=goal_dict["due_date"],
                 is_habit=goal_dict["is_habit"],
-                parent=parent
+                parent=parent,
+                timeframe=goal_dict.get("timeframe", "monthly")
             )
             # Children will use new_goal.id in their path — handled in service
             for child in goal_dict.get("children", []):

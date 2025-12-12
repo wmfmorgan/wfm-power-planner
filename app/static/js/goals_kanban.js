@@ -111,7 +111,7 @@ function renderKanban(goals) {
 
     card.innerHTML = `
     <div class="font-bold text-white text-xl mb-2">${escapeHtml(goal.title)}</div>
-    <div class="text-sm text-muted uppercase tracking-wider mb-3">${goal.category}</div>
+    <div class="text-sm text-muted uppercase tracking-wider mb-3">${goal.category} | ${goal.timeframe}</div>
     <div class="mt-4">
         <div class="bg-gray-700 rounded-full h-4 overflow-hidden border border-gray-600">
         <div class="bg-gradient-to-r from-green-500 to-emerald-600 h-full transition-all duration-700" style="width: ${goal.progress}%"></div>
@@ -165,9 +165,9 @@ function saveGoal() {
     description: document.getElementById('goal-description').value.trim(),
     category: document.getElementById('goal-category').value,
     due_date: document.getElementById('goal-due-date').value || null,
-    is_habit: document.getElementById('goal-is-habit').checked
+    is_habit: document.getElementById('goal-is-habit').checked,
+    timeframe: document.getElementById('goal-timeframe').value
   };
-
   fetch('/api/goals', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -243,30 +243,55 @@ function updateGoal(goalId, field, value) {
   .catch(err => console.error('Auto-save failed (will retry when online)', err));
 }
 
-function addChildGoal(parentId) {
-  const title = prompt("New step title:");
-  if (!title?.trim()) return;
+  function addChildGoal(parentId) {
+    const title = prompt("New step title:");
+    if (!title?.trim()) return;
 
-  function findGoalById(node, id) {
-    if (node.id === id) return node;
+    function findGoalById(node, id) {
+    const nodeId = Number(node.id);
+    const searchId = Number(id);
+    
+    if (nodeId === searchId) return node;
     if (node.children) {
       for (const child of node.children) {
-        const found = findGoalById(child, id);
+        const found = findGoalById(child, searchId);
         if (found) return found;
       }
     }
     return null;
   }
+  
+  const parentGoal = allGoals.reduce((found, root) => found || findGoalById(root, parentId), null);
+  if (!parentGoal) return;
 
-  const parentGoal = allGoals.reduce((found, root) => found || findGoalById(root, id), null);
+  // AUTOMATIC TIMEFRAME INHERITANCE — ONE LEVEL DOWN ONLY
+  let childTimeframe = 'monthly'; // fallback
+  switch (parentGoal.timeframe) {
+    case 'yearly':
+      childTimeframe = 'quarterly';
+      break;
+    case 'quarterly':
+      childTimeframe = 'monthly';
+      break;
+    case 'monthly':
+      childTimeframe = 'weekly';
+      break;
+    case 'weekly':
+      childTimeframe = 'daily';
+      break;
+    case 'daily':
+      childTimeframe = 'daily'; // can't go lower — stays daily
+      break;
+  }
 
   const payload = {
     title: title.trim(),
     parent_id: parentId,
     status: 'todo',
-    category: parentGoal?.category || 'work'
+    category: parentGoal?.category || 'work',
+    timeframe: childTimeframe
   };
-
+  alert(JSON.stringify(payload));
   fetch('/api/goals', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },

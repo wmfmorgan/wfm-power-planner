@@ -42,6 +42,12 @@ class GoalCategory(Enum):
     HEALTH = "health"
     HOBBY = "hobby"
 
+class GoalTimeframe(Enum):
+    YEARLY    = "yearly"
+    QUARTERLY = "quarterly"
+    MONTHLY   = "monthly"
+    WEEKLY    = "weekly"
+    DAILY     = "daily"
 # ------------------------------------------------------------------
 # GOAL MODEL — THE GOAL THAT NEVER TAPS OUT
 # ------------------------------------------------------------------
@@ -65,6 +71,16 @@ class Goal(db.Model):
         nullable=False, default=GoalCategory.WORK,
         comment="One of the 8 life domains")
     
+    timeframe = db.Column(SQLEnum(
+        GoalTimeframe, 
+        name="goaltimeframe",
+        values_callable=lambda enum: [e.value for e in enum], 
+        native_enum=True,
+        ), nullable=False,
+        default=GoalTimeframe.MONTHLY,
+        comment="Planning horizon: yearly → quarterly → monthly → weekly → daily"
+        )
+
     # Optional due date — inherited by children
     due_date = db.Column(db.Date, nullable=True, comment="When this goal should be complete")
     

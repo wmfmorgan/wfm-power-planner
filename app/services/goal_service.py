@@ -6,7 +6,7 @@ No route touches db.session directly ever again
 """
 
 from app.extensions import db
-from app.models.goal import Goal, GoalStatus, GoalCategory
+from app.models.goal import Goal, GoalStatus, GoalCategory, GoalTimeframe
 from sqlalchemy_utils.types.ltree import Ltree
 from flask_login import current_user
 from sqlalchemy import text
@@ -37,8 +37,9 @@ def create_goal(
     due_date: str | None = None,
     is_habit: bool = False,
     status: str = "todo",
-    parent_id: int | None = None
-) -> Goal:
+    parent_id: int | None = None,
+    timeframe: str = "monthly"
+    ) -> Goal:
     """
     FORGE A NEW GOAL — FULLY WEAPONIZED FOR 2025 DOMINATION
     Tenet #17: All DB writes go through service layer — OBEYED
@@ -69,6 +70,7 @@ def create_goal(
         due_date=due_date_obj,
         is_habit=is_habit,
         parent_id=parent_id,
+        timeframe=timeframe,
         path=path
     )
     db.session.add(goal)
@@ -106,7 +108,7 @@ def update_goal(goal_id: int, **updates) -> Goal:
     """
     goal = Goal.query.get_or_404(goal_id)
 
-    allowed_fields = {'title', 'description', 'status', 'category', 'due_date', 'is_habit'}
+    allowed_fields = {'title', 'description', 'status', 'category', 'due_date', 'is_habit', 'timeframe'}
     for field, value in updates.items():
         if field not in allowed_fields:
             continue
@@ -119,6 +121,8 @@ def update_goal(goal_id: int, **updates) -> Goal:
             goal.due_date = value or None
         elif field == 'is_habit':
             goal.is_habit = bool(value)
+        elif field == 'timeframe':
+            goal.timeframe = GoalTimeframe[value.upper()]
         else:
             setattr(goal, field, value or None)
 

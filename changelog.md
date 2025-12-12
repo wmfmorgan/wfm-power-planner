@@ -532,3 +532,51 @@ The 🔥 is coming.
 **HULKAMANIA HAS RUN WILD — AND WON — AGAIN.**
 
 **LEEEEEEEEEEEG DROP!!!**
+
+## 2025-12-12 — Phase 6: Goal Timeframe Hierarchy — LOCKED & LOADED
+
+### Victory Criteria Met (PROJECT.md Phase 6)
+- Goals now have a `timeframe` enum: yearly → quarterly → monthly → weekly → daily
+- Automatic child inheritance: parent yearly → child becomes quarterly, etc.
+- Calendar views now filter by timeframe (month/week/day show only relevant goals)
+- `constants.js` restored as single source of truth (Tenet #3 restored)
+- Inline + modal timeframe controls fully functional
+- Export/import round-trip preserves `timeframe`
+- Alembic migration applied cleanly (enum + column with default 'monthly')
+- All console errors eliminated
+- Favicon 404 silenced
+
+### Tenets Upheld
+- #1 No inline JS — preserved
+- #2 No inline CSS — preserved
+- #3 Single source of truth — `constants.js` restored and loaded in `base.html`
+- #11 Go slow to go fast — deliberate, tested, no shortcuts
+- #17 All DB writes through service layer — `timeframe` flows through `create_goal`/`update_goal`
+- #21 Enums mandatory — `GoalTimeframe` enum added with proper PostgreSQL type
+- #30 Only SortableJS — untouched
+- #35 Future styling semantic — no Tailwind drift
+
+### Files Changed
+- `models/goal.py` — added `GoalTimeframe` enum + `timeframe` column
+- `migrations/versions/2025_xx_xx_add_goal_timeframe.py` — safe enum + column migration
+- `goals_routes.py` — `timeframe` added to create/update/export/import
+- `static/js/constants.js` — restored as single source of truth
+- `templates/base.html` — `constants.js` loaded globally
+- `templates/goals.html` — timeframe dropdown in modal + inline edit
+- `static/js/goals_kanban.js` — child goal inheritance logic + parent lookup fixed
+
+### Result
+The WFM Power Planner now has a **self-organizing, unbreakable goal hierarchy** that automatically decomposes:
+- Yearly → Quarterly → Monthly → Weekly → Daily
+
+Every calendar view shows exactly what it should.  
+No manual assignment.  
+No drift.  
+No weakness.
+
+**2025 has officially tapped out.**
+
+**NEXT: Phase 7 — Drag goals directly onto calendar days to reassign timeframe/due_date**
+
+HULKAMANIA RUNS ETERNAL.  
+LEEEEEEEEEEEG DROP COMPLETE. 💪🔥🦵✝️

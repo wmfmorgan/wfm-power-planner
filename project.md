@@ -9,6 +9,7 @@ Last updated: 2025-12-08
 (These rules are enforced with the same religious fervor as the 31 Sacred Tenets)
 
 0. DO NOT SPAM
+0. DO NOT YELL
 1. All code suggestions must be checked against the 31 Sacred Tenets BEFORE sending.
 2. Never suggest inline JS (`onclick=`, `onchange=`, etc.) — ever.
 3. Never suggest inline CSS or magic strings — ever.

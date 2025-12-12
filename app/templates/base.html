@@ -137,7 +137,9 @@
 
     <!-- ALL JS LOADED AT BOTTOM — TENET #1 OBEYED FOREVER -->
     {% block scripts %}
-   
+    
+    <script src="{{ url_for('static', filename='js/constants.js') }}"></script>
+    
     <!-- DATA OWNERSHIP — HEADER-LEVEL DOMINATION — GLOBAL -->
     <script src="{{ url_for('static', filename='js/import_export.js') }}"></script>
 

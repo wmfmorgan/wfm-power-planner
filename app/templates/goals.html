@@ -26,7 +26,7 @@
           <div class="flex-1">
             <div class="text-xl font-bold text-white">{{ goal.title }}</div>
             <div class="text-sm text-muted mt-1">
-              {{ goal.category.name|upper }} • {{ goal.status.name|upper }} • {{ goal.progress }}%
+              {{ goal.category.name|upper }} • {{ goal.status.name|upper }} • {{ goal.timeframe.name|upper }} • {{ goal.progress }}%
               {% if goal.due_date %} • Due {{ goal.due_date }}{% endif %}
               {% if goal.is_habit %} • DAILY HABIT{% endif %}
             </div>
@@ -85,6 +85,21 @@
                     data-id="{{ goal.id }}">
               <span class="text-gold font-bold">This is a DAILY HABIT</span>
             </label>
+
+              <!-- Inside the goal-expanded div, right after the habit checkbox -->
+              <div class="mt-6">
+                <label class="block text-gold font-bold mb-2 text-xl">Timeframe</label>
+                <select 
+                  class="goal-timeframe w-full pad-lg bg-gray-800 rounded-lg border border-gray-600 focus:border-yellow-400 text-white text-xl"
+                  data-field="timeframe"
+                  data-id="{{ goal.id }}">
+                  {% for tf in goal_timeframes %}
+                    <option value="{{ tf.value }}" {% if tf.value == goal.timeframe.value %}selected{% endif %}>
+                      {{ tf.value|title }}
+                    </option>
+                  {% endfor %}
+                </select>
+              </div> 
 
             <!-- ADD CHILD GOAL BUTTON -->
             {% if not is_too_deep %}
@@ -148,19 +163,31 @@
               class="w-full pad mb-6 bg-gray-700 rounded border-2 border-gray-600 focus:border-yellow-400 text-white text-base h-32 resize-none"></textarea>
 
     <div class="grid grid-cols-2 gap-6 mb-6">
-      <select id="goal-category" class="p-4 bg-gray-700 rounded border-2 border-gray-600 text-white text-lg">
+      <select id="goal-category" class="p-4 bg-gray-700 rounded border-2 border-gray-600 text-white text-lg focus:border-yellow-400">
         {% for cat in goal_categories %}
           <option value="{{ cat.value }}">{{ cat.name }}</option>
         {% endfor %}
       </select>
 
       <input type="date" id="goal-due-date" 
-             class="p-4 bg-gray-700 rounded border-2 border-gray-600 text-white text-lg">
+             class="pad-lg bg-gray-700 rounded border-2 border-gray-600 text-white text-lg focus:border-yellow-400">
     </div>
 
     <div class="flex items-center mb-8">
       <input type="checkbox" id="goal-is-habit" class="w-8 h-8 text-gold bg-gray-700 border-gray-600 rounded focus:ring-yellow-500">
       <label for="goal-is-habit" class="ml-4 text-xl text-gold font-bold">This is a DAILY HABIT</label>
+    </div>
+
+    <div class="gap-6 mb-6">
+      <select 
+        id="goal-timeframe" 
+        class="w-full pad-lg bg-gray-700 rounded border-2 border-gray-600 focus:border-yellow-400 text-white text-lg">
+        {% for tf in goal_timeframes %}
+          <option value="{{ tf.value }}" {% if tf.value == 'monthly' %}selected{% endif %}>
+            {{ tf.value|title }}
+          </option>
+        {% endfor %}
+      </select>
     </div>
 
     <div class="flex gap-6">
