@@ -176,3 +176,64 @@
 .gap-4 { gap: 1rem; }
 .gap-6 { gap: 1.5rem; }
 .gap-8 { gap: 2rem; }
+
+/* ============================================= */
+/* 5. TASK CARD — DENSITY WITHOUT WEAKNESS      */
+/* ============================================= */
+.task-card {
+  word-wrap: break-word;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  hyphens: auto;
+  height: fit-content;
+  padding: 1rem !important;
+  gap: 0.5rem;
+}
+
+.task-card > div:first-child {
+  font-size: 1.05rem !important;
+  line-height: 1.35 !important;
+  margin-bottom: 0.5rem !important;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  !important;
+  -webkit-box-orient: vertical;
+  text-overflow: ellipsis;
+}
+
+/* ============================================= */
+/* TASK KANBAN — NOW 100% IDENTICAL TO GOALS KANBAN */
+/* ============================================= */
+#tasks-kanban {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 2rem;
+  padding: 2rem 1rem;
+}
+
+/* Mobile: full-width stacked columns — NO HORIZONTAL SCROLL */
+@media (max-width: 768px) {
+  #tasks-kanban {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    padding: 1rem;
+  }
+}
+
+/* Column styling — same as Goals */
+#tasks-kanban > div {
+  background: rgba(31, 41, 55, 0.95);
+  border-radius: 1.5rem;
+  border: 2px solid #374151;
+  min-height: 60vh;
+  padding: 2rem;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+  overflow-y: auto;
+}
+
+/* No horizontal scroll — ever */
+#tasks-kanban {
+  overflow: visible !important;
+}

@@ -4,7 +4,7 @@
 {% block content %}
 <div class="max-w-7xl mx-auto p-6">
   <div class="flex items-center justify-between mb-12">
-    <h1 class="text-6xl font-black text-gold drop-shadow-lg">TASKS ENGINE</h1>
+    <h1 class="text-4xl font-bold text-gold mb-8 drop-shadow-lg">TASK DOMINATION CENTER</h1>
     <button id="add-task-btn"
             class="bg-yellow-500 hover:bg-yellow-400 text-black font-bold text-4xl w-20 h-20 rounded-full shadow-2xl transition-all hover:scale-110 fixed bottom-8 right-8 z-50">
       +
@@ -12,7 +12,10 @@
   </div>
 
 <!-- TASKS KANBAN BOARD — 100% ENUM-DRIVEN — ZERO HARD-CODED STRINGS — TENET #3 ABSOLUTE LAW -->
-{% include "shared/kanban.html" %}
+<!-- TASKS KANBAN — NOW FULLY RESPONSIVE — MATCHES GOALS PAGE -->
+<div id="tasks-kanban">
+  {% include "shared/kanban.html" %}
+</div>
 
 <!-- ADD/EDIT TASK MODAL -->
 <!-- RECURRING TASK MODAL — PHASE 3.2 — FULLY CONSISTENT WITH GOALS PATTERN -->

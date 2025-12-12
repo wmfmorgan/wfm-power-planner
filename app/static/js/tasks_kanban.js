@@ -23,7 +23,7 @@ function renderTasks() {
     const col = document.getElementById(`column-${task.status}`);
     if (!col) return;
     const card = document.createElement('div');
-    card.className = 'bg-gray-800 pad rounded-lg shadow-lg cursor-pointer hover:scale-105 transition-all border-l-4 border-${getPriorityColor(task.priority)}-500';
+    card.className = 'bg-gray-800 pad rounded-lg shadow-lg cursor-pointer hover:scale-105 transition-all border-l-4 border-${getPriorityColor(task.priority)}-500 task-card';
     card.dataset.id = task.id;
     card.innerHTML = `
       <div class="font-bold text-lg text-white mb-2">${escapeHtml(task.title)}</div>
