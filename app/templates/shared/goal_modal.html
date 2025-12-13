@@ -1,68 +1,66 @@
-{# templates/shared/goal_modal.html — SINGLE MODAL FOR ALL GOAL EDITING #}
-<div id="goal-modal" class="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50 invisible opacity-0 transition-all duration-300">
-  <div class="bg-dark border-4 border-yellow-400 rounded-2xl pad-xl shadow-2xl w-full max-w-3xl max-h-screen overflow-y-auto">
-    <h2 class="text-5xl font-black text-gold text-center mb-10">EDIT GOAL</h2>
+{# templates/shared/goal_modal.html — PURE CSS, NO TAILWIND, FIXED HEIGHT, SCROLLABLE #}
+<div id="goal-modal" class="fixed left-0 top-0 w-full h-full bg-black/90 flex items-center justify-center z-50 invisible opacity-0 transition-opacity duration-300">
+  <div class="bg-dark border-4 border-yellow-400 rounded-xl shadow-heavy w-full max-w-4xl mx-4 my-8 h-[80vh] flex flex-col">
     
+    <div class="p-6 space-y-4 flex-1 flex flex-col overflow-hidden">
       <input type="hidden" id="goal-id">
 
-      <div>
-        <label class="block text-gold font-bold mb-2 text-xl">Title *</label>
-        <input type="text" id="goal-title" required class="w-full pad-lg bg-gray-800 rounded-lg border border-gray-600 focus:border-yellow-400 text-white text-xl">
-      </div>
-
-      <div>
-        <label class="block text-gold font-bold mb-2 text-xl">Description</label>
-        <textarea id="goal-description" class="w-full pad-lg bg-gray-800 rounded-lg border border-gray-600 focus:border-yellow-400 text-white h-32 resize-none"></textarea>
-      </div>
-
-        <div class="grid grid-cols-2 gap-8">
-            <div>
-                <label class="block text-gold font-bold mb-2 text-xl">Category</label>
-                <select id="goal-category" class="w-full pad-lg bg-gray-800 rounded-lg border border-gray-600 text-white">
-                <!-- Filled by JS -->
-                </select>
-            </div>
-
-            <div>
-                <label class="block text-gold font-bold mb-2 text-xl">Timeframe</label>
-                <select id="goal-timeframe" class="w-full pad-lg bg-gray-800 rounded-lg border border-gray-600 text-white">
-                <!-- Filled by JS -->
-                </select>
-            </div>
-        </div>
-
-      <div class="grid grid-cols-2 gap-8">
+      <!-- Title + Due Date -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
-          <label class="block text-gold font-bold mb-2 text-xl">Due Date</label>
-          <input type="date" id="goal-due-date" required class="w-full pad-lg bg-gray-800 rounded-lg border border-gray-600 text-white">
+          <input type="text" id="goal-title" required class="w-full pad bg-gray-800 rounded-lg border border-gray-600 focus:border-yellow-400 text-white text-xl">
         </div>
-        <div class="flex items-end">
-          <label class="flex items-center gap-3 cursor-pointer">
-            <input type="checkbox" id="goal-is-habit" class="w-8 h-8 text-yellow-400">
-            <span class="text-gold font-bold text-xl">Daily Habit</span>
-          </label>
+        <div>
+          <input type="date" id="goal-due-date" required class="w-full pad bg-gray-800 rounded-lg border border-gray-600 text-white">
         </div>
       </div>
-      <!-- After the form, before the buttons -->
-        <div id="modal-children-container" class="mt-12 border-t-4 border-yellow-600 pt-8">
-            <h3 class="text-3xl font-black text-gold mb-6">STEPS / SUB-GOALS</h3>
-            <div id="modal-goal-tree">
-                <!-- Children rendered here by JS -->
-            </div>
-        </div>
-      <div class="mt-8">
-        <button type="button" id="add-subgoal-btn" class="w-full bg-yellow-600 hover:bg-yellow-500 text-black font-black text-xl pad-lg rounded-lg transition-all hover:scale-105 shadow-xl">
-            + ADD STEP / SUB-GOAL
-        </button>
+
+      <!-- Description -->
+      <div>
+        <textarea id="goal-description" class="w-full pad-lg bg-gray-800 rounded-lg border border-gray-600 focus:border-yellow-400 text-white h-24 resize-none"></textarea>
       </div>
-      <div class="flex gap-8 mt-12">
-        <button type="button" id="save-goal-btn" class="flex-1 bg-green-600 hover:bg-green-500 text-black font-black text-2xl pad-xl rounded-lg transition-all hover:scale-105 shadow-2xl">
-          UPDATE GOAL
+
+      <!-- Category + Timeframe -->
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <select id="goal-category" class="w-full pad bg-gray-800 rounded-lg border border-gray-600 text-white">
+            <!-- Filled by JS -->
+          </select>
+        </div>
+        <div>
+          <select id="goal-timeframe" class="w-full pad bg-gray-800 rounded-lg border border-gray-600 text-white">
+            <!-- Filled by JS -->
+          </select>
+        </div>
+      </div>
+
+      <!-- Daily Habit -->
+      <div class="flex items-center gap-4">
+        <input type="checkbox" id="goal-is-habit" class="w-6 h-6 text-yellow-400">
+        <label class="text-gold font-bold text-xl cursor-pointer">Daily Habit</label>
+      </div>
+
+      <!-- SUB-GOALS — FIXED HEIGHT, SCROLLABLE -->
+      <div class="pt-6 modal-subgoals-scroll hide-scrollbar">
+        <div class="flex justify-between items-center mb-4">
+          <button type="button" id="add-subgoal-btn" class="bg-yellow-600 hover:bg-yellow-500 text-white font-bold px-6 py-3 rounded-lg shadow-lg transition-all hover-grow">
+            + ADD STEP
+          </button>
+        </div>
+        <div id="modal-goal-tree">
+          <!-- Filled by JS -->
+        </div>
+      </div>
+
+      <!-- Buttons — fixed at bottom -->
+      <div class="flex gap-4 pt-6">
+        <button type="button" id="save-goal-btn" class="flex-1 bg-green-600 hover:bg-green-500 text-black font-black text-xl py-4 rounded transition-all hover-grow shadow-2xl">
+          UPDATE
         </button>
-        <button type="button" id="close-goal-modal" class="flex-1 bg-gray-700 hover:bg-gray-600 text-white font-black text-2xl pad-xl rounded-lg transition-all hover:scale-105 shadow-2xl">
+        <button type="button" id="close-goal-modal" class="flex-1 bg-gray-700 hover:bg-gray-600 text-white font-black text-xl py-4 rounded transition-all hover-grow shadow-2xl">
           CANCEL
         </button>
       </div>
-    </form>
+    </div>
   </div>
 </div>

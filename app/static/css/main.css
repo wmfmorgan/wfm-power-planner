@@ -237,3 +237,79 @@
 #tasks-kanban {
   overflow: visible !important;
 }
+
+/* LOCK BACKGROUND WHEN MODAL IS OPEN — TENET-COMPLIANT, CLEAN */
+body.modal-open {
+  /* overflow: hidden; */
+}
+/* MODAL FIELD HEIGHT UNIFICATION — DUE DATE = SELECT HEIGHT */
+#goal-modal input[type="date"],
+#goal-modal select,
+#goal-modal input[type="text"] {
+  height: 3rem !important;   /* matches select height */
+  padding: 0.75rem 1rem !important;
+  display: flex;
+  align-items: center;
+}
+/* MODAL SUB-GOALS — FIXED HEIGHT, ALWAYS SCROLLABLE */
+.modal-subgoals-scroll {
+  max-height: 300px;           /* CHANGE THIS NUMBER TO WHAT YOU WANT */
+  min-height: 50px;
+  overflow-y: auto;
+  padding-right: 0.5rem;   /* space for scrollbar */
+}
+
+/* MODAL HEIGHT CONTROL — FIXED, NO TAILWIND ARBITRARY */
+.modal-height-medium {
+  height: 70vh;
+  max-height: 90vh;
+}
+
+.modal-height-small {
+  height: 60vh;
+  max-height: 80vh;
+}
+
+.modal-height-large {
+  height: 85vh;
+  max-height: 95vh;
+}
+
+/* MODAL POSITIONING — FIXED CENTER */
+.modal-fixed-center {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* MODAL BACKGROUND */
+.modal-backdrop {
+  background: rgba(0,0,0,0.9);
+}
+
+/* MODAL MARGIN */
+.modal-margin {
+  margin: 2rem 1rem;
+}
+
+/* Z-INDEX */
+.modal-z50 {
+  z-index: 50;
+}
+
+/* TRANSITION */
+.modal-transition {
+  transition: opacity 0.3s ease;
+}
+/* HIDE VERTICAL SCROLLBAR — CONTENT STILL SCROLLS — HULKAMANIA STYLE */
+.hide-scrollbar {
+  /* WebKit (Chrome, Safari, Edge) */
+  -ms-overflow-style: none;     /* IE and Edge */
+  scrollbar-width: none;        /* Firefox */
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;                /* Chrome, Safari, Edge */
+}

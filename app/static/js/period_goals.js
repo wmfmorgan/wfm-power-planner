@@ -164,7 +164,7 @@ function openGoalModal(goalId) {
         container.innerHTML = '';
 
         if (children.length === 0) {
-        container.innerHTML = '<p class="text-gray-500 text-center">No steps yet — add one above!</p>';
+        // container.innerHTML = '<p class="text-gray-500 text-center">No steps yet — add one above!</p>';
         return;
         }
 
@@ -232,6 +232,7 @@ function openGoalModal(goalId) {
         });
     };
 });
+// document.body.classList.add('modal-open');
 }
 
 
@@ -257,9 +258,11 @@ function updateGoal(goalId) {
 }
 
 function closeGoalModal() {
+    // document.body.classList.remove('modal-open');
   const modal = document.getElementById('goal-modal');
   modal.classList.add('invisible', 'opacity-0');
   modal.classList.remove('visible', 'opacity-100');
+
 }
 
 // Wire up the cancel button — once on load
