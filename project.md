@@ -356,6 +356,9 @@ CREATE TABLE goal_events (
 - Add health check endpoint (/api/health)
 - Remove tailwind
 - cleanup dead code
+- Move goal page to shared kanban
+- Delete goals/subgoals
+- Require due date on tasks and goals
 
 ### CURRENT STATUS — 2025-12-06
 
