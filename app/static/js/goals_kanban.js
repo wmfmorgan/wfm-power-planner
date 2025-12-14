@@ -52,13 +52,28 @@ function setupEventDelegation() {
   });
 
   // 3. MODAL BUTTONS
-  modal.addEventListener('click', (e) => {
-    const btn = e.target.closest('[data-action]');
-    if (!btn) return;
+    // MODAL BUTTONS — DIRECT ID MATCHING (MATCHES shared/goal_modal.html)
+  const saveBtn = document.getElementById('save-goal-btn');
+  const cancelBtn = document.getElementById('close-goal-modal');
 
-    if (btn.dataset.action === 'save-goal') saveGoal();
-    if (btn.dataset.action === 'close-modal') closeModal();
-  });
+  if (saveBtn) {
+    saveBtn.onclick = (e) => {
+      e.stopPropagation();
+      saveGoal();
+    };
+  }
+
+  if (cancelBtn) {
+    cancelBtn.onclick = (e) => {
+      e.stopPropagation();
+      closeModal();
+    };
+  }
+
+  // Background click close
+  modal.onclick = (e) => {
+    if (e.target === modal) closeModal();
+  };
 }
 
 // ===================================================================
@@ -134,9 +149,12 @@ function escapeHtml(text) {
 
 function openModal() {
   const modal = document.getElementById('goal-modal');
+  console.log('Opening goal modal:', modal);
   modal.classList.remove('invisible', 'opacity-0');
   modal.classList.add('visible', 'opacity-100');
   modal.dataset.state = 'open';
+  // POPULATE SELECTS FRESH EVERY TIME
+  populateGoalModalSelects();
   document.getElementById('goal-title').focus();
 }
 
@@ -304,3 +322,31 @@ function updateGoal(goalId, field, value) {
     alert('STEP CREATION FAILED — CHECK CONNECTION, WARRIOR!');
   });
 }
+
+function populateGoalModalSelects() {
+  const categorySelect = document.getElementById('goal-category');
+  const timeframeSelect = document.getElementById('goal-timeframe');
+
+  // Clear
+  categorySelect.innerHTML = '';
+  timeframeSelect.innerHTML = '';
+
+  // Category
+  Object.values(GOAL_CATEGORY).forEach(value => {
+    const opt = document.createElement('option');
+    opt.value = value;
+    opt.textContent = value.charAt(0).toUpperCase() + value.slice(1);
+    categorySelect.appendChild(opt);
+  });
+
+  // Timeframe
+  Object.values(GOAL_TIMEFRAMES).forEach(value => {
+    const opt = document.createElement('option');
+    opt.value = value;
+    opt.textContent = value.charAt(0).toUpperCase() + value.slice(1);
+    timeframeSelect.appendChild(opt);
+  });
+}
+
+// Run once on load
+document.addEventListener('DOMContentLoaded', populateGoalModalSelects);

@@ -1,4 +1,3 @@
-{# shared/kanban.html — REUSABLE KANBAN — USED BY GOALS AND TASKS #}
 <div id="{{ kanban_id }}" class="grid grid-cols-1 md:grid-cols-5 gap-8">
   {% for status in kanban_statuses %}
     <div class="bg-dark border-4 border-gray-700 rounded-2xl pad-xl shadow-heavy min-h-96">
@@ -8,13 +7,13 @@
      {% elif status == kanban_statuses.DONE %}text-green-400
      {% elif status == kanban_statuses.CANCELLED %}text-gray-500
      {% else %}text-gray-300{% endif %}">
-  {% if status.value == 'cancelled' %}
-    CANCELED
-  {% else %}
-    {{ status.value|upper }}
-  {% endif %}
-</h3>
-      <div id="column-{{ status.value }}" class="space-y-4 min-h-96">
+        {% if status.value == 'cancelled' %}
+          CANCELED
+        {% else %}
+          {{ status.value|upper }}
+        {% endif %}
+      </h3>
+      <div id="{{ kanban_id }}-column-{{ status.value }}" class="space-y-4 min-h-96">
         <p class="text-gray-500 text-center py-8">Loading {{ status.value }} {{ kanban_type }}s...</p>
       </div>
     </div>

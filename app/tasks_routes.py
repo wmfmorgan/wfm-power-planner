@@ -1,8 +1,10 @@
 # app/tasks_routes.py — PHASE 3.1 TASKS ENGINE — FULL CRUD
 from flask import Blueprint, render_template, request, jsonify, abort
 from flask_login import login_required, current_user
-from app.services.task_service import get_all_tasks, create_task, update_task, delete_task
+from app.services.task_service import get_all_tasks, create_task, update_task, delete_task, get_tasks_for_day, move_task
 from app.models.task import Task, TaskPriority, TaskStatus, TaskRecurrenceType
+from datetime import date
+from app.extensions import db
 
 def task_to_dict(task):
     """Convert Task model to JSON-serializable dict — PURE CHAMPIONSHIP FORMAT"""
@@ -101,4 +103,22 @@ def api_get_task(task_id):
     task = Task.query.get_or_404(task_id)
     if task.user_id != current_user.id:
         abort(403)
+    return jsonify(task_to_dict(task))
+
+@tasks_bp.route('/api/tasks/period/day/<int:year>/<int:month>/<int:day>')
+@login_required
+def api_tasks_day(year, month, day):
+    target_date = date(year, month, day)
+    tasks = get_tasks_for_day(target_date)  # ← SERVICE LAYER
+    return jsonify([task_to_dict(t) for t in tasks])
+
+@tasks_bp.route('/api/tasks/<int:task_id>/move', methods=['POST'])
+@login_required
+def api_move_task(task_id):
+    data = request.get_json() or {}
+    new_status = data.get('status')
+    if not new_status:
+        return jsonify({"error": "status required"}), 400
+
+    task = move_task(task_id, new_status)  # ← SERVICE LAYER
     return jsonify(task_to_dict(task))

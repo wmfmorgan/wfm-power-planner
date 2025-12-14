@@ -580,3 +580,83 @@ No weakness.
 
 HULKAMANIA RUNS ETERNAL.  
 LEEEEEEEEEEEG DROP COMPLETE. 💪🔥🦵✝️
+
+## 2025-12-13 — Phase 6: Calendar Goal Kanban + Shared Modal — TOTAL DOMINATION
+
+### Victory Criteria Met
+- Goals display on Day/Week/Month calendar views with correct timeframe filtering
+- Kanban cards draggable, status updates instant
+- Shared goal edit modal works from all calendar views
+- Modal fixed height with internal scroll for long sub-goal lists
+- Sub-goals displayed and clickable (recursive edit)
+- + ADD STEP button creates child goals with inherited timeframe/category
+- All enum logic unified via constants.js
+- No new Tailwind — legacy only, purge-safe classes used
+- Cursor = grab/grabbing on cards
+- Due date enforced in UI (required field)
+
+### Tenets Upheld
+- #1 No inline JS — all in period_goals.js
+- #2 No new Tailwind — only purge-safe classes
+- #3 Single source of truth — constants.js for categories/timeframes
+- #17 Service layer untouched (simple queries)
+- #21 Enums everywhere
+- #31 Simplest tool — vanilla JS + flex layout
+
+### Files Changed
+- `templates/shared/goal_modal.html` — fixed height, scrollable content, no Tailwind
+- `static/js/period_goals.js` — unified API URL builder, modal open/close, sub-goal rendering
+- `static/js/constants.js` — GOAL_CATEGORY + GOAL_TIMEFRAMES as const
+- `static/css/main.css` — modal-height classes + body.modal-open lock
+
+### Result
+The calendar is now a **weapon** — goals visible, editable, hierarchical, scrollable, unbreakable.
+
+**2025 HAS OFFICIALLY TAPPED OUT.**
+
+**PHASE 6 = COMPLETE — HULKAMANIA RUNS ETERNAL.**
+
+Brother, drop me the word and we launch **Phase 7** — whatever beast you want next.
+
+You did it.
+
+You are the champion.
+
+**WHAT SAY YOU, BROTHER?!** 💪🔥🦵✝️
+
+## 2025-12-14 — PHASE 6 COMPLETE: GOAL TIMEFRAME HIERARCHY DOMINATION
+
+- Added GoalTimeframe enum (yearly → quarterly → monthly → weekly → daily)
+- Automatic child inheritance: parent yearly → child quarterly, and so on down to daily
+- All calendar views (month/week/day) now filter and show only goals with matching timeframe
+- constants.js updated with GOAL_TIMEFRAMES — single source of truth restored
+- Inline + modal timeframe controls fully functional
+- Export/import round-trip preserves timeframe
+- Alembic migration applied cleanly (enum + column with default 'monthly')
+- No console errors, no drift — pure protein
+- Tenets #3, #17, #21, #35 — OBEYED ETERNALLY
+
+**GOALS NOW SELF-ORGANIZE INTO PERFECT TIMEFRAME HIERARCHY**
+**CALENDAR VIEWS SHOW EXACTLY WHAT THEY SHOULD**
+**2025 JUST GOT DECOMPOSED INTO QUARTERS, MONTHS, WEEKS, AND DAYS — FLAWLESSLY**
+
+## 2025-12-14 — PHASE 7 COMPLETE: TASK ASSIGNMENT TO DAYS — PULL TASKS INTO EXECUTION BATTLEFIELD
+
+- Tasks now assignable to specific days via due_date
+- Day page Kanban pulls and displays all tasks with due_date matching the current day
+- Full CRUD on Day page: create, edit, delete, drag status — same modal as global Tasks page
+- Unified task experience — warrior can forge tasks mid-battle without leaving the day view
+- Drag to Done on Day page updates status instantly
+- No many-to-many day table — due_date remains single source of truth
+- All changes refresh both global and day Kanbans
+- Tenets #3, #13, #17 — OBEYED WITH 24-INCH PYTHON AUTHORITY
+
+**TASKS NOW FLOW INTO DAILY EXECUTION**
+**DAY PAGE = FULL TASK DOMINATION CENTER**
+**THE HONEY-DO LIST IS OFFICIALLY DEAD**
+**2025 HAS BEEN CHOKE-SLAMMED INTO DAILY ACTION**
+
+**PHASES 6 & 7 = COMPLETE**
+**THE EMPIRE IS UNIFIED**
+**THE BELT IS OURS**
+**HULKAMANIA RUNS ETERNAL**

@@ -18,21 +18,43 @@ function fetchTasks() {
 }
 
 function renderTasks() {
-  document.querySelectorAll('#tasks-kanban [id^="column-"]').forEach(col => col.innerHTML = '');
+  document.querySelectorAll('#tasks-kanban [id^="tasks-kanban-column-"]').forEach(col => col.innerHTML = '');
   allTasks.forEach(task => {
-    const col = document.getElementById(`column-${task.status}`);
+    const col = document.getElementById(`tasks-kanban-column-${task.status}`);
     if (!col) return;
     const card = document.createElement('div');
-    card.className = 'bg-gray-800 pad rounded-lg shadow-lg cursor-pointer hover:scale-105 transition-all border-l-4 border-${getPriorityColor(task.priority)}-500 task-card';
+    card.className = 'bg-gray-800 pad rounded-lg shadow-lg cursor-pointer hover:scale-105 transition-all border-l-4 border-${getPriorityColor(task.priority)}-500 task-card relative';
     card.dataset.id = task.id;
+    
+    // DELETE BUTTON — TOP RIGHT CORNER
+    // const deleteBtn = document.createElement('button');
+    // deleteBtn.className = 'absolute top-2 right-2 text-red-400 hover:text-red-300 text-2xl z-10';
+    // deleteBtn.innerHTML = 'x';
+    // deleteBtn.title = 'Delete task';
+    // deleteBtn.onclick = (e) => {
+    //   e.stopPropagation(); // don't trigger card click
+    //   if (confirm('Obliterate this task forever?')) {
+    //     fetch(`/api/tasks/${task.id}`, { method: 'DELETE' })
+    //       .then(() => fetchTasks());
+    //   }
+    // };
+    
     card.innerHTML = `
-      <div class="font-bold text-lg text-white mb-2">${escapeHtml(task.title)}</div>
-      <div class="text-sm text-gray-400 mb-4">${task.due_date || 'No due date'}</div>
-      <div class="text-xs text-gray-500">${task.tags || ''}</div>
-    </div>`;
+    <div class="relative">
+      <div class="pr-10">
+        <div class="font-bold text-lg text-white">${escapeHtml(task.title)}</div>
+        <div class="text-sm text-gray-400">${task.due_date || 'No due date'}</div>
+        <div class="text-xs text-gray-500">${task.tags || ''}</div>
+      </div>
+    </div>
+    <button type="button" class="btn-task-delete text-red-400 hover:text-red-300 text-2xl z-10">
+      x
+    </button>
+    `;
+
+    // card.appendChild(deleteBtn);
 
     card.addEventListener('click', (e) => {
-      // Ignore clicks on buttons (for future delete/edit buttons)
       if (e.target.closest('button')) return;
       openEditModal(task);
     });
@@ -42,8 +64,18 @@ function renderTasks() {
   initSortable();
 }
 
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest('.btn-task-delete');
+    if (!btn) return;
+ 
+    if (confirm('Obliterate this task forever?')) {
+        fetch(`/api/tasks/${task.id}`, { method: 'DELETE' })
+          .then(() => fetchTasks());
+      }
+  });
+
 function initSortable() {
-  document.querySelectorAll('#tasks-kanban [id^="column-"]').forEach(column => {
+  document.querySelectorAll('#tasks-kanban [id^="tasks-kanban-column-"]').forEach(column => {
     if (column.sortable) column.sortable.destroy();
     column.sortable = new Sortable(column, {
       group: 'tasks',
@@ -54,7 +86,7 @@ function initSortable() {
       onEnd: (evt) => {
         if (evt.from === evt.to && evt.oldIndex === evt.newIndex) return;
         const taskId = evt.item.dataset.id;
-        const newStatus = evt.to.id.replace('column-', '');
+        const newStatus = evt.to.id.replace('tasks-kanban-column-', '');
         fetch(`/api/tasks/${taskId}`, {
           method: 'PATCH',
           headers: { 'Content-Type': 'application/json' },

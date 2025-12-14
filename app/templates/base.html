@@ -136,19 +136,31 @@
         {% block content %}{% endblock %}
     </main>
 
-    <!-- ALL JS LOADED AT BOTTOM — TENET #1 OBEYED FOREVER -->
+    <!-- ALL JS LOADED AT BOTTOM — TENET #1 ETERNAL LAW -->
     {% block scripts %}
+    <!-- ETERNAL GLOBAL CORE — LOADED ON EVERY PAGE, NO EXCEPTIONS -->
     <script src="{{ url_for('static', filename='js/constants.js') }}"></script>
-    
-    <!-- DATA OWNERSHIP — HEADER-LEVEL DOMINATION — GLOBAL -->
-    <script src="{{ url_for('static', filename='js/import_export.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/lib/sortable.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/kanban_core.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/task_modal.js') }}"></script> {# null-guarded inside #}
 
+    <!-- GLOBAL UTILITIES — USED EVERYWHERE -->
+    <script src="{{ url_for('static', filename='js/import_export.js') }}"></script>
     <script src="{{ url_for('static', filename='js/user_menu.js') }}"></script>
+
+    <!-- PAGE-SPECIFIC BEASTS — CONDITIONAL DOMINATION -->
+    {% if request.path.startswith('/tasks') %}
+      <script src="{{ url_for('static', filename='js/tasks_global.js') }}"></script>
+    {% endif %}
+
     {% if request.path.startswith('/calendar') %}
-        <!-- SORTABLE.JS — REQUIRED FOR DRAG & DROP ON CALENDAR -->
-        <script src="{{ url_for('static', filename='js/lib/sortable.min.js') }}"></script>
-        <script src="{{ url_for('static', filename='js/period_goals.js') }}"></script>
+      {# Calendar nav + styles already in base_calendar.html, but period goals needed on all views #}
+      <script src="{{ url_for('static', filename='js/period_goals.js') }}"></script>
+   {% endif %}
+
+    {# Future: Goals page specific script if it grows #}
+    {% if request.path.startswith('/goals') %}
+      {# <script src="{{ url_for('static', filename='js/goals_page.js') }}"></script> #}
     {% endif %}
     {% endblock %}
-</body>
 </html>

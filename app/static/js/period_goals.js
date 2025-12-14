@@ -70,10 +70,10 @@ function getPostgresISOWeek(dateInput) {
 }
 
 function renderPeriodGoals(goals) {
-  document.querySelectorAll('#period-goals-kanban [id^="column-"]').forEach(col => col.innerHTML = '');
+  document.querySelectorAll('#period-goals-kanban [id^="period-goals-kanban-column-"]').forEach(col => col.innerHTML = '');
   
   goals.forEach(goal => {
-    const column = document.getElementById(`column-${goal.status}`);
+    const column = document.getElementById(`period-goals-kanban-column-${goal.status}`);
     
     if (!column) return;
 
@@ -107,7 +107,7 @@ document.querySelectorAll('.goal-card').forEach(card => {
 
 function initCalendarGoalSortable() {
 
-  document.querySelectorAll('#period-goals-kanban [id^="column-"]').forEach(column => {
+  document.querySelectorAll('#period-goals-kanban [id^="period-goals-kanban-column-"]').forEach(column => {
     if (column.sortable) column.sortable.destroy();
 
     column.sortable = new Sortable(column, {
@@ -122,7 +122,7 @@ function initCalendarGoalSortable() {
         if (evt.from === evt.to && evt.oldIndex === evt.newIndex) return;
 
         const goalId = evt.item.dataset.id;
-        const newStatus = evt.to.id.replace('column-', '');
+        const newStatus = evt.to.id.replace('period-goals-kanban-column-', '');
 
         fetch(`/api/goals/${goalId}/move`, {
           method: 'POST',
@@ -146,9 +146,12 @@ function initCalendarGoalSortable() {
 }
 
 function openGoalModal(goalId) {
+  const modal = document.getElementById('goal-modal');
+
   fetch(`/api/goals/${goalId}`)
     .then(r => r.json())
     .then(goal => {
+      // Populate main fields
       document.getElementById('goal-id').value = goal.id;
       document.getElementById('goal-title').value = goal.title;
       document.getElementById('goal-description').value = goal.description || '';
@@ -157,82 +160,78 @@ function openGoalModal(goalId) {
       document.getElementById('goal-due-date').value = goal.due_date || '';
       document.getElementById('goal-is-habit').checked = goal.is_habit;
 
-    fetch(`/api/goals/${goal.id}/children`)
-    .then(r => r.json())
-    .then(children => {
-        const container = document.getElementById('modal-goal-tree');
-        container.innerHTML = '';
+      // HOIST GOAL INTO INNER SCOPE — CRITICAL FIX
+      const currentGoal = goal;
 
-        if (children.length === 0) {
-        // container.innerHTML = '<p class="text-gray-500 text-center">No steps yet — add one above!</p>';
-        return;
-        }
+      // Load children
+      fetch(`/api/goals/${goal.id}/children`)
+        .then(r => r.json())
+        .then(children => {
+          const container = document.getElementById('modal-goal-tree');
+          container.innerHTML = '';
 
-        children.forEach(child => {
-        const div = document.createElement('div');
-        div.className = 'bg-gray-800 rounded-lg p-4 mb-4 cursor-pointer hover:bg-gray-700 transition-all border-l-4 border-yellow-400';
-        div.innerHTML = `
-            <div class="font-bold text-white">${child.title}</div>
-            <div class="text-sm text-gray-400">${child.timeframe} • ${child.status}</div>
-        `;
-        div.onclick = () => openGoalModal(child.id); // RECURSIVE — CLICK TO EDIT
-        container.appendChild(div);
-        });
-    });
+          if (children.length > 0) {
+            children.forEach(child => {
+              const div = document.createElement('div');
+              div.className = 'bg-gray-800 rounded-lg p-4 mb-4 cursor-pointer hover:bg-gray-700 transition-all border-l-4 border-yellow-400';
+              div.innerHTML = `
+                <div class="font-bold text-white">${child.title}</div>
+                <div class="text-sm text-gray-400">${child.timeframe} • ${child.status}</div>
+              `;
+              div.onclick = () => openGoalModal(child.id);
+              container.appendChild(div);
+            });
+          }
 
-      const saveBtn = document.getElementById('save-goal-btn');
-      saveBtn.onclick = () => updateGoal(goal.id);
+          const addSubgoalBtn = document.getElementById('add-subgoal-btn');
+          if (addSubgoalBtn) {
+            addSubgoalBtn.onclick = () => {
+              e.stopPropagation();
+              const title = prompt("New step title:");
+              if (!title?.trim()) return;
 
-      const modal = document.getElementById('goal-modal');
-      modal.classList.remove('invisible', 'opacity-0');
-      modal.classList.add('visible', 'opacity-100');
-      // ADD SUB-GOAL BUTTON — WORKS FROM ANYWHERE
-      const addSubgoalBtn = document.getElementById('add-subgoal-btn');
-      addSubgoalBtn.onclick = () => {
-        const title = prompt("New step title:");
-        if (!title?.trim()) return;
+              let childTimeframe = 'monthly';
+              switch (currentGoal.timeframe) {
+                case 'yearly': childTimeframe = 'quarterly'; break;
+                case 'quarterly': childTimeframe = 'monthly'; break;
+                case 'monthly': childTimeframe = 'weekly'; break;
+                case 'weekly': childTimeframe = 'daily'; break;
+                case 'daily': childTimeframe = 'daily'; break;
+              }
 
-          let childTimeframe = 'monthly'; // fallback
-            switch (goal.timeframe) {
-                case 'yearly':
-                childTimeframe = 'quarterly';
-                break;
-                case 'quarterly':
-                childTimeframe = 'monthly';
-                break;
-                case 'monthly':
-                childTimeframe = 'weekly';
-                break;
-                case 'weekly':
-                childTimeframe = 'daily';
-                break;
-                case 'daily':
-                childTimeframe = 'daily'; // can't go lower — stays daily
-                break;
-            }
-        
-        const payload = {
-          title: title.trim(),
-          parent_id: goal.id,
-          due_date: goal.due_date,
-          timeframe: childTimeframe,  // inherit parent's timeframe
-          category: goal.category,
-          status: 'todo'
-        };
+              const payload = {
+                title: title.trim(),
+                parent_id: currentGoal.id,
+                due_date: currentGoal.due_date,
+                timeframe: childTimeframe,
+                category: currentGoal.category,
+                status: 'todo'
+              };
 
-        fetch('/api/goals', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
+              fetch('/api/goals', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+              })
+              .then(() => {
+                closeGoalModal();
+                location.reload();
+              });
+            };
+          }
+
+          // Background click
+          modal.onclick = (e) => {
+            if (e.target === modal) closeGoalModal();
+          };
+
+          // SHOW MODAL — ONLY ONCE
+          modal.classList.remove('invisible', 'opacity-0');
+          modal.classList.add('visible', 'opacity-100');
         })
-        .then(() => {
-          closeGoalModal();
-          // Refresh current view
-          location.reload();
-        });
-    };
-});
-// document.body.classList.add('modal-open');
+        .catch(err => console.error('Failed to load children:', err));
+    })
+    .catch(err => console.error('Failed to load goal:', err));
 }
 
 
@@ -260,49 +259,13 @@ function updateGoal(goalId) {
 function closeGoalModal() {
     // document.body.classList.remove('modal-open');
   const modal = document.getElementById('goal-modal');
-  modal.classList.add('invisible', 'opacity-0');
-  modal.classList.remove('visible', 'opacity-100');
-
-}
-
-// Wire up the cancel button — once on load
-document.addEventListener('DOMContentLoaded', () => {
-  const cancelBtn = document.getElementById('close-goal-modal');
-  if (cancelBtn) {
-    cancelBtn.addEventListener('click', closeGoalModal);
+  if (modal) {
+    modal.classList.add('invisible', 'opacity-0');
+    modal.classList.remove('visible', 'opacity-100');
+    modal.onclick = null;  // clean up background listener
   }
 
-  // Also close on background click
-  const modal = document.getElementById('goal-modal');
-  modal.addEventListener('click', (e) => {
-    if (e.target === modal) closeGoalModal();
-  });
-});
+  const cancelBtn = document.getElementById('close-goal-modal');
+  if (cancelBtn) cancelBtn.onclick = null;
 
-function populateGoalModalSelects() {
-  const categorySelect = document.getElementById('goal-category');
-  const timeframeSelect = document.getElementById('goal-timeframe');
-
-  // Clear
-  categorySelect.innerHTML = '';
-  timeframeSelect.innerHTML = '';
-
-  // Category
-  Object.values(GOAL_CATEGORY).forEach(value => {
-    const opt = document.createElement('option');
-    opt.value = value;
-    opt.textContent = value.charAt(0).toUpperCase() + value.slice(1);
-    categorySelect.appendChild(opt);
-  });
-
-  // Timeframe
-  Object.values(GOAL_TIMEFRAMES).forEach(value => {
-    const opt = document.createElement('option');
-    opt.value = value;
-    opt.textContent = value.charAt(0).toUpperCase() + value.slice(1);
-    timeframeSelect.appendChild(opt);
-  });
 }
-
-// Run once on load
-document.addEventListener('DOMContentLoaded', populateGoalModalSelects);

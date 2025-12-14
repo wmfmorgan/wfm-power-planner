@@ -197,8 +197,7 @@
   margin-bottom: 0.5rem !important;
   overflow: hidden;
   display: -webkit-box;
-  -webkit-line-clamp: 2;
-  !important;
+  /* -webkit-line-clamp: 2 !important; */
   -webkit-box-orient: vertical;
   text-overflow: ellipsis;
 }
@@ -239,9 +238,9 @@
 }
 
 /* LOCK BACKGROUND WHEN MODAL IS OPEN — TENET-COMPLIANT, CLEAN */
-body.modal-open {
+/* body.modal-open {
   /* overflow: hidden; */
-}
+/* } */
 /* MODAL FIELD HEIGHT UNIFICATION — DUE DATE = SELECT HEIGHT */
 #goal-modal input[type="date"],
 #goal-modal select,
@@ -312,4 +311,18 @@ body.modal-open {
 
 .hide-scrollbar::-webkit-scrollbar {
   display: none;                /* Chrome, Safari, Edge */
+}
+/* DAY PAGE TASK KANBAN — RESPONSIVE, CENTERED, NO 5-COLUMN LOCK */
+#day-tasks-kanban {
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)) !important;
+}
+
+/* ETERNAL MODAL FIELD SPACING — ADD TO main.css */
+.task-modal-field-group {
+  @apply space-y-2;  /* NO — WE DON'T USE TAILWIND */
+}
+
+/* PURE HAND-ROLLED — TENET #35 */
+.task-modal-field-spacing {
+  margin-bottom: 2rem;  /* 32px — jacked breathing room */
 }

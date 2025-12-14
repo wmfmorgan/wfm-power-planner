@@ -8,10 +8,10 @@
       <!-- Title + Due Date -->
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
-          <input type="text" id="goal-title" required class="w-full pad bg-gray-800 rounded-lg border border-gray-600 focus:border-yellow-400 text-white text-xl">
+          <input type="text" id="goal-title" class="w-full pad bg-gray-800 rounded-lg border border-gray-600 focus:border-yellow-400 text-white text-xl">
         </div>
         <div>
-          <input type="date" id="goal-due-date" required class="w-full pad bg-gray-800 rounded-lg border border-gray-600 text-white">
+          <input type="date" id="goal-due-date" class="w-full pad bg-gray-800 rounded-lg border border-gray-600 text-white">
         </div>
       </div>
 
@@ -24,11 +24,13 @@
       <div class="grid grid-cols-2 gap-4">
         <div>
           <select id="goal-category" class="w-full pad bg-gray-800 rounded-lg border border-gray-600 text-white">
-            <!-- Filled by JS -->
+            <option value="work" selected>Work</option> <!-- DEFAULT — NEVER EMPTY -->
+            <!-- Filled by JS for consistency -->
           </select>
         </div>
         <div>
           <select id="goal-timeframe" class="w-full pad bg-gray-800 rounded-lg border border-gray-600 text-white">
+            <option value="monthly" selected>Monthly</option> <!-- DEFAULT -->
             <!-- Filled by JS -->
           </select>
         </div>

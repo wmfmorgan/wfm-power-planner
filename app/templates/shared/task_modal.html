@@ -1,0 +1,94 @@
+{# shared/task_modal.html — SINGLE SOURCE OF TRUTH FOR TASK MODAL — TENET #3 ETERNAL LAW #}
+
+<!-- ADD/EDIT TASK MODAL -->
+<!-- RECURRING TASK MODAL — PHASE 3.2 — FULLY CONSISTENT WITH GOALS PATTERN -->
+<div id="task-modal" class="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50 invisible opacity-0 transition-all duration-300">
+  <div class="bg-dark border-4 border-yellow-400 rounded-2xl pad-xl shadow-2xl w-full max-w-2xl max-h-screen overflow-y-auto">
+        <h2 class="text-5xl font-black text-gold text-center mb-32">FORGE A TASK</h2>
+    <!-- BIG BREATHING ROOM AFTER HEADER — 64px mb-16 -->
+
+    <form id="task-form" class="space-y-10">
+      <!-- OVERALL FORM SPACING — 40px between major sections -->
+
+      <!-- TITLE -->
+      <div>
+        <input type="text" id="task-title" required
+               class="w-full pad-lg bg-gray-800 rounded-lg border border-gray-600 focus:border-yellow-400 text-white text-xl">
+      </div>
+
+      <!-- DESCRIPTION -->
+      <div class="mt-10">  <!-- EXTRA SPACE AFTER TITLE — 40px -->
+        <textarea id="task-description"
+                  class="w-full pad-lg bg-gray-800 rounded-lg border border-gray-600 focus:border-yellow-400 text-white h-32 resize-none"
+                  placeholder="Why this task matters, brother..."></textarea>
+      </div>
+
+      <!-- DUE DATE + PRIORITY ROW -->
+      <div class="mt-12 grid grid-cols-2 gap-8">  <!-- 48px space before row -->
+        <div>
+          <input type="date" id="task-due-date"
+                 class="w-full pad-lg bg-gray-800 rounded-lg border border-gray-600 text-white">
+        </div>
+        <div>
+          <select id="task-priority" class="w-full pad-lg bg-gray-800 rounded-lg border border-gray-600 text-white">
+            {% for priority in task_priorities %}
+              <option value="{{ priority.value }}" {% if priority == task_priorities.MEDIUM %}selected{% endif %}>
+                {{ priority.value|title }}
+              </option>
+            {% endfor %}
+          </select>
+        </div>
+      </div>
+
+      <!-- RECURRING TASK SECTION -->
+      <div class="mt-12">
+        <label class="block text-gold font-black text-2xl mb-6 flex items-center gap-4">
+          <input type="checkbox" id="task-is-recurring" class="w-8 h-8 text-yellow-400">
+          <span>Make this a recurring task</span>
+        </label>
+
+        <div id="recurring-options" class="hidden space-y-6 mt-6">
+          <div class="grid grid-cols-3 gap-6">
+            <div>
+              <label class="block text-gold font-bold mb-2">Repeat every</label>
+              <input type="number" id="task-recurrence-interval" value="1" min="1"
+                     class="w-full pad-lg bg-gray-800 rounded-lg border border-gray-600 text-white text-center">
+            </div>
+            <div>
+              <label class="block text-gold font-bold mb-2">Frequency</label>
+              <select id="task-recurrence-type" class="w-full pad-lg bg-gray-800 rounded-lg border border-gray-600 text-white">
+                {% for rt in task_recurrence_types %}
+                  <option value="{{ rt.value }}">{{ rt.value|title }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div>
+              <label class="block text-gold font-bold mb-2">End date (optional)</label>
+              <input type="date" id="task-recurrence-end"
+                     class="w-full pad-lg bg-gray-800 rounded-lg border border-gray-600 text-white">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAGS — EXTRA SPACE BEFORE -->
+      <div class="mt-12">
+        <label class="block text-gold font-bold mb-4 text-xl">Tags (comma-separated)</label>
+        <input type="text" id="task-tags" placeholder="work, gym, urgent"
+               class="w-full pad-lg bg-gray-800 rounded-lg border border-gray-600 text-white">
+      </div>
+
+      <!-- BUTTONS — BIG SPACE BEFORE -->
+      <div class="mt-16 flex gap-8">
+        <button type="submit"
+                class="flex-1 bg-green-600 hover:bg-green-500 text-black font-black text-2xl pad-xl rounded-lg transition-all hover:scale-105 shadow-2xl">
+          SAVE TASK
+        </button>
+        <button type="button" id="task-close-modal"
+                class="flex-1 bg-gray-700 hover:bg-gray-600 text-white font-black text-2xl pad-xl rounded-lg transition-all hover:scale-105 shadow-2xl">
+          CANCEL
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

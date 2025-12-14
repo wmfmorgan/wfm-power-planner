@@ -22,10 +22,10 @@ def create_task(title, description="", due_date=None, priority="medium", tags=""
     task = Task(
         user_id=current_user.id,
         title=title.strip(),
-        description=description.strip() or None,
+        description=description.strip() if description else None,
         due_date=due_date,
         priority=TaskPriority[priority.upper()].value if priority else TaskPriority.MEDIUM,
-        tags=tags.strip(),
+        tags=tags.strip() if tags else None,
         status=TaskStatus[status.upper()].value if status else TaskStatus.BACKLOG,
         is_recurring=is_recurring,
         recurrence_type=TaskRecurrenceType[recurrence_type.upper()].value if recurrence_type else None,
@@ -56,7 +56,7 @@ def update_task(task_id, **updates):
         elif key == 'status':
             task.status = TaskStatus[value.upper()].value
         elif key == 'recurrence_type':  # ← THIS IS THE MONEY LINE
-            task.recurrence_type = TaskRecurrenceType[value.upper()].value
+            task.recurrence_type = TaskRecurrenceType[value.upper()].value if value else None
         elif key == 'due_date' or key == 'recurrence_end_date' or key == 'day_date':
             setattr(task, key, value or None)
         else:
@@ -148,3 +148,20 @@ def calculate_next_due(master: Task, from_date: date) -> date:
             return date(year, month, monthrange(year, month)[1])
 
     return from_date  # fallback
+
+def get_tasks_for_day(target_date: date):
+    """Get all tasks due on a specific day — TENET #17 OBEYED"""
+    return Task.query.filter(
+        Task.user_id == current_user.id,
+        db.func.date(Task.due_date) == target_date
+    ).order_by(Task.sort_order).all()
+
+def move_task(task_id: int, new_status: str):
+    """Move task to new status — THROUGH SERVICE LAYER ONLY"""
+    task = Task.query.get_or_404(task_id)
+    if task.user_id != current_user.id:
+        raise PermissionError("Not your task, brother!")
+
+    task.status = TaskStatus(new_status.upper())
+    db.session.commit()
+    return task

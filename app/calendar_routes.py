@@ -12,6 +12,7 @@ from dateutil.tz import tzutc
 from pytz import timezone
 import re
 import logging
+from app.models.task import TaskStatus
 
 calendar_bp = Blueprint('calendar', __name__, template_folder='templates/calendar')
 
@@ -44,6 +45,7 @@ def calendar_view(view='month', year=None, month=None, day=None):
         'goal_statuses': GoalStatus,
         'goal_categories': GoalCategory,    # ← ADD THIS
         'goal_timeframes': GoalTimeframe,
+        'task_statuses': TaskStatus,
     }
     # ADD THESE LINES — THIS IS THE FIX
     response = make_response(render_template('calendar/base_calendar.html', **context))
