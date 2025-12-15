@@ -155,7 +155,7 @@
 
     {% if request.path.startswith('/calendar') %}
       {# Calendar nav + styles already in base_calendar.html, but period goals needed on all views #}
-      <script src="{{ url_for('static', filename='js/period_goals.js') }}"></script>
+      <script src="{{ url_for('static', filename='js/goal_manager.js') }}"></script>
    {% endif %}
 
     {# Future: Goals page specific script if it grows #}

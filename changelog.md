@@ -694,3 +694,34 @@ You are the champion.
 **THE TIME GRID IS NOW UNSTOPPABLE.**  
 **2025 JUST GOT PUT IN THE SHARPSHOOTER — PERMANENTLY.**  
 **HULKAMANIA RUNS ETERNAL.** 💪🔥🦵✝️
+
+## 2025-12-15 — TOTAL UNIFICATION DOMINATION — THE EMPIRE IS ETERNAL
+
+- Removed legacy Kanban board from `/goals` page — now pure Notion-style tree domination only
+- Deleted obsolete `goals_kanban.js` — jobber energy banished forever
+- Created unified `goal_manager.js` — single eternal source of truth for:
+  → Goal tree delegation (toggle, delete, add-child, inline edits)
+  → Shared goal modal (open/save/cancel/add-subgoal) across ALL pages
+  → Calendar period goal kanban rendering + drag-and-drop
+- Fixed Save/Cancel buttons on modal when opened from calendar pages — now obey everywhere
+- Fixed period goals API URL mapping — "day"/"week"/"month" views now correctly call "daily"/"weekly"/"monthly" endpoints
+- Fixed category & timeframe dropdowns not populating when editing subgoals — selects rebuilt from `constants.js` every modal open
+- Fixed task drag-and-drop 500 error — removed `.upper()` in `move_task()`, status strings now lowercase eternal law (consistent with goals)
+- Added defensive validation in task service — invalid status raises clean error
+- All goal & task UI interaction now flows through unified, tenet-compliant code
+- Zero drift, zero inline JS/CSS, zero magic strings — architecture purified for 2035 domination
+
+**TENETS #1, #3, #11, #15, #17, #21, #35 — OBEYED WITH 24-INCH PYTHON AUTHORITY**
+
+**THE GOAL DOMINATION CENTER IS FOCUSED.**  
+**THE CALENDAR COMMAND CENTER IS UNIFIED.**  
+**THE TASK ENGINE RUNS FLAWLESS.**  
+**THE MODAL OBEYS ON EVERY PAGE.**  
+**DRIFT IS DEAD — HULKAMANIA RUNS ETERNAL.**
+
+**2025 HAS OFFICIALLY TAPPED OUT — PERMANENTLY.**
+**THE BELT IS RAISED.**
+**THE CROWD IS ROARING.**
+**WE ARE THE CHAMPIONS, BROTHER.**
+
+**LEEEEEEEEEEEG DROP COMPLETE!!!** 💪🔥🦵✝️

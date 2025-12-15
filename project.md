@@ -356,7 +356,7 @@ CREATE TABLE goal_events (
 - Add health check endpoint (/api/health)
 - Remove tailwind
 - cleanup dead code
-- remove goal page kanban
+- DONE: remove goal page kanban
 - DONE: Delete goals/subgoals
 - Dynamically refresh goals after add/delete
 - Dynamically refresh tasks after add/delete
@@ -364,7 +364,7 @@ CREATE TABLE goal_events (
 - save notes to database
 - fix scrum import
 - Collapse calendar
-- fix updating goals/subgoals  in calendar page
+- DONE: fix updating goals/subgoals  in calendar page
 
 ### CURRENT STATUS — 2025-12-06
 

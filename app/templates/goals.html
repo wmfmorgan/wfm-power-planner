@@ -142,29 +142,11 @@
     {% endfor %}
   </div>
 
-  <!-- KANBAN BOARD -->
-  <h2 class="text-3xl font-bold text-gray-200 mb-8">Kanban</h2>
-  <div id="kanban" class="grid grid-cols-1 md:grid-cols-5 gap-8">
-    {% for status in goal_statuses %}
-      <div class="bg-dark rounded-xl pad-lg border-2 border-gray-800 shadow-xl">
-        <h3 class="text-2xl font-bold text-center mb-6
-          {% if status.value == 'doing' %}text-gold
-          {% elif status.value == 'blocked' %}text-red-400
-          {% elif status.value == 'done' %}text-green-400
-          {% else %}text-muted{% endif %}">
-          {{ status.name }}  <!-- AUTO UPPERCASE: backlog → BACKLOG -->
-        </h3>
-        <div id="{{ status.value }}" class="space-y-4 min-h-96"></div>
-      </div>
-    {% endfor %}
-  </div>
-</div>
-
 {% endblock %}
 
 <!-- ALL JS LOADED AT BOTTOM — TENET #1 OBEYED ETERNALLY -->
 {% block scripts %}
 {{ super() }}
   <script src="{{ url_for('static', filename='js/lib/sortable.min.js') }}"></script>    
-  <script src="{{ url_for('static', filename='js/goals_kanban.js') }}"></script>   
+  <script src="{{ url_for('static', filename='js/goal_manager.js') }}"></script>   
 {% endblock %}

@@ -161,7 +161,6 @@ def move_task(task_id: int, new_status: str):
     task = Task.query.get_or_404(task_id)
     if task.user_id != current_user.id:
         raise PermissionError("Not your task, brother!")
-
-    task.status = TaskStatus(new_status.upper())
+    task.status = TaskStatus[new_status.upper()].value
     db.session.commit()
     return task
