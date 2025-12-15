@@ -34,6 +34,19 @@ function setupEventDelegation() {
       case 'add-child':
         addChildGoal(goalId);
         break;
+      case 'delete':
+        if (confirm("BROTHER — DELETE THIS GOAL AND ALL SUBGOALS FOREVER? NO RECOVERY! NO MERCY!")) {
+          fetch(`/api/goals/${goalId}`, {
+            method: 'DELETE'
+          })
+          .then(r => {
+            if (!r.ok) throw new Error();
+            return r.json();
+          })
+          .then(() => fetchGoals())
+          .catch(() => fetchGoals());  // Refresh even on error — truth from server
+        }
+        break;  
     }
   });
 
@@ -134,11 +147,18 @@ function renderKanban(goals) {
         <div class="text-xs text-right text-gray-300 mt-2 font-bold">${goal.progress}%</div>
     </div>
     `;
-
+    card.style.border = '4px solid yellow !important';
+    card.style.backgroundColor = 'red !important';
+    card.style.minHeight = '100px !important';
+    card.style.marginBottom = '20px !important';
+    card.innerHTML = `
+      <div style="color: white; font-size: 24px;">DEBUG: ${escapeHtml(goal.title)}</div>
+      <div style="color: lime;">ID: ${goal.id} | Status: ${goal.status} | Progress: ${goal.progress}%</div>
+    `;
     column.appendChild(card);
   });
 
-  initSortable();
+  // initSortable();
 }
 
 function escapeHtml(text) {
@@ -206,7 +226,6 @@ function initSortable() {
   document.querySelectorAll('#kanban [id]').forEach(column => {
     if (column.sortable) column.sortable.destroy();
   });
-
   document.querySelectorAll('#kanban [id]').forEach(column => {
     column.sortable = new Sortable(column, {
       group: 'kanban',

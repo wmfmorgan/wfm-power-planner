@@ -29,7 +29,8 @@ from app.services.goal_service import (
     create_goal_from_dict,
     move_goal,
     update_goal,
-    delete_all_user_goals
+    delete_all_user_goals,
+    delete_goal
 )
 
 goals_bp = Blueprint('goals', __name__)
@@ -298,3 +299,13 @@ def api_goal_children(goal_id):
     
     children = Goal.query.filter_by(parent_id=goal_id).order_by(Goal.sort_order).all()
     return jsonify([goal_to_dict(g) for g in children])
+
+@goals_bp.route('/api/goals/<int:goal_id>', methods=['DELETE'])
+@login_required
+def api_delete_goal(goal_id):
+    goal = Goal.query.get_or_404(goal_id)
+    if goal.user_id != current_user.id:
+        abort(403)
+    
+    delete_goal(goal_id)  # SERVICE LAYER ONLY — TENET #17 ETERNAL
+    return jsonify({"message": "Goal and all subgoals obliterated forever."}), 200

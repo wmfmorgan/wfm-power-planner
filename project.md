@@ -357,7 +357,9 @@ CREATE TABLE goal_events (
 - Remove tailwind
 - cleanup dead code
 - Move goal page to shared kanban
-- Delete goals/subgoals
+- DONE: Delete goals/
+- Dynamically refresh goals after add/delete
+- Dynamically refresh tasks after add/delete
 - Require due date on tasks and goals
 
 ### CURRENT STATUS — 2025-12-06

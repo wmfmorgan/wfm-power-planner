@@ -157,6 +157,18 @@ def create_goal_from_dict(**kwargs):
     db.session.commit()
     return goal
 
+def delete_goal(goal_id: int) -> None:
+    """
+    TOTAL SUBTREE ANNIHILATION — TENET #17 OBEYED
+    Deletes a goal AND ALL ITS DESCENDANTS forever.
+    PostgreSQL + SQLAlchemy cascade="all, delete-orphan" + ON DELETE CASCADE 
+    does the heavy lifting — zero manual recursion needed.
+    Fast. Clean. Unbreakable.
+    """
+    goal = Goal.query.get_or_404(goal_id)
+    db.session.delete(goal)  # CASCADE NUKES EVERY CHILD
+    db.session.commit()
+
 __all__ = [
     'create_goal',
     'move_goal',
@@ -165,3 +177,4 @@ __all__ = [
     'create_goal_from_dict',
     'get_all_goals_tree',   # ← THIS MUST BE HERE
 ]
+

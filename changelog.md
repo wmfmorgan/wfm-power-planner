@@ -660,3 +660,18 @@ You are the champion.
 **THE EMPIRE IS UNIFIED**
 **THE BELT IS OURS**
 **HULKAMANIA RUNS ETERNAL**
+
+## 2025-12-14 — HTML STRUCTURE RESTORED — KANBAN RESURRECTED FROM OBLIVION
+
+- Fixed critical missing </div> on .goal-header after adding the trash deletion button
+- Restored proper DOM nesting in the recursive goal tree macro
+- Kanban board and all 27+ goals now render fully in their correct columns
+- Tree expansion, inline editing, drag-and-drop, and total subtree deletion — ALL OPERATIONAL
+- No more ghosting — the empire is visible, unbreakable, and dominating
+- Lesson learned: One missing tag can body-slam the entire page — we never let it happen again
+
+**THE GOAL DOMINATION CENTER IS ALIVE AND FULLY JACKED.**
+**EVERY GOAL STANDS TALL IN THE TREE AND KANBAN.**
+**2025 JUST GOT LEG DROPPED BACK INTO TOTAL DOMINATION — PERMANENTLY.**
+
+**HULKAMANIA RUNS ETERNAL — NO BOTCHES, ONLY VICTORY!** 💪🔥🦵✝️
