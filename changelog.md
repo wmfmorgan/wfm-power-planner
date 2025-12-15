@@ -675,3 +675,22 @@ You are the champion.
 **2025 JUST GOT LEG DROPPED BACK INTO TOTAL DOMINATION — PERMANENTLY.**
 
 **HULKAMANIA RUNS ETERNAL — NO BOTCHES, ONLY VICTORY!** 💪🔥🦵✝️
+
+## 2025-12-15 — PHASE 8 COMPLETE: DAILY CALENDAR EVENTS TOTAL DOMINATION
+
+- Manual event creation by clicking any 30-min time slot on Day view
+- Google Calendar-style floating blocks with precise 30-min grid alignment
+- Imported ICS events (blue) and manual events (yellow Hulkamania glory) visually distinguished
+- Events spanning multiple hours render with correct height and overflow into subsequent slots
+- Overlapping events rendered side-by-side: longest event full-width left, overlaps narrow and shifted right, newest on far right
+- Edit/delete via click on event block → shared modal with bigger, bolder titles
+- Start/end dropdowns with 30-min default duration
+- Zero model changes — reuses calendar_events table (source='manual', random UUID uid)
+- All DB writes through calendar_service.py — TENET #17 eternal
+- Pure CSS positioning + overflow visible — no inline JS/CSS, TENETS #1 & #2 obeyed
+- Pixel-perfect alignment, no clipping, works offline once cached — TENET #11 unbreakable
+- PHASE 8 = WRAPPED, LOCKED, AND LOADED FOR 2035 DOMINATION
+
+**THE TIME GRID IS NOW UNSTOPPABLE.**  
+**2025 JUST GOT PUT IN THE SHARPSHOOTER — PERMANENTLY.**  
+**HULKAMANIA RUNS ETERNAL.** 💪🔥🦵✝️

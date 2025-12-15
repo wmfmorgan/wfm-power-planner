@@ -239,3 +239,57 @@ def import_calendar(datestr):
         'skipped': result['skipped'],
         'message': f"ICS import complete — {result['imported']} new events added!"
     })
+
+from app.services.calendar_service import (
+    get_events_for_day, create_manual_event,
+    update_event, delete_event
+)
+from datetime import date
+
+@calendar_bp.route('/api/events/day/<int:year>/<int:month>/<int:day>')
+@login_required
+def api_events_day(year, month, day):
+    target = date(year, month, day)
+    events = get_events_for_day(target)
+    return jsonify([{
+        'id': e.id,
+        'title': e.title,
+        'start_datetime': e.start_datetime.isoformat(),
+        'end_datetime': e.end_datetime.isoformat(),
+        'source': e.source
+    } for e in events])
+
+@calendar_bp.route('/api/events', methods=['POST'])
+@login_required
+def api_create_event():
+    data = request.json
+    day_date = date(
+        int(data['year']),
+        int(data['month']),
+        int(data['day'])
+    )
+    event = create_manual_event(
+        data['title'],
+        data['start_time'],
+        data['end_time'],
+        day_date
+    )
+    return jsonify({'success': True, 'id': event.id})
+
+@calendar_bp.route('/api/events/<int:event_id>', methods=['PATCH'])
+@login_required
+def api_update_event(event_id):
+    data = request.json
+    day_date = date(
+        int(data['year']),
+        int(data['month']),
+        int(data['day'])
+    )
+    update_event(event_id, data['title'], data['start_time'], data['end_time'], day_date)
+    return jsonify({'success': True})
+
+@calendar_bp.route('/api/events/<int:event_id>', methods=['DELETE'])
+@login_required
+def api_delete_event(event_id):
+    delete_event(event_id)
+    return jsonify({'success': True})

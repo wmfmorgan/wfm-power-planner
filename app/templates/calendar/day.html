@@ -30,26 +30,27 @@
           {% endfor %}
         </div>
 
-        <!-- TIME SLOTS -->
-        <div class="col-span-11 bg-gray-950">
-          <div class="grid grid-rows-38 h-full">
-            {% for slot in range(38) %}
-              {% set hour = 5 + (slot // 2) %}
-              {% set minute = (slot % 2) * 30 %}
-              {% set hour_12 = ((hour - 1) % 12) + 1 %}
-              {% set am_pm = 'AM' if hour < 12 else 'PM' %}
-
-              <div class="border-b border-gray-700 relative group cursor-pointer">
-                <div class="absolute inset-0 hover:bg-yellow-900/30 transition-all"></div>
-                <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
-                  <span class="text-2xl font-black text-gold drop-shadow-lg">
-                    {{ "%d:%02d %s"|format(hour_12, minute, am_pm) }}
-                  </span>
+          <!-- TIME SLOTS -->
+          <div class="col-span-11 bg-gray-950">
+            <div class="grid grid-rows-38 h-full">
+              {% for slot in range(38) %}
+                <div class="border-b border-gray-700 relative group cursor-pointer" data-slot="{{ slot }}">
+                  <div class="event-container"></div>
+                  <div class="absolute inset-0 hover:bg-yellow-900/30 transition-all"></div>
+                  <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                    <span class="text-2xl font-black text-gold drop-shadow-lg">
+                      {% set hour = 5 + (slot // 2) %}
+                      {% set minute = (slot % 2) * 30 %}
+                      {% set hour_12 = ((hour - 1) % 12) + 1 %}
+                      {% set am_pm = 'AM' if hour < 12 else 'PM' %}
+                      {{ "%d:%02d %s"|format(hour_12, minute, am_pm) }}
+                    </span>
+                  </div>
                 </div>
-              </div>
-            {% endfor %}
+              {% endfor %}
+            </div>
           </div>
-        </div>
+          
       </div>
     </div>
   </div>

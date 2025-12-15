@@ -318,11 +318,125 @@
 }
 
 /* ETERNAL MODAL FIELD SPACING — ADD TO main.css */
-.task-modal-field-group {
-  @apply space-y-2;  /* NO — WE DON'T USE TAILWIND */
-}
+/* .task-modal-field-group { */
+  /* @apply space-y-2;  NO — WE DON'T USE TAILWIND */
+/* } */
 
 /* PURE HAND-ROLLED — TENET #35 */
 .task-modal-field-spacing {
   margin-bottom: 2rem;  /* 32px — jacked breathing room */
+}
+
+/* ============================================= */
+/* 8. CALENDAR EVENTS — GOOGLE CALENDAR STYLE   */
+/* ============================================= */
+.event-container {
+  position: relative;
+  height: 100%;
+  min-height: 8rem; /* h-32 */
+}
+
+.event-block {
+  position: absolute;
+  left: 4px;
+  right: 4px;
+  padding: 0.5rem;
+  border-left: 6px solid;
+  border-radius: 0.5rem;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.6);
+  transition: all 0.2s ease;
+  z-index: 10;
+}
+
+.event-block:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.8);
+}
+
+/* Imported from Outlook ICS */
+.event-block.imported-event {
+  background: rgba(59, 130, 246, 0.6);   /* blue-500/60 */
+  border-color: #3b82f6;
+}
+
+/* Manual events — HULKAMANIA YELLOW */
+.event-block.manual-event {
+  background: rgba(250, 204, 21, 0.6);   /* yellow-500/60 */
+  border-color: #facc15;
+}
+
+/* Overlap stacking — max 3 side-by-side */
+.event-block:nth-child(1) { left: 4px; width: calc(100% - 8px); }
+.event-block:nth-child(2) { left: calc(33.33% + 4px); width: calc(66.66% - 8px); }
+.event-block:nth-child(3) { left: calc(66.66% + 4px); width: calc(33.33% - 8px); }
+/* 4+ stack vertically with slight opacity drop */
+.event-block:nth-child(n+4) {
+  top: calc(var(--top) + 1rem) !important;
+  opacity: 0.85;
+}
+/* PHASE 8 FINAL ALIGNMENT LOCK — ZERO TOLERANCE MISALIGNMENT */
+.grid-rows-38 > div {
+  position: relative;          /* Ensure positioning context */
+  padding: 0 !important;       /* Nuke any hidden padding */
+  margin: 0 !important;
+  overflow: visible !important;
+  box-sizing: border-box;
+}
+
+.event-container {
+  position: absolute !important;  /* Full coverage of slot */
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: visible !important;
+}
+
+.event-block {
+  position: absolute;
+  top: 4px !important;         /* Small breathing room from slot top — prevents border overlap */
+  left: 8px !important;        /* More side breathing */
+  right: 8px !important;
+  bottom: 4px !important;      /* Optional: cap bottom if needed */
+  padding: 0.75rem;
+  border-radius: 0.75rem;      /* Bigger rounded for jacked look */
+  box-shadow: 0 6px 16px rgba(0,0,0,0.7);
+}
+
+/* Bigger title — you asked for it, brother! */
+.event-block > div {
+  font-size: 1.25rem !important;  /* text-xl range */
+  font-weight: 900;
+  line-height: 1.2;
+}
+/* PHASE 8 OVERLAP DOMINATION — LONG EVENT LEFT, OVERLAPS NARROW RIGHT */
+.event-block.long-event {
+  width: calc(100% - 16px) !important;
+  left: 8px !important;
+  right: 8px !important;
+}
+
+.event-block.overlap-2:not(.long-event) {
+  width: calc(50% - 12px) !important;
+}
+
+.event-block.overlap-2:nth-child(1):not(.long-event) { left: 8px !important; }
+.event-block.overlap-2:nth-child(2):not(.long-event) { left: calc(50% + 4px) !important; right: 8px !important; }
+
+.event-block.overlap-3:not(.long-event) {
+  width: calc(33.33% - 12px) !important;
+}
+.event-block.overlap-3:nth-child(1):not(.long-event) { left: 8px !important; }
+.event-block.overlap-3:nth-child(2):not(.long-event) { left: calc(33.33% + 4px) !important; }
+.event-block.overlap-3:nth-child(3):not(.long-event) { left: calc(66.66% + 4px) !important; right: 8px !important; }
+
+/* Fallback for many overlaps */
+.event-block:nth-child(n+4):not(.long-event) {
+  width: calc(100% - 16px) !important;
+  left: 8px !important;
+  opacity: 0.9;
 }
