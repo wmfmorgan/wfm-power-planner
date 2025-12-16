@@ -14,7 +14,7 @@ import re
 import logging
 from app.models.task import TaskStatus
 from app.services.reflection_service import upsert_note, get_all_for_period
-from app.date_utils import get_sunday_of_week, get_first_of_month
+from app.date_utils import get_sunday_of_week, get_first_of_month, get_iso_week_for_goal, get_sunday_of_week, get_first_of_month
 
 
 calendar_bp = Blueprint('calendar', __name__, template_folder='templates/calendar')
@@ -41,9 +41,60 @@ def calendar_view(view='month', year=None, month=None, day=None):
     month = month or today.month
     day = day or today.day
 
-    valid_views = ['year', 'quarter', 'month', 'week', 'day']
-    if view not in valid_views:
-        view = 'month'
+    # NEW: Universal prev/next navigation — one pattern to rule them all
+    prev_nav = next_nav = None
+    display_values = {}
+
+    current_date = date(year, month, day)
+
+    if view == 'year':
+        prev_year = year - 1
+        next_year = year + 1
+        prev_nav = {'view': 'year', 'year': prev_year}
+        next_nav = {'view': 'year', 'year': next_year}
+        display_values['year'] = year
+
+    elif view == 'quarter':
+        current_q = ((month - 1) // 3) + 1
+        prev_q_date = current_date - timedelta(days=90)  # approx 3 months back
+        next_q_date = current_date + timedelta(days=90)
+        prev_nav = {'view': 'quarter', 'year': prev_q_date.year, 'month': prev_q_date.month}
+        next_nav = {'view': 'quarter', 'year': next_q_date.year, 'month': next_q_date.month}
+        display_values['quarter'] = f"Q{current_q}"
+
+    elif view == 'month':
+        # Prev month
+        prev_month_date = current_date - timedelta(days=15)  # safe middle-of-month jump
+        if prev_month_date.month == 12:
+            prev_year = prev_month_date.year + 1
+            prev_month = 1
+        else:
+            prev_year = prev_month_date.year
+            prev_month = prev_month_date.month + 1 if prev_month_date.month == 12 else prev_month_date.month - 1
+        # Next month
+        next_month_date = current_date + timedelta(days=15)
+        next_year = next_month_date.year
+        next_month = 1 if next_month_date.month == 12 else next_month_date.month + 1
+
+        prev_nav = {'view': 'month', 'year': prev_year, 'month': prev_month}
+        next_nav = {'view': 'month', 'year': next_year, 'month': next_month}
+        display_values['month'] = month
+
+    elif view == 'week':
+        current_week_number = get_iso_week_for_goal(year, month, day)
+        anchor_date = current_date
+        prev_week_anchor = anchor_date - timedelta(days=7)
+        next_week_anchor = anchor_date + timedelta(days=7)
+        prev_nav = {'view': 'week', 'year': prev_week_anchor.year, 'month': prev_week_anchor.month, 'day': prev_week_anchor.day}
+        next_nav = {'view': 'week', 'year': next_week_anchor.year, 'month': next_week_anchor.month, 'day': next_week_anchor.day}
+        display_values['week'] = f"Week {current_week_number}"
+
+    elif view == 'day':
+        prev_day = current_date - timedelta(days=1)
+        next_day = current_date + timedelta(days=1)
+        prev_nav = {'view': 'day', 'year': prev_day.year, 'month': prev_day.month, 'day': prev_day.day}
+        next_nav = {'view': 'day', 'year': next_day.year, 'month': next_day.month, 'day': next_day.day}
+        display_values['day'] = day
 
     context = {
         'current_view': view,
@@ -56,6 +107,10 @@ def calendar_view(view='month', year=None, month=None, day=None):
         'goal_categories': GoalCategory,    # ← ADD THIS
         'goal_timeframes': GoalTimeframe,
         'task_statuses': TaskStatus,
+        'prev_nav': prev_nav,
+        'next_nav': next_nav,
+        'display_values': display_values,
+        'current_view': view,
     }
     # ADD THESE LINES — THIS IS THE FIX
     response = make_response(render_template('calendar/base_calendar.html', **context))

@@ -85,24 +85,80 @@
             <div class="pt-10">
                 <div class="flex items-center justify-between">
                 <!-- LEFT: CALENDAR PATH — ALIGNED WITH GOALS/CALENDAR ABOVE -->
-                <div class="flex items-center gap-8 text-2xl font-black pl-72"> <!-- pl-72 aligns with GOALS/CALENDAR -->
-                    <a href="{{ url_for('calendar.calendar_view', view='year', year=year) }}" class="text-gold hover:text-white transition">{{ year }}</a>
-                    <span class="text-gray-600">/</span>
-                    <a href="{{ url_for('calendar.calendar_view', view='quarter', year=year, month=month) }}" class="text-gold hover:text-white transition">
-                    Q{{ ((month-1)//3)+1 }}
-                    </a>
-                    <span class="text-gray-600">/</span>
-                    <a href="{{ url_for('calendar.calendar_view', view='month', year=year, month=month) }}" class="text-gold hover:text-white transition">
-                    {{ month|month_name }}
-                    </a>
-                    <span class="text-gray-600">/</span>
-                    <a href="{{ url_for('calendar.calendar_view', view='week', year=year, month=month, day=day) }}" class="text-gold hover:text-white transition">
-                    Week {{ year|iso_week(month, day) }}</a>
-                    <span class="text-gray-600">/</span>
-                    <a href="{{ url_for('calendar.calendar_view', view='day', year=year, month=month, day=day) }}" class="text-gold hover:text-white transition">
-                    {{ day }}
-                    </a>
-                </div>
+                    <div class="flex items-center gap-8 text-2xl font-black pl-72">
+                        <!-- YEAR -->
+                        {% set seg = 'year' %}
+                        <a href="{{ url_for('calendar.calendar_view', view=seg, year=year) }}"
+                        class="text-gold hover:text-white transition">
+                            {% if current_view == seg and prev_nav %}
+                                <a href="{{ url_for('calendar.calendar_view', **prev_nav) }}" class="text-gold hover:text-white mr-4">←</a>
+                            {% endif %}
+                            {{ year }}
+                            {% if current_view == seg and next_nav %}
+                                <a href="{{ url_for('calendar.calendar_view', **next_nav) }}" class="text-gold hover:text-white ml-4">→</a>
+                            {% endif %}
+                        </a>
+
+                        <span class="text-gray-600">/</span>
+
+                        <!-- QUARTER -->
+                        {% set seg = 'quarter' %}
+                        <a href="{{ url_for('calendar.calendar_view', view=seg, year=year, month=month) }}"
+                        class="text-gold hover:text-white transition">
+                            {% if current_view == seg and prev_nav %}
+                                <a href="{{ url_for('calendar.calendar_view', **prev_nav) }}" class="text-gold hover:text-white mr-4">←</a>
+                            {% endif %}
+                            Q{{ ((month-1)//3)+1 }}
+                            {% if current_view == seg and next_nav %}
+                                <a href="{{ url_for('calendar.calendar_view', **next_nav) }}" class="text-gold hover:text-white ml-4">→</a>
+                            {% endif %}
+                        </a>
+
+                        <span class="text-gray-600">/</span>
+
+                        <!-- MONTH -->
+                        {% set seg = 'month' %}
+                        <a href="{{ url_for('calendar.calendar_view', view=seg, year=year, month=month) }}"
+                        class="text-gold hover:text-white transition">
+                            {% if current_view == seg and prev_nav %}
+                                <a href="{{ url_for('calendar.calendar_view', **prev_nav) }}" class="text-gold hover:text-white mr-4">←</a>
+                            {% endif %}
+                            {{ month|month_name }}
+                            {% if current_view == seg and next_nav %}
+                                <a href="{{ url_for('calendar.calendar_view', **next_nav) }}" class="text-gold hover:text-white ml-4">→</a>
+                            {% endif %}
+                        </a>
+
+                        <span class="text-gray-600">/</span>
+
+                        <!-- WEEK -->
+                        {% set seg = 'week' %}
+                        <a href="{{ url_for('calendar.calendar_view', view=seg, year=year, month=month, day=day) }}"
+                        class="text-gold hover:text-white transition">
+                            {% if current_view == seg and prev_nav %}
+                                <a href="{{ url_for('calendar.calendar_view', **prev_nav) }}" class="text-gold hover:text-white mr-4">←</a>
+                            {% endif %}
+                            Week {{ year|iso_week(month, day) if current_view != 'week' else display_values.week.split(' ')[1] }}
+                            {% if current_view == seg and next_nav %}
+                                <a href="{{ url_for('calendar.calendar_view', **next_nav) }}" class="text-gold hover:text-white ml-4">→</a>
+                            {% endif %}
+                        </a>
+
+                        <span class="text-gray-600">/</span>
+
+                        <!-- DAY -->
+                        {% set seg = 'day' %}
+                        <a href="{{ url_for('calendar.calendar_view', view=seg, year=year, month=month, day=day) }}"
+                        class="text-gold hover:text-white transition">
+                            {% if current_view == seg and prev_nav %}
+                                <a href="{{ url_for('calendar.calendar_view', **prev_nav) }}" class="text-gold hover:text-white mr-4">←</a>
+                            {% endif %}
+                            {{ day }}
+                            {% if current_view == seg and next_nav %}
+                                <a href="{{ url_for('calendar.calendar_view', **next_nav) }}" class="text-gold hover:text-white ml-4">→</a>
+                            {% endif %}
+                        </a>
+                    </div>
 
                 <!-- RIGHT: TODAY + SYNC -->
                 <div class="flex items-center gap-4">
