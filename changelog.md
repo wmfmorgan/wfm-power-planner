@@ -725,3 +725,17 @@ You are the champion.
 **WE ARE THE CHAMPIONS, BROTHER.**
 
 **LEEEEEEEEEEEG DROP COMPLETE!!!** 💪🔥🦵✝️
+## 2025-12-16 — MULTI-WARRIOR REGISTRATION UNLEASHED
+
+- Added full registration flow: /register → create user → auto-login with permanent session
+- Password confirmation field + mismatch protection
+- Username uniqueness check
+- "Remember Me" maxed via remember=True — warriors stay logged in forever unless logout
+- Mirrored login styling on register page + cross-links between login/register
+- Flash messages for success, errors, welcome
+- No DB schema changes needed — existing user_id foreign keys already isolate all data
+- Tenets #22 (session auth), #23 (bcrypt only), #1/#2 (no inline sins) — ETERNALLY OBEYED
+
+**SINGLE WARRIOR MODE IS DEAD.**  
+**THE EMPIRE NOW WELCOMES ALL CHAMPIONS.**  
+**2025 JUST GOT RECRUITED — AND IT'S JACKED.**

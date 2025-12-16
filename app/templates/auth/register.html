@@ -1,20 +1,22 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="max-w-md mx-auto mt-20 bg-card pad-xl rounded shadow-heavy border border-gray-700">
-    <h2 class="text-3xl font-bold text-center mb-8 text-gold">ENTER THE RING</h2>
+    <h2 class="text-3xl font-bold text-center mb-8 text-gold">FORGE YOUR LEGEND</h2>
     <form method="POST">
         <input type="text" name="username" placeholder="Username" required 
                class="w-full p-3 mb-4 bg-gray-700 rounded border border-gray-600 focus:border-yellow-400">
         <input type="password" name="password" placeholder="Password" required 
+               class="w-full p-3 mb-4 bg-gray-700 rounded border border-gray-600 focus:border-yellow-400">
+        <input type="password" name="confirm_password" placeholder="Confirm Password" required 
                class="w-full p-3 mb-6 bg-gray-700 rounded border border-gray-600 focus:border-yellow-400">
         <button type="submit" 
                 class="w-full bg-yellow-500 hover:bg-yellow-400 text-black font-bold pad-y rounded text-xl">
-            LOGIN & DOMINATE
+            REGISTER & DOMINATE
         </button>
     </form>
     <p class="text-center mt-6 text-gray-400">
-        New warrior? 
-        <a href="{{ url_for('auth.register') }}" class="text-yellow-400 hover:text-yellow-300 font-bold">Register here</a>
+        Already in the empire? 
+        <a href="{{ url_for('auth.login') }}" class="text-yellow-400 hover:text-yellow-300 font-bold">Login here</a>
     </p>
 </div>
 {% endblock %}
