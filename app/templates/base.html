@@ -99,7 +99,7 @@
                     <a href="{{ url_for('calendar.calendar_view', view='week', year=year, month=month, day=day) }}" class="text-gold hover:text-white transition">
                     Week {{ year|iso_week(month, day) }}</a>
                     <span class="text-gray-600">/</span>
-                    <a href="{{ url_for('calendar.calendar_view', view='day', year=year, month=month, day=day) }}" class="text-gold hover:text-white transition font-black text-glow text-3xl">
+                    <a href="{{ url_for('calendar.calendar_view', view='day', year=year, month=month, day=day) }}" class="text-gold hover:text-white transition">
                     {{ day }}
                     </a>
                 </div>
