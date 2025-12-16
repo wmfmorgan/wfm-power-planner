@@ -51,13 +51,28 @@ const GOAL_TIMEFRAMES = {
   daily:      'daily'
 };
 
+const REFLECTION_NOTE_TYPE = {
+  PREP:    "prep",
+  WINS:    "wins",
+  IMPROVE: "improve",
+  NOTES:   "notes"
+};
+
+const REFLECTION_TIMEFRAME = {
+  DAILY:   "daily",
+  WEEKLY:  "weekly",
+  MONTHLY: "monthly"
+};
+
 // Expose globally
 Object.assign(window, {
   GOAL_STATUS,
   GOAL_CATEGORY,
   TASK_STATUS,
   GOAL_TIMEFRAMES,
-  CATEGORY_COLORS
+  CATEGORY_COLORS,
+  REFLECTION_NOTE_TYPE,
+  REFLECTION_TIMEFRAME
 });
 
 

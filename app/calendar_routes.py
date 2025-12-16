@@ -13,8 +13,18 @@ from pytz import timezone
 import re
 import logging
 from app.models.task import TaskStatus
+from app.services.reflection_service import upsert_note, get_all_for_period
+from app.date_utils import get_sunday_of_week, get_first_of_month
+
 
 calendar_bp = Blueprint('calendar', __name__, template_folder='templates/calendar')
+
+def get_sunday_of_week(year: int, month: int, day: int) -> date:
+    d = date(year, month, day)
+    return d - timedelta(days=d.weekday() + 1)  # +1 because Monday=0, Sunday=6 → we want Sunday
+
+def get_first_of_month(year: int, month: int) -> date:
+    return date(year, month, 1)
 
 @calendar_bp.route('/calendar')
 @calendar_bp.route('/calendar/<view>')
@@ -293,3 +303,45 @@ def api_update_event(event_id):
 def api_delete_event(event_id):
     delete_event(event_id)
     return jsonify({'success': True})
+
+@calendar_bp.route('/api/reflections/<timeframe>/<path:date_path>', methods=['GET'])
+@login_required
+def api_get_reflections(timeframe, date_path):
+    # date_path is like "2025-12-16" or "2025/12" or "2025/12/16"
+    parts = date_path.split('/')
+    if len(parts) == 3:
+        year, month, day = map(int, parts)
+        day_val = day
+    elif len(parts) == 2:
+        year, month = map(int, parts)
+        day_val = 1
+    else:
+        return jsonify({'error': 'Invalid date'}), 400
+
+    if timeframe == 'daily':
+        date_val = date(year, month, day_val)
+    elif timeframe == 'weekly':
+        date_val = get_sunday_of_week(year, month, day_val or 1)
+    else:  # monthly
+        date_val = get_first_of_month(year, month)
+
+    data = get_all_for_period(timeframe, date_val)
+    return jsonify(data)
+
+@calendar_bp.route('/api/reflections', methods=['POST'])
+@login_required
+def api_save_reflection():
+    data = request.get_json()
+    note_type = data['type']
+    timeframe = data['timeframe']
+    date_str = data['date']  # 'YYYY-MM-DD'
+    content = data['content']
+    
+    date_val = datetime.strptime(date_str, '%Y-%m-%d').date()
+    if timeframe == 'weekly':
+        date_val = get_sunday_of_week(date_val.year, date_val.month, date_val.day)
+    elif timeframe == 'monthly':
+        date_val = get_first_of_month(date_val.year, date_val.month)
+    
+    upsert_note(note_type, timeframe, date_val, content)
+    return jsonify({'status': 'saved'})

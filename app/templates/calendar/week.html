@@ -1,4 +1,8 @@
 {# templates/calendar/week.html — SUN→SAT HORIZONTAL DOMINATION — FINAL FINAL #}
+
+{% block date_str %}
+{{ year }}-{{ '%02d'|format(month) }}-{{ '%02d'|format(day) }}
+{% endblock %}
 <div class="max-w-7xl mx-auto">
   <h2 class="text-5xl font-black text-gold mb-8 text-center drop-shadow-lg">
     Week of {{ month|month_name }} {{ day }}, {{ year }}

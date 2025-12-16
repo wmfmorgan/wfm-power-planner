@@ -35,3 +35,23 @@ def get_iso_year_for_goal(year: int, month: int, day: int) -> int:
     if d.weekday() == 6:
         d = d + timedelta(days=1)
     return d.isocalendar()[0]
+
+
+"""
+Date helpers for calendar views — Sunday-first week, month-first day.
+Used by calendar_routes API for reflection notes keying.
+"""
+from datetime import date, timedelta
+
+def get_sunday_of_week(year: int, month: int, day: int) -> date:
+    """
+    Return the Sunday date of the week containing the given year/month/day.
+    Matches our Sunday-first calendar — eternal consistency.
+    """
+    d = date(year, month, day)
+    # weekday(): Mon=0 ... Sun=6 → subtract to reach Sunday
+    return d - timedelta(days=(d.weekday() + 1) % 7)
+
+def get_first_of_month(year: int, month: int) -> date:
+    """Return YYYY-MM-01 for the given year/month."""
+    return date(year, month, 1)

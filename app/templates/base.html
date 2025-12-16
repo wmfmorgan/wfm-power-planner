@@ -1,12 +1,13 @@
 <!-- app/templates/base.html — ETERNAL, TENET-COMPLIANT, UNBREAKABLE -->
 <!DOCTYPE html>
-<!DOCTYPE html>
 <html lang="en" 
       class="dark bg-gray-950 text-gray-100 min-h-screen"
-      data-current-view="{% block current_view %}month{% endblock %}"
-      data-year="{% block year %}{{ now.year }}{% endblock %}"
-      data-month="{% block month %}{{ now.month }}{% endblock %}"
-      data-day="{% block day %}{{ now.day }}{% endblock %}">
+      data-current-view="{{ calendar_view|default('month') }}"
+      data-year="{{ calendar_year|default(now.year) }}"
+      data-month="{{ calendar_month|default(now.month) }}"
+      data-day="{{ calendar_day|default('') }}"
+      data-timeframe="{{ calendar_timeframe|default('month') }}"
+      data-date-str="{{ calendar_date_str|default(now.strftime('%Y-%m-%d')) }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -156,8 +157,8 @@
     {% if request.path.startswith('/calendar') %}
       {# Calendar nav + styles already in base_calendar.html, but period goals needed on all views #}
       <script src="{{ url_for('static', filename='js/goal_manager.js') }}"></script>
-   {% endif %}
-
+      <script src="{{ url_for('static', filename='js/reflection_zones.js') }}"></script>
+    {% endif %}
     {# Future: Goals page specific script if it grows #}
     {% if request.path.startswith('/goals') %}
       {# <script src="{{ url_for('static', filename='js/goals_page.js') }}"></script> #}

@@ -1,4 +1,9 @@
 {# templates/calendar/month.html — FINAL SUNDAY-FIRST GRID, NO FILTERS, PURE PROTEIN #}
+
+
+{% block date_str %}
+{{ year }}-{{ '%02d'|format(month) }}-01
+{% endblock %}
 <div class="max-w-5xl mx-auto">
   <h2 class="text-5xl font-black text-gold mb-8 text-center drop-shadow-lg">
     {{ month|month_name }} {{ year }}

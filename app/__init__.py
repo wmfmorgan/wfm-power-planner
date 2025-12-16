@@ -1,6 +1,6 @@
 # app/__init__.py
 # THE ONE AND ONLY APP FACTORY — CLEAN, ETERNAL, CHAMPIONSHIP-CALIBER
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 from flask import Flask
 from flask_login import LoginManager, login_required, current_user
 from flask_migrate import Migrate
@@ -85,5 +85,40 @@ def create_app():
         # Python: 0=Mon ... 6=Sun → we want 6=Sun, so just return it!
         return d.weekday()
 
-    return app
+    @app.context_processor
+    def inject_calendar_data():
+        if request.endpoint and request.endpoint.startswith('calendar.'):
+            view_args = request.view_args or {}
+            view = view_args.get('view', 'month')
+            year = view_args.get('year') or datetime.today().year
+            month = view_args.get('month') or datetime.today().month
+            day = view_args.get('day')  # can be None
 
+            if view == 'monthly':
+                date_str = f"{year}-{month:02d}-01"
+            elif view == 'weekly':
+                day_for_str = day if day is not None else 1
+                date_str = f"{year}-{month:02d}-{day_for_str:02d}"
+            else:  # daily
+                day_for_str = day if day is not None else 1
+                date_str = f"{year}-{month:02d}-{day_for_str:02d}"
+
+            timeframe_map = {
+            'day': 'daily',
+            'week': 'weekly',
+            'month': 'monthly',
+            'year': 'monthly',      # fallback if we ever add year view
+            'quarter': 'monthly',   # fallback
+            }
+            timeframe_enum = timeframe_map.get(view, 'monthly')
+
+            return {
+                'calendar_view': view,
+                'calendar_year': year,
+                'calendar_month': month,
+                'calendar_day': day,
+                'calendar_timeframe': timeframe_enum,
+                'calendar_date_str': date_str
+            }
+        return {}
+    return app
