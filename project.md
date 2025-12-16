@@ -361,7 +361,7 @@ CREATE TABLE goal_events (
 - Dynamically refresh goals after add/delete
 - Dynamically refresh tasks after add/delete
 - Require due date on tasks and goals
-- save notes to database
+- DONE: save notes to database
 - fix scrum import
 - Collapse calendar
 - DONE: fix updating goals/subgoals  in calendar page
