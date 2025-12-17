@@ -22,6 +22,7 @@ Last updated: 2025-12-08
 10. PROJECT.md is the single source of truth for architecture, tenets, and workflow — forever.
 11. GO SLOW TO GO FAST — THE LAW OF UNBREAKABLE VELOCITY
 (Added 2025-12-08 after near-fatal speed violations)
+12. Ask questions when we go into discussions about design
 
 - Never sacrifice a Sacred Tenet for the illusion of progress.
 - Every single code suggestion must pass a 10-second mental checklist:
