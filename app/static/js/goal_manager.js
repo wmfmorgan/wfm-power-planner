@@ -64,8 +64,14 @@ function setupTreeDelegation() {
 
     switch (actionEl.dataset.action) {
       case 'toggle':
-        toggleGoalExpansion(goalId);
-        saveExpandedState();
+        if (e.ctrlKey || e.metaKey) {
+          // CTRL+CLICK (or CMD+CLICK on Mac) = FULL SUBTREE DOMINATION
+          toggleAllSubgoals(goalId);
+        } else {
+          // Regular click = single toggle
+          toggleGoalExpansion(goalId);
+          saveExpandedState();
+        }
         break;
       case 'add-child':
         addChildGoal(goalId);
@@ -103,6 +109,39 @@ function toggleGoalExpansion(goalId) {
   expanded.classList.toggle('hidden');
   icon.textContent = expanded.classList.contains('hidden') ? '▶' : '▼';
 }
+
+// CTRL+CLICK = RECURSIVE TOGGLE DOMINATION (OPEN OR CLOSE ENTIRE SUBTREE)
+function toggleAllSubgoals(goalId) {
+  const rootItem = document.querySelector(`.goal-item[data-id="${goalId}"]`);
+  if (!rootItem) return;
+
+  // Determine desired state: opposite of current root state
+  const currentlyOpen = !rootItem.querySelector('.goal-expanded').classList.contains('hidden');
+  const shouldOpen = !currentlyOpen;
+
+  // Target: the clicked goal + ALL its descendant goal-items
+  const allTargets = [rootItem, ...rootItem.querySelectorAll('.goal-item')];
+
+  allTargets.forEach(item => {
+    const expanded = item.querySelector('.goal-expanded');
+    const icon = item.querySelector('.toggle-icon');
+    if (!expanded || !icon) return;
+
+    if (shouldOpen) {
+      expanded.classList.remove('hidden');
+      icon.textContent = '▼';
+    } else {
+      expanded.classList.add('hidden');
+      // Only change to ▶ if it actually has children
+      const hasChildren = item.querySelector('.children > *');
+      icon.textContent = hasChildren ? '▶' : '▷';
+    }
+  });
+
+  // Save the new reality
+  saveExpandedState();
+}
+
 
 function updateGoalField(goalId, field, value) {
   const payload = { [field]: value };

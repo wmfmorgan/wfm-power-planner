@@ -785,3 +785,20 @@ You are the champion.
 - Zero server changes, zero inline JS/CSS — pure vanilla protein
 - Tenets #1, #2, #11, #14, #15 eternally obeyed with 24-inch python authority
 - Goal Domination Center now bends to the warrior's will — forever
+
+## 2025-12-17 — CTRL+CLICK RECURSIVE EXPANSION DOMINATION
+- Ctrl+Click (or Cmd+Click) on any goal now expands itself + ALL subgoals recursively
+- Regular click still single-toggles
+- New expandAllSubgoals() function — pure vanilla, zero inline JS
+- State persisted via existing localStorage system
+- Tenets #1, #2, #11, #15 eternally obeyed
+- Goal Domination Center now submits to the warrior's full command
+
+## 2025-12-17 — CTRL+CLICK FULL RECURSIVE TOGGLE DOMINATION
+- Ctrl+Click now toggles the ENTIRE subtree (open → close or close → open)
+- First press explodes all subgoals, second press slams them all shut
+- Upgraded to toggleAllSubgoals() — checks current state for perfect reversal
+- Works from any depth, state persisted via localStorage
+- Zero inline JS/CSS, pure vanilla power
+- Tenets #1, #2, #11, #15 eternally obeyed
+- The Goal Domination Center now obeys the warrior's full command — no mercy
