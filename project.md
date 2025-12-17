@@ -359,15 +359,16 @@ CREATE TABLE goal_events (
 - DONE: remove goal page kanban
 - DONE: Delete goals/subgoals
 - Dynamically refresh goals after add/delete
-- Dynamically refresh tasks after add/delete
+- DONE: Dynamically refresh tasks after add/delete
 - Require due date on tasks and goals
 - DONE: save notes to database
 - fix scrum import
 - Collapse calendar
 - DONE: fix updating goals/subgoals  in calendar page
-- If i am on they day page, add the task to the TODO and default time to today
+- DONE: If i am on they day page, add the task to the TODO and default time to today
 - Fix criticality of task
 - DONE: Click on calendar, it defaults to Today
+
 
 ### CURRENT STATUS — 2025-12-06
 

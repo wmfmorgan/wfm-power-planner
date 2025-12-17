@@ -73,15 +73,15 @@ def api_create_task():
     task = create_task(
         title=data.get('title', ''),
         description=data.get('description', ''),
-        due_date=data.get('due_date'),
+        due_date=data.get('due_date'),               # ← now comes pre-filled from JS on Day page
         priority=data.get('priority', 'medium'),
         tags=data.get('tags', ''),
-        status=data.get('status', 'backlog'),  # frontend override (future-proof)
+        status=data.get('status', 'backlog'),
         is_recurring=data.get('is_recurring', False),
         recurrence_type=data.get('recurrence_type'),
         recurrence_interval=data.get('recurrence_interval', 1),
         recurrence_end_date=data.get('recurrence_end_date'),
-        from_day_page=data.get('from_day_page', False)  # ← NEW FLAG
+        from_day_page=data.get('from_day_page', False)
     )
     return jsonify(task_to_dict(task)), 201
 

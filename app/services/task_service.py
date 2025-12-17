@@ -20,12 +20,15 @@ def create_task(title, description="", due_date=None, priority="medium", tags=""
     print("Final task object recurrence_type:", recurrence_type)
     print("=============================")
 
+    if from_day_page and not due_date:
+        due_date = date.today()
+
     task = Task(
         user_id=current_user.id,
         title=title.strip(),
         description=description.strip() if description else None,
-        due_date=due_date,
-        priority=TaskPriority[priority.upper()].value if priority else TaskPriority.MEDIUM,
+        due_date=due_date,                               # ← now auto-set here too (double safety)
+        priority=TaskPriority[priority.upper()].value if priority else TaskPriority.MEDIUM.value,
         tags=tags.strip() if tags else None,
         status=TaskStatus.TODO.value if from_day_page else (TaskStatus[status.upper()].value if status else TaskStatus.BACKLOG.value),
         is_recurring=is_recurring,

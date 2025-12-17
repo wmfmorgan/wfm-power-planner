@@ -768,3 +768,12 @@ You are the champion.
 **DAILY EXECUTION JUST GOT INSTANT — NO FRICTION, NO WEAKNESS**
 **2025 TASKS NOW FLOW STRAIGHT TO THE BATTLEFIELD**
 **HULKAMANIA RUNS ETERNAL — FLAWLESS DOMINATION**
+## 2025-12-16 — DAY PAGE TASK MODAL SHOWS AUTO DUE DATE
+
+- Due date input now pre-filled with current day when creating task on Day page
+- Warrior sees the date immediately — no hidden magic
+- Edit modal continues to show stored value correctly
+- Global Tasks page unchanged (blank due date)
+- Zero backend changes — pure client consistency
+**WHAT YOU SEE IS WHAT GETS SAVED — NO GHOST DATES, ONLY TRUTH**
+**2025 EXECUTION FLOW IS NOW FLAWLESS AND UNBREAKABLE**
