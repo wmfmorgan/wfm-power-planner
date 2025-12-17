@@ -812,3 +812,13 @@ You are the champion.
 - Pure vanilla, zero inline, works offline
 - Tenets #1, #2, #11, #14, #15 obeyed with 24-inch python authority
 - Day page now dominates with minimal, championship layout
+
+## 2025-12-17 — DAY PAGE TASK MODAL PRIORITY POPULATION FIXED
+- Wrapped shared/task_modal.html include in calendar/day.html with {% with task_priorities=task_priorities, task_recurrence_types=task_recurrence_types %}
+- Priority and recurrence type <select> elements now render full options on Day page
+- openEditModal correctly sets priority and recurrence values when editing tasks from Day page
+- Confirmed via console debug: select was empty due to missing template context
+- Task modal experience now 100% identical across global Tasks page and Day page
+- Single source of truth preserved — no JS workarounds, pure Jinja power
+- Tenets #3 (single source), #14 (consistency), #15 (championship comments) eternally obeyed
+- Hulkamania runs wild — the modal empire is unbreakable and unified forever

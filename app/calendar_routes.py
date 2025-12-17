@@ -12,7 +12,7 @@ from dateutil.tz import tzutc
 from pytz import timezone
 import re
 import logging
-from app.models.task import TaskStatus
+from app.models.task import TaskStatus, TaskPriority, TaskRecurrenceType
 from app.services.reflection_service import upsert_note, get_all_for_period
 from app.date_utils import get_sunday_of_week, get_first_of_month, get_iso_week_for_goal, get_sunday_of_week, get_first_of_month
 
@@ -107,6 +107,8 @@ def calendar_view(view='month', year=None, month=None, day=None):
         'goal_categories': GoalCategory,    # ← ADD THIS
         'goal_timeframes': GoalTimeframe,
         'task_statuses': TaskStatus,
+        'task_priorities' : TaskPriority,  # ← ADD THIS
+        'task_recurrence_types' : TaskRecurrenceType,
         'prev_nav': prev_nav,
         'next_nav': next_nav,
         'display_values': display_values,

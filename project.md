@@ -366,7 +366,7 @@ CREATE TABLE goal_events (
 - DONE: Collapse calendar
 - DONE: fix updating goals/subgoals  in calendar page
 - DONE: If i am on they day page, add the task to the TODO and default time to today
-- Fix criticality of task
+- DONE: Fix criticality of task
 - DONE: Click on calendar, it defaults to Today
 
 

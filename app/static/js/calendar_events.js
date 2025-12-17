@@ -174,46 +174,49 @@ function renderEvents(events) {
 
   saveBtn.onclick = () => {
     const id = document.getElementById('event-id').value;
-    const dayStr = getCurrentDay(); // "2025-12-15"
+    const dayStr = getCurrentDay();
     const [year, month, day] = dayStr.split('-');
     const payload = {
-        title: titleInput.value.trim(),
-        start_time: slotToTime(parseInt(startSelect.value)),
-        end_time: slotToTime(parseInt(endSelect.value)),
-        year: parseInt(year),
-        month: parseInt(month),
-        day: parseInt(day)
+      title: titleInput.value.trim(),
+      start_time: slotToTime(parseInt(startSelect.value)),
+      end_time: slotToTime(parseInt(endSelect.value)),
+      year: parseInt(year),
+      month: parseInt(month),
+      day: parseInt(day)
     };
+
+    if (!payload.title) return alert('Title required, warrior!');
 
     const method = id ? 'PATCH' : 'POST';
     const url = id ? `/api/events/${id}` : '/api/events';
 
-    fetch(url, {
-      method,
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    })
-    .then(r => {
-      if (!r.ok) throw new Error('Save failed');
-      closeModal();
-      fetchAndRenderEvents();
-    })
-    .catch(err => console.error(err));
-  };
-
-  deleteBtn.onclick = () => {
-    if (!confirm('Delete this event forever?')) return;
-    const id = document.getElementById('event-id').value;
-    fetch(`/api/events/${id}`, { method: 'DELETE' })
+    fetch(url, { method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) })
       .then(() => {
         closeModal();
         fetchAndRenderEvents();
       });
   };
 
-  closeBtn.onclick = modal.onclick = (e) => {
-    if (e.target === modal || e.target === closeBtn) closeModal();
-  };
+  deleteBtn.onclick = () => {
+      if (!confirm('Delete this event forever?')) return;
+      const id = document.getElementById('event-id').value;
+      fetch(`/api/events/${id}`, { method: 'DELETE' })
+        .then(() => {
+          closeModal();
+          fetchAndRenderEvents();
+        });
+    };
+
+    closeBtn.onclick = closeModal;
+    modal.onclick = (e) => { if (e.target === modal) closeModal(); };
+
+    // Enter key save
+    modal.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        saveBtn.onclick();
+      }
+    });
 
   // Initial load
   document.addEventListener('DOMContentLoaded', () => {

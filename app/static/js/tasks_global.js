@@ -40,9 +40,6 @@ function createTaskCard(task) {
   card.dataset.id = task.id;
 
   card.innerHTML = `
-    <button type="button" class="btn-task-delete text-red-400 hover:text-red-300 text-2xl z-10">
-      ×
-    </button>
     <div class="font-bold text-white text-xl">${escapeHtml(task.title)}</div>
     <div class="text-sm text-muted mt-2">${task.due_date || 'No due date'}</div>
     <div class="text-xs text-gray-500 mt-1">${task.tags || ''}</div>

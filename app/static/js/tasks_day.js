@@ -30,6 +30,7 @@ if (window.tasksDayInitialized) {
           return r.json();
         })
         .then(tasks => {
+          console.log('DAY PAGE TASKS RAW DATA:', tasks);
           renderDayTasks(tasks);
         })
         .catch(err => {
@@ -69,9 +70,6 @@ if (window.tasksDayInitialized) {
       card.dataset.id = task.id;
 
       card.innerHTML = `
-        <button type="button" class="btn-task-delete text-red-400 hover:text-red-300 text-2xl z-10 absolute top-4 right-4">
-          ×
-        </button>
         <div class="font-bold text-white text-xl">${escapeHtml(task.title)}</div>
         <div class="text-sm text-muted mt-2">${task.due_date || 'No due date'}</div>
         <div class="text-xs text-gray-500 mt-1">${task.tags || ''}</div>
@@ -79,7 +77,7 @@ if (window.tasksDayInitialized) {
 
       card.addEventListener('click', (e) => {
         if (e.target.closest('.btn-task-delete')) return;
-        if (window.openEditModal) window.openEditModal(task);
+        window.openEditModal(task);
       });
 
       return card;

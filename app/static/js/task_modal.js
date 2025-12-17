@@ -1,33 +1,30 @@
 // static/js/task_modal.js
-// TASK MODAL + FULL CRUD LOGIC — EXTRACTED FOR REUSE
-// Used by both global Tasks page and Day page — zero duplication
-// Championship comments — future warriors in 2035 will feel the power
+// TASK MODAL + FULL CRUD LOGIC — UNIFIED WITH GOAL/EVENT PATTERN
+// NO FORM, PURE JS CONTROL — TENET #4 ETERNAL
 
 console.log('task_modal.js LOADED — MODAL DOMINATION CENTER ARMED');
 
-// SINGLE INITIALIZATION GUARD — PREVENTS DOUBLE-RUN IF LOADED TWICE
 if (window.taskModalInitialized) {
-  console.log('task_modal.js already initialized — skipping duplicate run');
+  console.log('task_modal.js already initialized — skipping');
 } else {
   window.taskModalInitialized = true;
 
   const modal = document.getElementById('task-modal');
-
   if (!modal) {
-    console.log('task_modal.js: No #task-modal in DOM — safe to skip init (e.g. Goals page)');
-    // Stub globals so other scripts don't crash if they call early
-    window.openTaskModal = () => console.warn('Task modal not available on this page');
-    window.openEditModal = () => console.warn('Task modal not available on this page');
-    window.closeTaskModal = () => console.warn('Task modal not available on this page');
+    console.log('No #task-modal — safe skip');
+    window.openTaskModal = () => {};
+    window.openEditModal = () => {};
+    window.closeTaskModal = () => {};
   } else {
-    // ONLY RUN FULL INIT WHEN MODAL EXISTS
-    const form = document.getElementById('task-form');
+    // ELEMENTS
+    const saveBtn = document.getElementById('save-task-btn');
+    const deleteBtn = document.getElementById('delete-task-btn');
     const closeBtn = document.getElementById('task-close-modal');
+    const hiddenId = document.getElementById('task-id');
 
-    // Recurring toggle — safe optional chaining
+    // Recurring toggle
     document.getElementById('task-is-recurring')?.addEventListener('change', (e) => {
-      const options = document.getElementById('recurring-options');
-      if (options) options.classList.toggle('hidden', !e.target.checked);
+      document.getElementById('recurring-options')?.classList.toggle('hidden', !e.target.checked);
     });
 
     function openTaskModal() {
@@ -39,174 +36,152 @@ if (window.taskModalInitialized) {
     function closeTaskModal() {
       modal.classList.remove('visible', 'opacity-100');
       modal.classList.add('invisible', 'opacity-0');
-      form.reset();
-      form.removeAttribute('data-task-id');
-      form.onsubmit = handleCreate;
-      const options = document.getElementById('recurring-options');
-      if (options) options.classList.add('hidden');
+
+      // Reset all fields
+      modal.querySelectorAll('input:not([type="hidden"]), textarea, select').forEach(el => {
+        if (el.type === 'checkbox') el.checked = false;
+        else el.value = '';
+      });
+      hiddenId.value = '';
+      deleteBtn?.classList.add('hidden');
+      document.getElementById('recurring-options')?.classList.add('hidden');
+      const recurCheck = document.getElementById('task-is-recurring');
+        if (recurCheck) recurCheck.checked = false;
+
     }
 
     function collectFormData() {
-    const isRecurring = document.getElementById('task-is-recurring')?.checked || false;
+      const isRecurring = document.getElementById('task-is-recurring')?.checked || false;
+      const calApp = document.getElementById('calendar-app');
+      const isDayPage = calApp && calApp.dataset.year && calApp.dataset.month && calApp.dataset.day;
 
-    const calApp = document.getElementById('calendar-app');
-    const isDayPage = calApp && calApp.dataset.year && calApp.dataset.month && calApp.dataset.day;
-
-    let due_date = document.getElementById('task-due-date')?.value || null;
-
-    if (isDayPage && !due_date) {  // ← NEW: auto-set if blank and on Day page
-      const year = calApp.dataset.year;
-      const month = String(calApp.dataset.month).padStart(2, '0');
-      const day = String(calApp.dataset.day).padStart(2, '0');
-      due_date = `${year}-${month}-${day}`;
-    }
-
-    return {
-      title: document.getElementById('task-title')?.value.trim() || '',
-      description: document.getElementById('task-description')?.value.trim() || null,
-      due_date: due_date,                           // ← now auto-filled on Day page
-      priority: document.getElementById('task-priority')?.value || 'medium',
-      tags: document.getElementById('task-tags')?.value.trim() || null,
-      is_recurring: isRecurring,
-      recurrence_type: isRecurring ? document.getElementById('task-recurrence-type')?.value : null,
-      recurrence_interval: isRecurring ? parseInt(document.getElementById('task-recurrence-interval')?.value) || 1 : null,
-      recurrence_end_date: isRecurring ? document.getElementById('task-recurrence-end')?.value || null : null,
-      from_day_page: form.dataset.fromDayPage === 'true'
-    };
-  }
-
-    function handleCreate(e) {
-      e.preventDefault();
-      const data = collectFormData();
-      fetch('/api/tasks', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data)
-      })
-      .then(() => {
-        closeTaskModal();
-        if (window.refreshTasks) window.refreshTasks();
-      })
-      .catch(err => console.error('Create failed:', err));
-    }
-
-    function handleUpdate(e) {
-      e.preventDefault();
-      const taskId = form.dataset.taskId;
-      if (!taskId) return;
-
-      const data = collectFormData();
-      fetch(`/api/tasks/${taskId}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data)
-      })
-      .then(() => {
-        closeTaskModal();
-        if (window.refreshTasks) window.refreshTasks();
-      })
-      .catch(err => console.error('Update failed:', err));
-    }
-
-    window.openEditModal = function(task) {
-      // Populate fields
-      const titleEl = document.getElementById('task-title');
-      const descEl = document.getElementById('task-description');
-      const dueEl = document.getElementById('task-due-date');
-      const priEl = document.getElementById('task-priority');
-      const tagsEl = document.getElementById('task-tags');
-
-      if (titleEl) titleEl.value = task.title || '';
-      if (descEl) descEl.value = task.description || '';
-      if (dueEl) dueEl.value = task.due_date || '';
-      if (priEl) priEl.value = task.priority || 'medium';
-      if (tagsEl) tagsEl.value = task.tags || '';
-
-      // Recurring
-      const recurCheck = document.getElementById('task-is-recurring');
-      const options = document.getElementById('recurring-options');
-      if (recurCheck) recurCheck.checked = !!task.is_recurring;
-      if (options) options.classList.toggle('hidden', !task.is_recurring);
-
-      if (task.is_recurring) {
-        const typeEl = document.getElementById('task-recurrence-type');
-        const intervalEl = document.getElementById('task-recurrence-interval');
-        const endEl = document.getElementById('task-recurrence-end');
-
-        if (typeEl) typeEl.value = task.recurrence_type || 'daily';
-        if (intervalEl) intervalEl.value = task.recurrence_interval || 1;
-        if (endEl) endEl.value = task.recurrence_end_date || '';
+      let due_date = document.getElementById('task-due-date')?.value || null;
+      if (isDayPage && !due_date) {
+        const year = calApp.dataset.year;
+        const month = String(calApp.dataset.month).padStart(2, '0');
+        const day = String(calApp.dataset.day).padStart(2, '0');
+        due_date = `${year}-${month}-${day}`;
       }
 
-      form.dataset.taskId = task.id;
-      form.onsubmit = handleUpdate;
+        return {
+        title: document.getElementById('task-title')?.value.trim() || '',
+        description: document.getElementById('task-description')?.value.trim() || null,
+        due_date,
+        priority: document.getElementById('task-priority')?.value || 'medium',
+        tags: document.getElementById('task-tags')?.value.trim() || null,
+        is_recurring: isRecurring,
+        recurrence_type: isRecurring ? document.getElementById('task-recurrence-type')?.value : null,
+        recurrence_interval: isRecurring ? parseInt(document.getElementById('task-recurrence-interval')?.value) || 1 : null,
+        recurrence_end_date: isRecurring ? document.getElementById('task-recurrence-end')?.value || null : null,
+        status: (!hiddenId.value && isDayPage) ? TASK_STATUS.TODO : undefined  // ← NEW: Force TODO on Day page new tasks
+      };
+    }
+
+    function saveTask() {
+      const taskId = hiddenId.value;
+      const data = collectFormData();
+      if (!data.title) return alert('Title required, warrior!');
+
+      const method = taskId ? 'PATCH' : 'POST';
+      const url = taskId ? `/api/tasks/${taskId}` : '/api/tasks';
+
+      fetch(url, {
+        method,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      })
+      .then(() => {
+        closeTaskModal();
+        if (window.refreshTasks) window.refreshTasks();
+      })
+      .catch(err => console.error('Task save failed:', err));
+    }
+
+    // EDIT: populate + show DELETE
+    window.openEditModal = function(task) {
+      console.log('openEditModal CALLED — TASK OBJECT:', task);
+      console.log('Priority value:', task.priority);
+      console.log('Priority element:', document.getElementById('task-priority'));
+      hiddenId.value = task.id || '';
+      document.getElementById('task-title').value = task.title || '';
+      document.getElementById('task-description').value = task.description || '';
+      document.getElementById('task-due-date').value = task.due_date || '';
+      document.getElementById('task-priority').value = task.priority || 'medium';
+      document.getElementById('task-tags').value = task.tags || '';
+
+      const recurCheck = document.getElementById('task-is-recurring');
+      recurCheck.checked = !!task.is_recurring;
+      document.getElementById('recurring-options').classList.toggle('hidden', !task.is_recurring);
+
+      if (task.is_recurring) {
+        const recurType = document.getElementById('task-recurrence-type');
+        if (recurType) recurType.value = task.recurrence_type || 'daily';
+
+        const recurInterval = document.getElementById('task-recurrence-interval');
+        if (recurInterval) recurInterval.value = task.recurrence_interval || 1;
+
+        const recurEnd = document.getElementById('task-recurrence-end');
+        if (recurEnd) recurEnd.value = task.recurrence_end_date || '';
+
+      }
+
+      deleteBtn?.classList.remove('hidden');
       openTaskModal();
     };
 
-    // Delete delegation — works on any page with task cards
+    // + BUTTON — NEW TASK (GLOBAL OR DAY PAGE)
+    document.getElementById('add-task-btn')?.addEventListener('click', () => {
+      closeTaskModal(); // Full reset
+
+      const calApp = document.getElementById('calendar-app');
+      const isDayPage = calApp && calApp.dataset.year && calApp.dataset.month && calApp.dataset.day;
+
+      if (isDayPage) {
+        const year = calApp.dataset.year;
+        const month = String(calApp.dataset.month).padStart(2, '0');
+        const day = String(calApp.dataset.day).padStart(2, '0');
+        const todayStr = `${year}-${month}-${day}`;
+        document.getElementById('task-due-date').value = todayStr;
+      }
+
+      openTaskModal();
+    });
+
+    // BUTTON HANDLERS
+    saveBtn.onclick = saveTask;
+    deleteBtn.onclick = () => {
+      if (!confirm('Obliterate this task forever?')) return;
+      const taskId = hiddenId.value;
+      fetch(`/api/tasks/${taskId}`, { method: 'DELETE' })
+        .then(() => {
+          closeTaskModal();
+          if (window.refreshTasks) window.refreshTasks();
+        });
+    };
+    closeBtn.onclick = closeTaskModal;
+
+    // ENTER KEY SAVE (except Shift+Enter in textarea)
+    modal.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && !e.shiftKey && !e.ctrlKey && !e.metaKey) {
+        e.preventDefault();
+        saveTask();
+      }
+    });
+
+    // DELETE FROM CARD (delegated — works on any page)
     document.addEventListener('click', (e) => {
       const btn = e.target.closest('.btn-task-delete');
       if (!btn) return;
-
       const card = btn.closest('.task-card');
       if (!card || !confirm('Obliterate this task forever?')) return;
-
       const taskId = card.dataset.id;
-      if (!taskId) return;
-
       fetch(`/api/tasks/${taskId}`, { method: 'DELETE' })
-        .then(() => {
-          if (window.refreshTasks) window.refreshTasks();
-        })
-        .catch(err => console.error('Delete failed:', err));
+        .then(() => window.refreshTasks?.());
     });
 
-    // Global exports
-    Object.assign(window, {
-      openTaskModal,
-      closeTaskModal,
-      openEditModal
-    });
-
-    // + BUTTON LISTENER — WORKS ON ANY PAGE WITH #add-task-btn
-    // Global Tasks page AND Day page both have the floating yellow beast
-        // + BUTTON LISTENER — WORKS ON ANY PAGE WITH #add-task-btn
-    // DAY PAGE DETECTION: if calendar-app has date data → we're on daily execution battlefield
-        // + BUTTON LISTENER — WORKS ON ANY PAGE WITH #add-task-btn
-    // DAY PAGE DETECTION + AUTO-FILL DUE DATE FOR INSTANT EXECUTION
-    document.getElementById('add-task-btn')?.addEventListener('click', () => {
-        // Reset form for new task
-        form.reset();
-        form.removeAttribute('data-task-id');
-        form.removeAttribute('data-from-day-page');
-        form.onsubmit = handleCreate;
-        document.getElementById('recurring-options')?.classList.add('hidden');
-        const recurCheckbox = document.getElementById('task-is-recurring');
-        if (recurCheckbox) recurCheckbox.checked = false;
-
-        // DETECT DAY PAGE
-        const calApp = document.getElementById('calendar-app');
-        const isDayPage = calApp && calApp.dataset.year && calApp.dataset.month && calApp.dataset.day;
-
-        if (isDayPage) {
-            form.dataset.fromDayPage = 'true';
-
-            // AUTO-FILL THE DUE DATE INPUT SO WARRIOR SEES IT
-            const year = calApp.dataset.year;
-            const month = String(calApp.dataset.month).padStart(2, '0');
-            const day = String(calApp.dataset.day).padStart(2, '0');
-            const todayStr = `${year}-${month}-${day}`;
-
-            const dueDateInput = document.getElementById('task-due-date');
-            if (dueDateInput) dueDateInput.value = todayStr;
-        }
-
-        openTaskModal();
-    });
-
-
-    // Final setup — safe because we're inside the modal-exists branch
-    if (form) form.onsubmit = handleCreate;
-    if (closeBtn) closeBtn.addEventListener('click', closeTaskModal);
+    // GLOBAL EXPORTS
+    window.openTaskModal = openTaskModal;
+    window.closeTaskModal = closeTaskModal;
+    window.openEditModal = openEditModal;
   }
-}    
+}
