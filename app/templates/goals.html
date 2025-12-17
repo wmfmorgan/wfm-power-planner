@@ -67,7 +67,7 @@
                       data-field="status"
                       data-id="{{ goal.id }}">
                 {% for status in goal_statuses %}
-                  <option value="{{ status.value }}" {% if status.value == goal.status %}selected{% endif %}>
+                  <option value="{{ status.value }}" {% if status.value == goal.status.value %}selected{% endif %}>
                     {{ status.name }}
                   </option>
                 {% endfor %}
@@ -77,7 +77,7 @@
                       data-field="category"
                       data-id="{{ goal.id }}">
                 {% for cat in goal_categories %}
-                  <option value="{{ cat.value }}" {% if cat.value == goal.category %}selected{% endif %}>
+                  <option value="{{ cat.value }}" {% if cat.value == goal.category.value %}selected{% endif %}>
                     {{ cat.name }}
                   </option>
                 {% endfor %}
