@@ -7,7 +7,10 @@ const GOAL_MODAL = document.getElementById('goal-modal');
 document.addEventListener('DOMContentLoaded', () => {
   // Tree page delegation (toggle, delete, add-child, inline edits)
   const tree = document.getElementById('goal-tree');
-  if (tree) setupTreeDelegation();
+  if (tree) {
+    setupTreeDelegation();
+    restoreExpandedState();   // ← NEW: bring back warrior's last view
+  }
 
   // Calendar goal kanban init
   const periodKanban = document.getElementById('period-goals-kanban');
@@ -62,6 +65,7 @@ function setupTreeDelegation() {
     switch (actionEl.dataset.action) {
       case 'toggle':
         toggleGoalExpansion(goalId);
+        saveExpandedState();
         break;
       case 'add-child':
         addChildGoal(goalId);
@@ -336,3 +340,40 @@ function initCalendarGoalSortable() {
     });
   });
 }
+
+// Save current open state to localStorage
+function saveExpandedState() {
+  const openIds = Array.from(document.querySelectorAll('.goal-item .goal-expanded:not(.hidden)'))
+                       .map(el => el.closest('.goal-item').dataset.id);
+  localStorage.setItem('goal-tree-open', JSON.stringify(openIds));
+}
+
+// Restore open state from localStorage
+function restoreExpandedState() {
+  const stored = localStorage.getItem('goal-tree-open');
+  if (!stored) return;
+
+  try {
+    const openIds = JSON.parse(stored);
+    openIds.forEach(id => {
+      const item = document.querySelector(`.goal-item[data-id="${id}"]`);
+      if (item) {
+        const expanded = item.querySelector('.goal-expanded');
+        const icon = item.querySelector('.toggle-icon');
+        if (expanded && icon) {
+          expanded.classList.remove('hidden');
+          icon.textContent = '▼';
+        }
+      }
+    });
+  } catch (e) {
+    console.warn('Failed to restore goal tree state');
+  }
+}
+document.getElementById('collapse-all')?.addEventListener('click', () => {
+  document.querySelectorAll('.goal-expanded').forEach(el => el.classList.add('hidden'));
+  document.querySelectorAll('.toggle-icon').forEach(icon => {
+    if (icon.closest('.goal-item').querySelector('.children > *')) icon.textContent = '▶';
+  });
+  localStorage.removeItem('goal-tree-open');
+});

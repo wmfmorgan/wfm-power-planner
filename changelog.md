@@ -777,3 +777,11 @@ You are the champion.
 - Zero backend changes — pure client consistency
 **WHAT YOU SEE IS WHAT GETS SAVED — NO GHOST DATES, ONLY TRUTH**
 **2025 EXECUTION FLOW IS NOW FLAWLESS AND UNBREAKABLE**
+
+## 2025-12-17 — GOAL TREE EXPANSION STATE ETERNAL DOMINATION
+- Expanded goals now persist across inline edits and full page reloads via localStorage
+- Added "COLLAPSE ALL GOALS" button — one click resets to clean slate
+- Fresh visits start fully collapsed; warrior's battle stance remembered on return
+- Zero server changes, zero inline JS/CSS — pure vanilla protein
+- Tenets #1, #2, #11, #14, #15 eternally obeyed with 24-inch python authority
+- Goal Domination Center now bends to the warrior's will — forever
