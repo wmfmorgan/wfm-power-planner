@@ -57,7 +57,8 @@ if (window.taskModalInitialized) {
         is_recurring: isRecurring,
         recurrence_type: isRecurring ? document.getElementById('task-recurrence-type')?.value : null,
         recurrence_interval: isRecurring ? parseInt(document.getElementById('task-recurrence-interval')?.value) || 1 : null,
-        recurrence_end_date: isRecurring ? document.getElementById('task-recurrence-end')?.value || null : null
+        recurrence_end_date: isRecurring ? document.getElementById('task-recurrence-end')?.value || null : null,
+        from_day_page: form.dataset.fromDayPage === 'true'  // ← THE POWER FLAG
       };      
     }
 
@@ -156,16 +157,26 @@ if (window.taskModalInitialized) {
 
     // + BUTTON LISTENER — WORKS ON ANY PAGE WITH #add-task-btn
     // Global Tasks page AND Day page both have the floating yellow beast
+        // + BUTTON LISTENER — WORKS ON ANY PAGE WITH #add-task-btn
+    // DAY PAGE DETECTION: if calendar-app has date data → we're on daily execution battlefield
     document.getElementById('add-task-btn')?.addEventListener('click', () => {
         // Reset form for new task
         form.reset();
         form.removeAttribute('data-task-id');
+        form.removeAttribute('data-from-day-page'); // clear old flag
         form.onsubmit = handleCreate;
         document.getElementById('recurring-options')?.classList.add('hidden');
         const recurCheckbox = document.getElementById('task-is-recurring');
-        if (recurCheckbox) {
-            recurCheckbox.checked = false;
+        if (recurCheckbox) recurCheckbox.checked = false;
+
+        // DETECT DAY PAGE — calendar-app exists + has year/month/day data
+        const calApp = document.getElementById('calendar-app');
+        const isDayPage = calApp && calApp.dataset.year && calApp.dataset.month && calApp.dataset.day;
+
+        if (isDayPage) {
+            form.dataset.fromDayPage = 'true'; // flag for backend
         }
+
         openTaskModal();
     });
 

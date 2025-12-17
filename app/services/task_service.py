@@ -8,7 +8,8 @@ def get_all_tasks():
     return Task.query.filter_by(user_id=current_user.id).order_by(Task.sort_order, Task.id).all()
 
 def create_task(title, description="", due_date=None, priority="medium", tags="", status="backlog",
-                is_recurring=False, recurrence_type=None, recurrence_interval=1, recurrence_end_date=None):
+                is_recurring=False, recurrence_type=None, recurrence_interval=1, recurrence_end_date=None,
+                from_day_page=False):
     print("=== TASK SERVICE DEBUG ===")
     print("Title:", title)
     print("is_recurring:", is_recurring)
@@ -26,7 +27,7 @@ def create_task(title, description="", due_date=None, priority="medium", tags=""
         due_date=due_date,
         priority=TaskPriority[priority.upper()].value if priority else TaskPriority.MEDIUM,
         tags=tags.strip() if tags else None,
-        status=TaskStatus[status.upper()].value if status else TaskStatus.BACKLOG,
+        status=TaskStatus.TODO.value if from_day_page else (TaskStatus[status.upper()].value if status else TaskStatus.BACKLOG.value),
         is_recurring=is_recurring,
         recurrence_type=TaskRecurrenceType[recurrence_type.upper()].value if recurrence_type else None,
         recurrence_interval=recurrence_interval,
