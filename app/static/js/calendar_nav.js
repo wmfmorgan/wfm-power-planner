@@ -1,10 +1,10 @@
 // static/js/calendar_nav.js
 // CALENDAR NAVIGATION — PURE PROTEIN, NO INLINE JS, WORKS OFFLINE
 document.addEventListener('DOMContentLoaded', () => {
-const currentView = document.documentElement.dataset.currentView || 'month';
-const year = parseInt(document.documentElement.dataset.year) || new Date().getFullYear();
-const month = parseInt(document.documentElement.dataset.month) || new Date().getMonth() + 1;
-const day = parseInt(document.documentElement.dataset.day) || new Date().getDate();
+  const currentView = document.documentElement.dataset.currentView || 'month';
+  const year = parseInt(document.documentElement.dataset.year) || new Date().getFullYear();
+  const month = parseInt(document.documentElement.dataset.month) || new Date().getMonth() + 1;
+  const day = parseInt(document.documentElement.dataset.day) || new Date().getDate();
 
   // Highlight active button
   document.querySelectorAll('[data-view]').forEach(btn => {
@@ -18,6 +18,12 @@ const day = parseInt(document.documentElement.dataset.day) || new Date().getDate
     const today = new Date();
     navigate('day', today.getFullYear(), today.getMonth()+1, today.getDate());
   });
+
+  // POWER MOVE: If we land on plain /calendar → snap to browser-local TODAY day view
+  if (window.location.pathname === '/calendar' || window.location.pathname === '/calendar/') {
+    const today = new Date();
+    navigate('day', today.getFullYear(), today.getMonth() + 1, today.getDate());
+  }
 
   function navigate(view, y = year, m = month, d = day) {
     const url = `/calendar/${view}/${y}${m !== undefined ? '/' + m : ''}${d !== undefined ? '/' + d : ''}`;

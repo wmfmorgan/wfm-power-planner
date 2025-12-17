@@ -75,9 +75,9 @@
                       TASKS
                     </a>
                     <span class="text-gold mx-4">•</span>
-                    <a href="{{ url_for('calendar.calendar_view', view='day', year=now.year, month=now.month, day=now.day) }}" 
-                        class="text-gold hover:text-white transition-all {% if request.path.startswith('/calendar') %}text-white underline decoration-4 underline-offset-4{% endif %}">
-                        CALENDAR
+                    <a href="{{ url_for('calendar.calendar_view') }}" 
+                    class="text-gold hover:text-white transition-all {% if request.path.startswith('/calendar') %}text-white underline decoration-4 underline-offset-4{% endif %}">
+                    CALENDAR
                     </a>
                 </div>
             <!-- CALENDAR SUB-NAV — ONLY ON CALENDAR PAGES -->
