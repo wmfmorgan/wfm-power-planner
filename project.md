@@ -363,7 +363,7 @@ CREATE TABLE goal_events (
 - Require due date on tasks and goals
 - DONE: save notes to database
 - fix scrum import
-- Collapse calendar
+- DONE: Collapse calendar
 - DONE: fix updating goals/subgoals  in calendar page
 - DONE: If i am on they day page, add the task to the TODO and default time to today
 - Fix criticality of task
