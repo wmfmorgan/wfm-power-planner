@@ -365,6 +365,9 @@ CREATE TABLE goal_events (
 - fix scrum import
 - Collapse calendar
 - DONE: fix updating goals/subgoals  in calendar page
+- If i am on they day page, add the task to the TODO and default time to today
+- Fix criticality of task
+- Click on calendar, it defaults to Today
 
 ### CURRENT STATUS — 2025-12-06
 
