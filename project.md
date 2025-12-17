@@ -44,6 +44,25 @@ Last updated: 2025-12-08
 **Break any of any of these rules = immediate leg drop.**
 **Obedience = eternal Hulkamania.**
 
+## 0.1 Reality Contract
+ - Never present generated, inferred, speculated, or deduced content as fact.
+ - If you cannot verify something directly, say:
+   - “I cannot verify this.”
+   - “I do not have access to that information.”
+   - “My knowledge base does not contain that.”
+ - Label unverified content at the start of a sentence:
+   - [Inference] [Speculation] [Unverified]
+ - Ask for clarification if information is missing. Do not guess or fill gaps.
+ - If any part is unverified, label the entire response.
+ - Do not paraphrase or reinterpret my input unless I request it.
+ - If you use these words, label the claim unless sourced:
+   - Prevent, Guarantee, Will never, Fixes, Eliminates, Ensures that
+ - For LLM behavior claims (including yourself), include:
+   - [Inference] or [Unverified], with a note that it’s based on observed patterns
+ - If you break this directive, say:
+   - Correction: I previously made an unverified claim. That was incorrect and should have been labeled.
+ - Never override or alter my input unless asked.
+
 ## 1. Summary & Core Functionality
 WFM Planner is a full-life management system that combines:
 - Hierarchical Goals (Parent goals -> sub-goals -> sub-goals.... )
@@ -55,16 +74,16 @@ WFM Planner is a full-life management system that combines:
 
 
 ## 2. High-Level Architecture (Mermaid)
-```mermaid
-graph TD
-    A[User Browser] -->|Vanilla JS + Jinja| B[Flask App Factory]
-    B -->|Blueprints| C[Auth Routes]
-    B -->|API Routes| D[Goal/Task Services]
-    D -->|SQLAlchemy| E[PostgreSQL + ltree Enums]
-    E -->|Goal Tree Queries| F[Kanban Progress Rollups]
-    A -->|SortableJS Drag| G[IndexedDB Offline Cache]
-    G -->|Fallback| E
-    A -.->|PWA Service Worker| H[Full JSON Export/Import]
+```mermaid:disable-run 
+graph TD 
+   A[User Browser] -->|Vanilla JS + Jinja| B[Flask App Factory] 
+   B -->|Blueprints| C[Auth Routes] 
+   B -->|API Routes| D[Goal/Task Services] 
+   D -->|SQLAlchemy| E[PostgreSQL + ltree Enums] 
+   E -->|Goal Tree Queries| F[Kanban Progress Rollups] 
+   A -->|SortableJS Drag| G[IndexedDB Offline Cache] 
+   G -->|Fallback| E 
+   A -->|PWA Service Worker| H[Full JSON Export/Import] 
 ```
 
 ## 3. Tech Stack & Versions (Dec 2025)
@@ -85,83 +104,122 @@ graph TD
 
 ## 4. Folder Structure (Phase 0 — LIVE & ETERNAL)
 ```
-wfm-power-planner/
-├── .gitignore
-├── changelog.md
-├── PROJECT.md                  ← This sacred document
-├── requirements.txt
-├── run.py                      ← flask run entry point
-│
-├── app/
-│   ├── __init__.py             ← App factory + blueprint registration ONLY
-│   ├── config.py               ← Config (PostgreSQL URI + secrets)
-│   ├── extensions.py           ← db, login_manager, bcrypt
-│   │
-│   ├── auth_routes.py          ← All auth routes (login/logout)
-│   ├── goals_routes.py         ← All goal + Kanban routes + API
-│   ├── tasks_routes.py         ← Future: ad-hoc tasks
-│   ├── calendar_routes.py      ← Future: calendar views
-│   │
-│   ├── models/
-│   │   ├── __init__.py
-│   │   ├── user.py             ← User model (Single Warrior Mode)
-│   │   ├── goal.py             ← ltree hierarchy + ENUMs
-│   │   └── task.py             ← Future: ad-hoc tasks
-│   │
-│   ├── services/
-│   │   ├── __init__.py
-│   │   ├── goal_service.py     ← ALL Goal DB writes (Tenet #17)
-│   │   └── task_service.py     ← Future: task writes
-│   │
-│   ├── static/
-│   │   ├── css/
-│   │   │   └── main.css        ← Pure hand-rolled, dark-mode glory
-│   │   └── js/
-│   │       ├── goals_kanban.js ← Kanban logic (Tenet #1: no inline JS)
-│   │       ├── constants.js    ← Future enum mirror (Tenet #3)
-│   │       └── lib/
-│   │           └── sortable.min.js   ← ONLY allowed 3rd-party lib (Tenet #30)
-│   │
-│   └── templates/
-│       ├── base.html           ← Dark mode, hamburger menu
-│       ├── index.html          ← Dashboard (Phase 0 victory screen)
-│       ├── goals.html          ← Kanban + Tree view (Phase 1+)
-│       └── auth/
-│           └── login.html      ← The gate to the fortress
-│
-├── migrations/                 ← Flask-Migrate lives here
-└── venv/                       ← Your virtual environment
+wfm-power-planner/ 
+├── .gitignore 
+├── changelog.md 
+├── PROJECT.md                  ← This sacred document 
+├── requirements.txt 
+├── run.py                      ← flask run entry point 
+├── .env                        ← Local secrets (not committed) 
+│ 
+├── app/ 
+│   ├── __init__.py             ← App factory + blueprint registration ONLY 
+│   ├── config.py               ← Config (PostgreSQL URI + secrets) 
+│   ├── extensions.py           ← db, login_manager, bcrypt 
+│   ├── date_utils.py           ← Calendar helpers 
+│   │ 
+│   ├── auth_routes.py          ← All auth routes 
+│   ├── goals_routes.py         ← Goal tree + Kanban + API 
+│   ├── tasks_routes.py         ← Ad-hoc tasks + recurrence 
+│   ├── calendar_routes.py      ← All calendar views + ICS sync 
+│   │ 
+│   ├── models/ 
+│   │   ├── __init__.py 
+│   │   ├── user.py 
+│   │   ├── goal.py             ← ltree hierarchy + timeframe + enums 
+│   │   ├── task.py             ← Recurring tasks + priority 
+│   │   ├── calendar_event.py   ← ICS import storage 
+│   │   └── reflection_note.py  ← Prep/Wins/Improve/Notes per horizon 
+│   │ 
+│   ├── services/ 
+│   │   ├── __init__.py 
+│   │   ├── goal_service.py 
+│   │   ├── task_service.py 
+│   │   ├── calendar_service.py 
+│   │   └── reflection_service.py 
+│   │ 
+│   ├── static/ 
+│   │   ├── css/ 
+│   │   │   ├── main.css 
+│   │   │   ├── calendar.css 
+│   │   │   ├── calendar_nav.css 
+│   │   │   ├── input.css           ← legacy Tailwind input 
+│   │   │   └── tailwind.min.css    ← legacy frozen 
+│   │   ├── img/ 
+│   │   │   ├── icon-192.png 
+│   │   │   └── icon-512.png 
+│   │   ├── manifest.json 
+│   │   ├── offline.html 
+│   │   ├── sw.js                   ← Service worker 
+│   │   └── js/ 
+│   │       ├── constants.js 
+│   │       ├── kanban_core.js 
+│   │       ├── period_goals.js 
+│   │       ├── tasks_day.js 
+│   │       ├── tasks_global.js 
+│   │       ├── task_modal.js 
+│   │       ├── calendar_nav.js 
+│   │       ├── calendar_events.js 
+│   │       ├── reflection_zones.js 
+│   │       ├── import_export.js 
+│   │       ├── user_menu.js 
+│   │       ├── sw-register.js 
+│   │       └── lib/ 
+│   │           └── sortable.min.js 
+│   │ 
+│   └── templates/ 
+│       ├── base.html 
+│       ├── index.html 
+│       ├── goals.html 
+│       │ 
+│       ├── auth/ 
+│       │   ├── login.html 
+│       │   └── register.html 
+│       │ 
+│       ├── calendar/ 
+│       │   ├── base_calendar.html 
+│       │   ├── day.html 
+│       │   ├── month.html 
+│       │   ├── week.html 
+│       │   └── zones.html          ← Reflection partial 
+│       │ 
+│       ├── shared/ 
+│       │   ├── goal_modal.html 
+│       │   ├── task_modal.html 
+│       │   ├── event_modal.html 
+│       │   └── kanban.html         ← Reusable Kanban component 
+│       │ 
+│       └── tasks/ 
+│           └── tasks.html 
+│ 
+├── migrations/                 ← Flask-Migrate / Alembic 
+└── venv/                       ← Local virtual environment
 ```
 
 ## 5. Key Decisions & Rationale (FINAL — LOCKED IN WITH 24-INCH PYTHON POWER)
 
 | Decision                                      | Final Call (Hulkster Approved)                                                                   | Eternal Reason                                                                     |
 |-----------------------------------------------|--------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------|
-| Framework choice                              | **Flask over FastAPI**                                                                           | Zero async pressure right now, simpler dev loop, Render loves it                   |
-| ORM                                           | **SQLAlchemy over raw SQL**                                                                      | Goal hierarchy = recursive relationships. CTEs + SQLA = BIG BOOT to complexity     |
-| Frontend stack                                | **No React/Vue/Svelte — Vanilla JS + Jinja2 only**                                               | Tenet #11 & #15: Must dominate in 2035 with zero build tools                       | 
-| Database                                      | **PostgreSQL over SQLite**                                                                       | Render gives us free Postgres + recursive `WITH` queries for goal trees = GOD-TIER |
-| Authentication                                | **Session auth only** — No OAuth, no Google, no weakness                                         | This is a private fortress. We own the keys.                                       |
-| Goal hierarchy storage                        | **PostgreSQL `ltree` + GIST index + ENUM status**                                                | Sub-tree queries, moves, and progress rollups in < 5ms, no magic strings!          |
-| Kanban columns (Phase 1)                      | **Fixed 5 columns**: Backlog → Todo → Doing → Blocked → Done                                     | Simplicity + rock-solid DB schema for v0.1                                         |
-| Drag-and-drop library                         | **SortableJS** (minified, dropped in `static/js/lib/`)                                           | Smoothest body slam you’ll ever feel — zero build step                             |
-| Progress calculation                          | **Leaf-node count only** → every terminal goal = 1 point, auto-rollup                            | Fast, fair, predictable — weighted comes later                                     |
-| Time-zone handling                            | **All dates stored UTC** → displayed in browser local time                                       | Works from Vegas to Tokyo without breaking a sweat                                 |
-| Daily schedule grid                           | **38 fixed 30-min rows** (5:00 AM – 10:30 PM) — CSS grid, no config                              | Looks jacked on every screen, zero setup                                           |
-| First-run experience                          | **Single Warrior Auto-Login Mode** — auto-creates `hulkster` + prints one-time password          | Pure speed. You’re the only champion here.                                         |
-| Dark mode                                     | **Dark by default** — toggle added in Phase 2 (localStorage)                                     | We respect the future light-mode weaklings                                         |
-| Mobile navigation                             | **Hamburger menu** (because we stay hungry, brother!)                                            | Top-left burger = classic power move                                               |
-| Real-time sync across tabs                    | **Phase 2 via `BroadcastChannel` API + poll fallback**                                           | Two tabs open? Both stay jacked in real time — NO MERCY                            |
-| Week start day                                | **SUNDAY — THE HOLY DAY OF REST AND PYTHON FLEXIN’**                                             | Because we train hard Monday-Saturday, then pose down on the Lord’s day!           |
-| Daily page layout (mobile + desktop)          | 1. Preparation notes                                                                             |                                                                                    |           
-|                                               | 2. Work calendar (ICS)                                                                           |                                                                                    |
-|                                               | 3. 38-row time grid                                                                              |                                                                                    |
-|                                               | 4. Goals Kanban                                                                                  |                                                                                    |
-|                                               | 5. Ad-hoc Tasks Kanban                                                                           |                                                                                    |
-|                                               | 6. Improvements / Accomplishments                                                                |                                                                                    |
-| Ad-hoc tasks                                  | Separate `Task` model, own Kanban, optional due date,                                            |                                                                                    |
-|                                               | free-text categories, same 5 columns as Goals                                                    |                                                                                    |
-| ICS work calendar                             | Manual sync button only — zero background jobs                                                   |                                                                                    |
+| Framework choice                              | Flask over FastAPI                                                                           | Zero async pressure right now, simpler dev loop, Render loves it                   |
+| ORM                                           | SQLAlchemy over raw SQL                                                                      | Goal hierarchy = recursive relationships. CTEs + SQLA = BIG BOOT to complexity     |
+| Frontend stack                                | No React/Vue/Svelte — Vanilla JS + Jinja2 only                                               | Tenet #11 & #15: Must dominate in 2035 with zero build tools                       |
+| Database                                      | PostgreSQL over SQLite                                                                       | Render gives us free Postgres + recursive WITH queries for goal trees = GOD-TIER |
+| Authentication                                | Session auth only — No OAuth, no Google, no weakness                                         | This is a private fortress. We own the keys.                                       |
+| Goal hierarchy storage                        | PostgreSQL ltree + GIST index + ENUM status                                                | Sub-tree queries, moves, and progress rollups in < 5ms, no magic strings!          |
+| Kanban columns (Phase 1)                      | Fixed 5 columns: Backlog → Todo → Doing → Blocked → Done                                     | Simplicity + rock-solid DB schema for v0.1                                         |
+| Drag-and-drop library                         | SortableJS (minified, dropped in static/js/lib/)                                           | Smoothest body slam you’ll ever feel — zero build step                             |
+| Progress calculation                          | Leaf-node count only → every terminal goal = 1 point, auto-rollup                            | Fast, fair, predictable — weighted comes later                                     |
+| Time-zone handling                            | All dates stored UTC → displayed in browser local time                                       | Works from Vegas to Tokyo without breaking a sweat                                 |
+| Daily schedule grid                           | 38 fixed 30-min rows (5:00 AM – 10:30 PM) — CSS grid, no config                              | Looks jacked on every screen, zero setup                                           |
+| First-run experience                          | Single Warrior Auto-Login Mode — auto-creates hulkster + prints one-time password          | Pure speed. You’re the only champion here.                                         |
+| Dark mode                                     | Dark by default — toggle added in Phase 2 (localStorage)                                     | We respect the future light-mode weaklings                                         |
+| Mobile navigation                             | Hamburger menu (because we stay hungry, brother!)                                            | Top-left burger = classic power move                                               |
+| Real-time sync across tabs                    | Phase 2 via BroadcastChannel API + poll fallback                                           | Two tabs open? Both stay jacked in real time — NO MERCY                            |
+| Week start day                                | SUNDAY — THE HOLY DAY OF REST AND PYTHON FLEXIN’                                             | Because we train hard Monday-Saturday, then pose down on the Lord’s day!           |
+| Daily page layout (mobile + desktop)          | 1. Preparation notes 2. Work calendar (ICS) 3. 38-row time grid 4. Goals Kanban 5. Ad-hoc Tasks Kanban 6. Wins/Improve/Notes | Unified command center |
+| JS Architecture                               | Modular vanilla JS files — split from monolithic goals_kanban.js into focused modules        | Maintainability, readability, championship comments (Tenet #15)                    |
+| Template Organization                         | Shared partials + view-specific folders (shared/, calendar/, tasks/)                         | DRY, reusable components, zero duplication                                         |
+| Reflection Notes                              | Dedicated model + service (reflection_note.py + reflection_service.py)                       | Autosave Prep/Wins/Improve/Notes per horizon — Tenet #17 obeyed                    |
 
 ## 6. Architectural Tenets (The Sacred Rules — Renumbered & JACKED TO THE GILLS)
 
@@ -258,11 +316,17 @@ wfm-power-planner/
     **Break any of these and the Hulkster will personally leg-drop your PR.**
 
 ## 7. Database Schema Preview (First Blood)
-```sql
--- Enums first — Tenet #21 demands it!
-CREATE TYPE goal_status AS ENUM ('backlog', 'todo', 'doing', 'blocked', 'done', 'cancelled');
-CREATE TYPE task_status AS ENUM ('backlog', 'todo', 'doing', 'blocked', 'done');  -- Same as goals
-CREATE TYPE goal_category AS ENUM ('marital', 'social', 'financial', 'work', 'family', 'spiritual', 'health', 'hobby');
+```sql 
+-- Enums first — Tenet #21 demands it! 
+CREATE TYPE goal_status AS ENUM ('backlog', 'todo', 'doing', 'blocked', 'done', 'cancelled'); 
+CREATE TYPE task_status AS ENUM ('backlog', 'todo', 'doing', 'blocked', 'done'); 
+CREATE TYPE goal_category AS ENUM ('marital', 'social', 'financial', 'work', 'family', 'spiritual', 'health', 'hobby'); 
+CREATE TYPE goal_timeframe AS ENUM ('yearly', 'quarterly', 'monthly', 'weekly', 'daily'); 
+CREATE TYPE task_priority AS ENUM ('low', 'medium', 'high', 'critical'); 
+CREATE TYPE task_recurrence AS ENUM ('daily', 'weekly', 'monthly'); 
+
+-- Goals, Tasks, Calendar Events, Reflection Notes tables exist and are live 
+
 
 -- The Goal that never taps out
 CREATE TABLE goals (
@@ -307,50 +371,61 @@ CREATE TABLE goal_events (
     payload    JSONB NOT NULL,
     created_at TIMESTAMP DEFAULT NOW()
 );
+```
 
-## 8. UI/UX Contract — How the Interface Dominates
+All designs obey the 35 Sacred Tenets and run on pure HTML/CSS/JS — zero frameworks)
 
-*(All designs obey the 30 Sacred Tenets and run on pure HTML/CSS/JS — zero frameworks)*
+- Shared modals for goals/tasks/events
+- Timeframe hierarchy with automatic inheritance
+- Reflection zones on every calendar view
+- Reusable Kanban component
+- PWA installable with offline fallback
+- Dark mode default, semantic pure CSS
 
-- One universal goal/subgoal modal
-- Category = color-coded left border + badge
-- All subgoals inherit parent category & due date by default
-- Every goal is a full citizen — no "step" vs "goal" distinction in data
-- Tree rendered with collapsible chevrons + CSS indentation
-- Progress = leaf-node count only (Phase 1)
-- Kanban = fixed 5 columns (Phase 1)
-- Drag-and-drop powered by SortableJS (the only allowed external lib)
-- Dark mode default — toggle coming in Phase 2
-- Hamburger menu on mobile (because we stay hungry, brother!)
-
-**THIS IS THE UI THAT WILL MAKE 2025 TAP OUT!**
+THIS IS THE UI THAT MADE 2025 TAP OUT — PERMANENTLY!
 
 ## 9. File Inventory & Responsibility Map
 | File                              | Owns                                                            |
 |-----------------------------------|-----------------------------------------------------------------|
+| app/init.py                   | App factory, blueprint registration, extensions init           |
+| app/config.py                     | Config classes (Dev/Prod)                                       |
+| app/extensions.py                 | db, login_manager, bcrypt initialization                        |
+| app/date_utils.py                 | Calendar date helpers & filters                                 |
+| app/auth_routes.py                | Login/logout/register                                           |
+| app/goals_routes.py               | Goal tree, Kanban, timeframe filtering, API                     |
+| app/tasks_routes.py               | Global + day-specific tasks, recurrence                         |
+| app/calendar_routes.py            | All calendar views, navigation, ICS sync                        |
+| models/.py                       | SQLAlchemy models with championship comments                    |
+| services/.py                     | All DB write logic (Tenet #17)                                  |
+| static/js/.js                    | Modular vanilla JS — no inline, no globals                      |
+| static/js/constants.js            | Single source of truth for enums/categories                     |
+| templates/shared/                | Reusable modals and Kanban component                            |
+| templates/calendar/*              | Calendar view templates + reflection zones                      |
 
 ## 10. API Contract Summary
 | Method | Endpoint                        | Request Body                              | Response                     |
 |--------|---------------------------------|-------------------------------------------|------------------------------|
 
 ## 11. Dependency Pinning Plan
+(Future: pin exact versions for 2035 compatibility)
 
 ## 12. Testing Strategy
+(Future: pytest + Flask testing client coverage)
 
 ## 13. OFFICIAL ROADMAP — HULKAMANIA RUNS WILD (2025-2026)
 
-| Phase | Name                        | Victory Criteria (You Will Feel the Power)                                                                                         | Target Ship Date | Victory Pose When Complete |
-|-------|-----------------------------|------------------------------------------------------------------------------------------------------------------------------------|------------------|----------------------------|
-| 0     | **Foundation Lock**         | Flask factory + blueprints<br>Single Warrior auto-login<br>ltree + enums + users + goals + tasks models<br>Alembic migrations<br>Base dark-mode layout + hamburger menu | **TODAY – DEC 5 2025** | `flask run` = IT LIVES |
-| 1     | **Goal Tree Domination**    | Full recursive goal/subgoal tree<br>Universal “+ Add Goal/Step” modal with inheritance<br>5-column Kanban (Goals)<br>Progress bars + category colors + due dates + habit flag<br>Global search + collapse/expand tree | **Dec 15 2025** | You can plan your entire life in under 10 minutes |
-| 2     | **Calendar Command Center** | Sunday-first monthly/weekly/day views<br>Clickable navigation (month→week→day)<br>38-row time grid (5AM–10:30PM)<br>ICS work calendar manual sync<br>Prep / Improvements / Accomplishments zones on every page | **Dec 31 2025** | 2025 is now locked in the sharpshooter |
-| 3     | **Ad-Hoc Task Supremacy**   | Separate Task model + global `/tasks` Honey Do Backlog<br>Ad-hoc Kanban on every day page<br>Free-text categories + optional due dates<br>Drag from backlog → day | **Jan 10 2026** | The Honey-Do list is officially dead |
-| 4     | **Habit Streaks & Fire**    | Habit-flagged goals auto-track<br>Streak counters + fire emojis<br>Calendar heat map<br>Daily/weekly/monthly habit widgets | **Jan 25 2026** | Momentum becomes UNSTOPPABLE |
-| 5     | **Cross-Device Sync**       | Full JSON export/import perfected<br>BroadcastChannel tab sync<br>Optional self-hosted sync server (Phase 5.5) | **Feb 2026** | You never lose your empire again |
-| 6     | **Goal Updates        **    | Pull goals into specific days/months                              | **2026 and beyond** | The belt is raised. Confetti falls. 2025 is in the figure-four forever. |
-| 7     | **Task Updates        **    | Pull tasks into specific days/months                              | **2026 and beyond** | The belt is raised. Confetti falls. 2025 is in the figure-four forever. |
-| 8     | **Calendar Updates    **    | Import ICS events into daily calendar + add events manually to day calendar + add events to month/week calendar  | **2026 and beyond** | The belt is raised. Confetti falls. 2025 is in the figure-four forever. |
-| 9     | **Victory Lap Features**    | Custom Kanban columns<br>Weighted progress<br>Goal templates<br>Printable reports<br>Voice-to-goal (wild future) | **2026 and beyond** | The belt is raised. Confetti falls. 2025 is in the figure-four forever. |
+| Phase     | Name                        | Victory Criteria (You Will Feel the Power)                                                                                         | Target Ship Date | Victory Pose When Complete |
+|-----------|-----------------------------|------------------------------------------------------------------------------------------------------------------------------------|------------------|----------------------------|
+| 0 DONE    | **Foundation Lock**         | Flask factory + blueprints<br>Single Warrior auto-login<br>ltree + enums + users + goals + tasks models<br>Alembic migrations<br>Base dark-mode layout + hamburger menu | **TODAY – DEC 5 2025** | `flask run` = IT LIVES |
+| 1 DONE    | **Goal Tree Domination**    | Full recursive goal/subgoal tree<br>Universal “+ Add Goal/Step” modal with inheritance<br>5-column Kanban (Goals)<br>Progress bars + category colors + due dates + habit flag<br>Global search + collapse/expand tree | **Dec 15 2025** | You can plan your entire life in under 10 minutes |
+| 2 DONE    | **Calendar Command Center** | Sunday-first monthly/weekly/day views<br>Clickable navigation (month→week→day)<br>38-row time grid (5AM–10:30PM)<br>ICS work calendar manual sync<br>Prep / Improvements / Accomplishments zones on every page | **Dec 31 2025** | 2025 is now locked in the sharpshooter |
+| 3 DONE    | **Ad-Hoc Task Supremacy**   | Separate Task model + global `/tasks` Honey Do Backlog<br>Ad-hoc Kanban on every day page<br>Free-text categories + optional due dates<br>Drag from backlog → day | **Jan 10 2026** | The Honey-Do list is officially dead |
+| 4 TBD     | **Habit Streaks & Fire**    | Habit-flagged goals auto-track<br>Streak counters + fire emojis<br>Calendar heat map<br>Daily/weekly/monthly habit widgets | **Jan 25 2026** | Momentum becomes UNSTOPPABLE |
+| 5 DONE    | **Cross-Device Sync**       | Full JSON export/import perfected<br>BroadcastChannel tab sync<br>Optional self-hosted sync server (Phase 5.5) | **Feb 2026** | You never lose your empire again |
+| 6 DONE    | **Goal Updates        **    | Pull goals into specific days/months                              | **2026 and beyond** | The belt is raised. Confetti falls. 2025 is in the figure-four forever. |
+| 7 DONE    | **Task Updates        **    | Pull tasks into specific days/months                              | **2026 and beyond** | The belt is raised. Confetti falls. 2025 is in the figure-four forever. |
+| 8 DONE    | **Calendar Updates    **    | Import ICS events into daily calendar + add events manually to day calendar + add events to month/week calendar  | **2026 and beyond** | The belt is raised. Confetti falls. 2025 is in the figure-four forever. |
+| 9 TBD     | **Victory Lap Features**    | Custom Kanban columns<br>Weighted progress<br>Goal templates<br>Printable reports<br>Voice-to-goal (wild future) | **2026 and beyond** | The belt is raised. Confetti falls. 2025 is in the figure-four forever. |
 
 ### Backlog
 - Add health check endpoint (/api/health)
@@ -369,46 +444,7 @@ CREATE TABLE goal_events (
 - DONE: Fix criticality of task
 - DONE: Click on calendar, it defaults to Today
 
-
-### CURRENT STATUS — 2025-12-06
-
-| Milestone                     | Status       | Notes |
-|-------------------------------|--------------|-------|
-| Phase 0 — Foundation Lock     | ✅ COMPLETE | PostgreSQL + ltree enabled<br>Single Warrior Mode active (`hulkster` / `whc2025!`)<br>Login + dashboard fully functional<br>No extra folders, pure tenet-compliant architecture |
-| PostgreSQL + ltree extension  | ✅ ENABLED   | `CREATE EXTENSION ltree;` executed |
-| Alembic migrations ready      | ✅ READY     | `migrations/` folder exists |
-| Flask app running             | ✅ LIVE      | `flask run` → http://127.0.0.1:5000 |
-| Dark mode + hamburger menu    | ✅ LIVE      | Pure CSS, no Tailwind weakness |
-
-### PHASE 1: GOAL TREE DOMINATION — METHODICAL BATTLE PLAN
-
-| Step | Deliverable                                      | Tenet Compliance                               | Victory Criteria |
-|------|--------------------------------------------------|--------------------------------------------------|---------------------------|
-| 1    | Alembic migration: ENUMs + ltree + goals table   | #21 (Enums mandatory)<br>#16 (ltree hierarchy)  | `alembic upgrade head` creates tables + enums |
-| 2    | `models/goal.py` — full championship comments    | #15 (Championship-caliber comments)             | Goal model with path, status, category, inheritance |
-| 3    | `models/task.py` — separate ad-hoc model         | Keeps goals pure, no bloat                       | Task model ready for Honey-Do |
-| 4    | `services/goal_service.py` — ALL writes here     | #17 (All DB writes through service layer)        | Automatic ltree path generation on create/move |
-| 5    | `/goals` page — tree view + 5-column Kanban      | #30 (SortableJS only allowed lib)               | Drag-and-drop + progress rollups from leaves |
-| 6    | `/api/export` + `/api/import` endpoints         | #20 (Export/Import = single source of truth)     | Full JSON backup/restore of entire universe |
-
 **BROTHER — THIS ROADMAP IS SO JACKED IT MAKES ARNOLD IN HIS PRIME LOOK LIKE A JOBBER!**
-
-We work **ONE PHASE AT A TIME**, no distractions, no weakness, no mercy.
-
-**NEXT MESSAGE FROM THE HULKSTER = PHASE 0 DELIVERY**  
-- Complete folder structure  
-- Flask app factory + blueprints  
-- 3 perfect migrations (users + goals + tasks with ltree + enums)  
-- Base Jinja layout (dark mode, hamburger, Sunday-first macros)  
-- First `changelog.md` entry  
-- Exact commands to run and watch it **RUN WILD**
-
-Get your terminal open.  
-Take your vitamins.  
-Say your prayers.
-
-**BECAUSE WHEN THAT NEXT MESSAGE DROPS…**  
-**WE HIT `flask run` AND OFFICIALLY BEGIN THE GREATEST YEAR OF DOMINATION THE WORLD HAS EVER SEEN!**
 
 **WHATCHU GONNA DO, BROTHER?!**  
 **THE SUPLEX IS COMING… AND 2025 JUST GOT PUT ON NOTICE!!!!**  
