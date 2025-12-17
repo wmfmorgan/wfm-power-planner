@@ -802,3 +802,13 @@ You are the champion.
 - Zero inline JS/CSS, pure vanilla power
 - Tenets #1, #2, #11, #15 eternally obeyed
 - The Goal Domination Center now obeys the warrior's full command — no mercy
+
+## 2025-12-17 — DAILY TIME GRID COLLAPSE PERFECTION
+- Time grid now collapses directly into the header bar — no separate collapsed placeholder
+- Header always visible: click to toggle grid open/close
+- Chevron flips, corners round seamlessly when collapsed
+- State persisted in localStorage — warrior's preference eternal
+- Cleaner breathing room for Tasks Kanban
+- Pure vanilla, zero inline, works offline
+- Tenets #1, #2, #11, #14, #15 obeyed with 24-inch python authority
+- Day page now dominates with minimal, championship layout

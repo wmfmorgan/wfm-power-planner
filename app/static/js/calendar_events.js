@@ -224,3 +224,47 @@ function renderEvents(events) {
   // Expose for future use
   window.refreshCalendarEvents = fetchAndRenderEvents;
 }
+
+// DAILY TIME GRID COLLAPSE DOMINATION — CONSISTENT WITH GOAL TREE
+function setupCalendarCollapse() {
+  const header = document.getElementById('calendar-toggle-header');
+  const collapsed = document.getElementById('calendar-grid-collapsed');
+  const expanded = document.getElementById('calendar-grid-expanded');
+  const icon = document.getElementById('calendar-toggle-icon');
+
+  if (!header || !collapsed || !expanded || !icon) return;
+
+  // Restore saved state (default: open)
+  const saved = localStorage.getItem('day-calendar-open');
+  const isOpen = saved === null || saved === 'true'; // default true = expanded
+
+    function setOpen(open) {
+    if (open) {
+      expanded.classList.remove('hidden');
+      icon.textContent = '▼';
+      header.classList.remove('rounded-xl');     // Make bottom corners square when open
+      header.classList.add('rounded-t-xl');
+    } else {
+      expanded.classList.add('hidden');
+      icon.textContent = '▶';
+      header.classList.remove('rounded-t-xl');
+      header.classList.add('rounded-xl');        // Full rounded when collapsed
+    }
+    localStorage.setItem('day-calendar-open', open);
+  }
+
+  setOpen(isOpen);
+
+  // Toggle on click
+  document.addEventListener('click', (e) => {
+    if (e.target.closest('[data-action="toggle-calendar"]')) {
+      setOpen(expanded.classList.contains('hidden'));
+    }
+  });
+}
+
+// Run after DOM ready
+document.addEventListener('DOMContentLoaded', () => {
+  // ... existing code ...
+  setupCalendarCollapse();
+});

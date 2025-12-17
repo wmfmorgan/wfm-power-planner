@@ -8,27 +8,40 @@
   <!-- MAIN GRID — 3:1 RATIO, CLEAN GAP -->
   <div class="mt-20 grid grid-cols-1 md:grid-cols-4 gap-8">
     
-    <!-- LEFT: TIME GRID -->
-    <div class="max-w-7xl mx-auto">
-      <div class="grid grid-cols-12 gap-0 border-4 border-yellow-400 rounded-xl overflow-hidden shadow-heavy bg-black">
-        <!-- TIME LABELS -->
-        <div class="col-span-1 bg-dark">
-          {% for slot in range(38) %}
-            {% set hour = 5 + (slot // 2) %}
-            {% set minute = (slot % 2) * 30 %}
-            {% set hour_12 = ((hour - 1) % 12) + 1 %}
-            {% set am_pm = 'AM' if hour < 12 else 'PM' %}
-
-            <div class="h-32 border-b border-gray-700 flex items-center justify-end pr-5">
-              {% if minute == 0 %}
-                <span class="text-gold text-lg">{{ "%d:00"|format(hour_12) }}</span>
-                <span class="text-gold text-sm ml-2">{{ am_pm }}</span>
-              {% else %}
-                <span class="text-gray-500 text-lg">{{ "%d:%02d"|format(hour_12, minute) }}</span>
-              {% endif %}
-            </div>
-          {% endfor %}
+    <!-- LEFT: TIME GRID — NOW WITH COLLAPSE DOMINATION -->
+    <div class="md:col-span-3"> {# Takes 3/4 on desktop, full on mobile #}
+      <!-- COLLAPSIBLE HEADER BAR — ALWAYS VISIBLE, BECOMES THE COLLAPSED STATE -->
+      <div id="calendar-toggle-header"
+           class="p-6 bg-black border-4 border-yellow-400 rounded-xl cursor-pointer select-none flex items-center justify-between shadow-heavy hover:bg-gray-900 transition-all"
+           data-action="toggle-calendar">
+        <div class="flex items-center gap-4">
+          <span id="calendar-toggle-icon" class="text-gold font-bold text-3xl">▼</span>
+          <h3 class="text-4xl font-black text-gold drop-shadow-lg">DAILY TIME GRID</h3>
         </div>
+        <span class="text-gray-400 text-lg">5:00 AM – 10:30 PM</span>
+      </div>
+
+      <!-- EXPANDED GRID -->
+      <div id="calendar-grid-expanded" class="border-x-4 border-b-4 border-yellow-400 rounded-b-xl overflow-hidden shadow-heavy bg-black">
+        <div class="grid grid-cols-12 gap-0">
+          <!-- TIME LABELS -->
+          <div class="col-span-1 bg-dark">
+            {% for slot in range(38) %}
+              {% set hour = 5 + (slot // 2) %}
+              {% set minute = (slot % 2) * 30 %}
+              {% set hour_12 = ((hour - 1) % 12) + 1 %}
+              {% set am_pm = 'AM' if hour < 12 else 'PM' %}
+
+              <div class="h-32 border-b border-gray-700 flex items-center justify-end pr-5">
+                {% if minute == 0 %}
+                  <span class="text-gold text-lg">{{ "%d:00"|format(hour_12) }}</span>
+                  <span class="text-gold text-sm ml-2">{{ am_pm }}</span>
+                {% else %}
+                  <span class="text-gray-500 text-lg">{{ "%d:%02d"|format(hour_12, minute) }}</span>
+                {% endif %}
+              </div>
+            {% endfor %}
+          </div>
 
           <!-- TIME SLOTS -->
           <div class="col-span-11 bg-gray-950">
@@ -50,9 +63,16 @@
               {% endfor %}
             </div>
           </div>
-          
+        </div>
+      </div>
+
+      <!-- COLLAPSED PLACEHOLDER -->
+      <div id="calendar-grid-collapsed"
+           class="hidden p-8 bg-black border-4 border-yellow-400 rounded-xl cursor-pointer select-none text-center shadow-heavy hover:bg-gray-900 transition-all"
+           data-action="toggle-calendar">
       </div>
     </div>
+    <!-- LEFT: TIME GRID -->
   </div>
       <!-- TASKS KANBAN — FULL WIDTH, CENTERED -->
     <div class="mt-20">
