@@ -91,3 +91,7 @@ def delete_event(event_id):
     event = CalendarEvent.query.filter_by(id=event_id, user_id=current_user.id).first_or_404()
     db.session.delete(event)
     db.session.commit()
+
+def delete_all_user_calendar_events(user_id): 
+    CalendarEvent.query.filter_by(user_id=user_id).delete()
+    db.session.commit()

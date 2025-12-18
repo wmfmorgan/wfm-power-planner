@@ -33,3 +33,7 @@ def get_all_for_period(timeframe: str, date_val: date):
         date=date_val
     ).all()
     return {note.note_type: note.content or '' for note in notes}
+
+def delete_all_user_reflections(user_id): 
+    ReflectionNote.query.filter_by(user_id=user_id).delete()
+    db.session.commit()

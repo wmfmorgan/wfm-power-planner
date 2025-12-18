@@ -168,3 +168,7 @@ def move_task(task_id: int, new_status: str):
     task.status = TaskStatus[new_status.upper()].value
     db.session.commit()
     return task
+
+def delete_all_user_tasks(user_id): 
+    Task.query.filter_by(user_id=user_id).delete()
+    db.session.commit()

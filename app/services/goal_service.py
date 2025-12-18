@@ -196,27 +196,26 @@ def update_goal(goal_id: int, **updates) -> Goal:
 
 def delete_all_user_goals(user_id):
     """NUCLEAR OPTION — USED BEFORE IMPORT"""
-    db.session.execute(
-        text("DELETE FROM goals WHERE user_id = :user_id"),
-        {"user_id": user_id}
-    )
+    Goal.query.filter_by(user_id=user_id).delete(synchronize_session=False)
     db.session.commit()
 
 def create_goal_from_dict(**kwargs):
-    """Used by import — builds path correctly using new ID"""
     user_id = kwargs.pop("user_id")
     parent = kwargs.pop("parent", None)
-
-    goal = Goal(user_id=user_id, **kwargs)
+    
+    # Temp path to satisfy NOT NULL
+    goal = Goal(user_id=user_id, path=Ltree('temp'), **kwargs)
+    if parent:
+        goal.parent_id = parent.id
     db.session.add(goal)
-    db.session.flush()  # Gets new ID
-
-    # Rebuild path using new reality
+    db.session.flush()
+    
+    # Rebuild correct path
     if parent:
         goal.path = parent.path + Ltree(str(goal.id))
     else:
         goal.path = Ltree(str(goal.id))
-
+    
     db.session.commit()
     return goal
 

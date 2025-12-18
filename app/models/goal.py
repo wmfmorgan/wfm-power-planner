@@ -132,6 +132,25 @@ class Goal(db.Model):
         result = db.session.execute(query, {"path": str(self.path), "id": self.id})
         return [row[0] for row in result]
 
+    def calculate_progress(self):
+        """Recursively calculate progress from leaves"""
+        if not self.children:
+            return 100 if self.status == GoalStatus.DONE else 0
+        
+        total = sum(child.calculate_progress() for child in self.children)
+        return total // len(self.children) if self.children else 0
+
+    @property
+    def progress(self):
+        """Calculate progress recursively from leaves up"""
+        if not self.children:
+            # Leaf goal
+            return 100 if self.status == GoalStatus.DONE else 0
+        
+        # Parent — average of children
+        child_progresses = [child.progress for child in self.children]
+        return sum(child_progresses) // len(child_progresses) if child_progresses else 0
+
     # ------------------------------------------------------------------
     # Helper: Progress % — leaf-node count only (Phase 1)
     # ------------------------------------------------------------------
