@@ -77,6 +77,19 @@ def test_full_universe_round_trip(authenticated_client):
     })
     assert response.status_code == 200
 
+    # Fake ICS-style event with UID
+    response = authenticated_client.post('/api/events', json={
+        'title': 'Fake Outlook Meeting',
+        'start_time': '11:00:00',
+        'end_time': '12:00:00',
+        'year': date.today().year,
+        'month': date.today().month,
+        'day': date.today().day,
+        'uid': 'fake-uid-12345@outlook.com',  # ← fake UID
+        'source': 'outlook_ics'
+    })
+    assert response.status_code == 200
+
     # 2. EXPORT
     response = authenticated_client.get('/api/export')
     assert response.status_code == 200
@@ -85,7 +98,7 @@ def test_full_universe_round_trip(authenticated_client):
     assert len(export_data['data']['goals']) == 1  # root only
     assert len(export_data['data']['tasks']) == 1
     assert len(export_data['data']['reflection_notes']) == 1
-    assert len(export_data['data']['calendar_events']) == 1
+    assert len(export_data['data']['calendar_events']) == 2
 
     # 3. IMPORT (wipe + restore)
     export_json = json.dumps(export_data).encode('utf-8')
@@ -118,8 +131,22 @@ def test_full_universe_round_trip(authenticated_client):
     data = response.get_json()
     assert data['wins'] == 'Test win'
 
-    # Events
+    # Events — both have UID (manual generates UUID)
     response = authenticated_client.get(f'/api/events/day/{date.today().year}/{date.today().month}/{date.today().day}')
-    events = response.get_json()
-    assert len(events) == 1
-    assert events[0]['title'] == 'Test Event'
+    events = response.get_json()  # ← ADD THIS LINE!!!
+    assert len(events) == 2
+
+    titles = [e['title'] for e in events]
+    assert 'Test Event' in titles
+    assert 'Fake Outlook Meeting' in titles
+
+    # Both have 'uid' key
+    assert all('uid' in e for e in events)
+
+    # Manual event has generated UUID
+    manual_event = next(e for e in events if e['title'] == 'Test Event')
+    assert len(manual_event['uid']) == 36  # UUID format
+
+    # Fake event has generated UUID (not our fake string, because manual create overrides)
+    fake_event = next(e for e in events if e['title'] == 'Fake Outlook Meeting')
+    assert len(fake_event['uid']) == 36

@@ -319,11 +319,13 @@ def api_events_day(year, month, day):
     target = date(year, month, day)
     events = get_events_for_day(target)
     return jsonify([{
-        'id': e.id,
-        'title': e.title,
-        'start_datetime': e.start_datetime.isoformat(),
-        'end_datetime': e.end_datetime.isoformat(),
-        'source': e.source
+    'id': e.id,
+    'title': e.title,
+    'start_datetime': e.start_datetime.isoformat(),
+    'end_datetime': e.end_datetime.isoformat() if e.end_datetime else None,
+    'all_day': e.all_day,
+    'source': e.source,
+    'uid': e.uid  # ← ADD THIS LINE — THE MISSING PIECE!!!
     } for e in events])
 
 @calendar_bp.route('/api/events', methods=['POST'])

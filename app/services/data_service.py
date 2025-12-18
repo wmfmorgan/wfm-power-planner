@@ -155,8 +155,10 @@ def import_all(data_dict, user_id):
     
     # EVENTS — upsert by UID
     for e in data.get("calendar_events", []):
+        print(f"Processing event: {e['title']} | UID: {e['uid']}")
         existing = CalendarEvent.query.filter_by(user_id=user_id, uid=e["uid"]).first()
         if existing:
+            print(f"Updating existing event: {e['title']}")
             existing.title = e["title"]
             existing.description = e["description"]
             existing.start_datetime = datetime.fromisoformat(e["start_datetime"])
@@ -175,4 +177,6 @@ def import_all(data_dict, user_id):
                 source=e["source"]
             )
             db.session.add(event)
+            print(f"Created new event: {e['title']}")
+    db.session.commit()
     # NO commit — Flask route will commit
