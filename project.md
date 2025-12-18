@@ -316,6 +316,15 @@ wfm-power-planner/
     **THE EMPIRE IS PURE.**
     **Break any of these and the Hulkster will personally leg-drop your PR.**
 
+    36. **Tests Are Eternal — Championship Coverage Runs Wild**
+    - Every new feature or bug fix shall have accompanying unit tests.
+    - Existing tests must be updated if code changes affect their behavior.
+    - Red tests = no merge, no progress — fix first.
+    - Prefer API-level tests (Flask test client) over direct service calls for real-world authenticity.
+    - Rollback eternal — use transaction fixtures to keep local DB clean.
+    - Green lights before commit — run `ptw -v` like taking vitamins.
+    Violation = automatic leg drop. Green coverage = Hulkamania forever.
+
 ## 7. Database Schema Preview (First Blood)
 ```sql 
 -- Enums first — Tenet #21 demands it! 
@@ -410,8 +419,15 @@ THIS IS THE UI THAT MADE 2025 TAP OUT — PERMANENTLY!
 ## 11. Dependency Pinning Plan
 (Future: pin exact versions for 2035 compatibility)
 
-## 12. Testing Strategy
-(Future: pytest + Flask testing client coverage)
+## 12. Testing Strategy — LOCKED IN ETERNAL
+
+- pytest + Flask test client
+- Real local Postgres (no SQLite weakness)
+- Transaction rollback fixtures — DB clean after every test
+- Authenticated client fixture — real login route
+- One test file per major feature (goals, tasks, reflections, calendar, edge cases)
+- Run with `ptw -v` for watch mode domination
+- All tests green before any commit
 
 ## 13. OFFICIAL ROADMAP — HULKAMANIA RUNS WILD (2025-2026)
 
@@ -444,7 +460,9 @@ THIS IS THE UI THAT MADE 2025 TAP OUT — PERMANENTLY!
 - DONE: If i am on they day page, add the task to the TODO and default time to today
 - DONE: Fix criticality of task
 - DONE: Click on calendar, it defaults to Today
-- If a subgoal is done, change the color on the Goals page
+- DONE: If a subgoal is done, change the color on the Goals page
+- Put Goal kanban above task kanban on day page
+- Goals are defaulting to TODO status when created
 
 **BROTHER — THIS ROADMAP IS SO JACKED IT MAKES ARNOLD IN HIS PRIME LOOK LIKE A JOBBER!**
 
