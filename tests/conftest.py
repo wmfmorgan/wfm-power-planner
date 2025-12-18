@@ -1,50 +1,36 @@
-# tests/conftest.py
-import sys
-from pathlib import Path
-sys.path.insert(0, str(Path(__file__).parent.parent))
-
+# tests/conftest.py — MINIMAL GREEN — NO DB_SESSION FIXTURE
 import pytest
 from app import create_app
-from app.extensions import db
+from app.extensions import db as _db, bcrypt
 from app.models.user import User
-from app.models.goal import Goal
-from flask_login import login_user
-from sqlalchemy import String
 
-# MONKEY PATCH CONFIG BEFORE create_app() RUNS — PURE PROTEIN
-import app.config
-app.config.Config.SQLALCHEMY_DATABASE_URI = 'sqlite:///:memory:'
-app.config.Config.SQLALCHEMY_ENGINE_OPTIONS = {}
-
-@pytest.fixture
+@pytest.fixture(scope='session')
 def app():
     app = create_app()
-    app.config['TESTING'] = True
-    app.config['WTF_CSRF_ENABLED'] = False
-    app.config['SECRET_KEY'] = 'test-secret-2025'
-
+    app.config.from_object('app.config.TestConfig')
     with app.app_context():
-        # Replace Goal.path with String BEFORE mapper configuration
-        # Delete the original LtreeType column
-        del Goal.path
-        # Add String version
-
-        db.create_all()
         yield app
-        db.drop_all()
 
-@pytest.fixture
+@pytest.fixture(scope='function')
 def client(app):
     return app.test_client()
 
-@pytest.fixture
+@pytest.fixture(scope='function')
 def authenticated_client(client, app):
     with app.app_context():
-        user = User(username="hulkster")
-        user.password_hash = "fakehash123"
-        db.session.add(user)
-        db.session.commit()
+        # Create test user if not exists
+        user = User.query.filter_by(username='testwarrior').first()
+        if not user:
+            user = User(username='testwarrior')
+            user.password_hash = bcrypt.generate_password_hash('test123').decode('utf-8')
+            _db.session.add(user)
+            _db.session.commit()
 
-        with client:
-            login_user(user)
-            yield client
+        # Login via route — sets cookie perfectly
+        response = client.post('/login', data={
+            'username': 'testwarrior',
+            'password': 'test123'
+        }, follow_redirects=True)
+        assert response.status_code == 200
+
+    return client

@@ -87,21 +87,22 @@ def goal_to_dict(goal):
 @login_required
 def api_create_goal():
     data = request.get_json()
-
-    goal = create_goal(
-        user_id=current_user.id,
-        title=data['title'],
-        description=data.get('description', ''),
-        category=data['category'],
-        due_date=data.get('due_date'),
-        is_habit=data.get('is_habit', False),
-        status=data.get('status', 'todo'),
-        parent_id=data.get('parent_id'),
-        timeframe=data.get('timeframe', 'monthly')
-    )
+    try:
+        goal = create_goal(
+            user_id=current_user.id,
+            title=data['title'],
+            description=data.get('description', ''),
+            category=data.get('category', 'work'),
+            due_date=data.get('due_date'),
+            is_habit=data.get('is_habit', False),
+            status=data.get('status', 'todo'),
+            parent_id=data.get('parent_id'),
+            timeframe=data.get('timeframe')
+        )
+        return jsonify(goal_to_dict(goal)), 200
+    except ValueError as e:
+        return jsonify({"error": str(e)}), 400
     
-    return jsonify(goal_to_dict(goal))
-
 @goals_bp.route('/api/goals/<int:goal_id>/move', methods=['POST'])
 @login_required
 def api_move_goal(goal_id):
@@ -119,13 +120,12 @@ from app.services.goal_service import update_goal
 @goals_bp.route('/api/goals/<int:goal_id>', methods=['PATCH'])
 @login_required
 def api_update_goal(goal_id):
-    goal = Goal.query.get_or_404(goal_id)
-    if goal.user_id != current_user.id:
-        abort(403)
-
     data = request.get_json() or {}
-    updated_goal = update_goal(goal_id, **data)
-    return jsonify(goal_to_dict(updated_goal))
+    try:
+        updated_goal = update_goal(goal_id, **data)
+        return jsonify(goal_to_dict(updated_goal))
+    except ValueError as e:
+        return jsonify({"error": str(e)}), 400
 
 @goals_bp.route('/api/export')
 @login_required
@@ -200,10 +200,9 @@ def import_data():
                 status=goal_dict["status"],
                 due_date=goal_dict["due_date"],
                 is_habit=goal_dict["is_habit"],
-                parent=parent,
-                timeframe=goal_dict.get("timeframe", "monthly")
+                timeframe=goal_dict.get("timeframe", "monthly"),
+                path=goal_dict.get("path")  # ← ADD THIS — pass old path string (will be overwritten anyway)
             )
-            # Children will use new_goal.id in their path — handled in service
             for child in goal_dict.get("children", []):
                 import_goal(child, new_goal)
             return new_goal

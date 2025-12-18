@@ -13,6 +13,7 @@ from sqlalchemy import text
 from sqlalchemy.orm import joinedload
 from ..models.goal import Goal
 from ..extensions import db
+from flask import jsonify
 
 import logging
 
@@ -33,12 +34,12 @@ def create_goal(
     user_id: int,
     title: str,
     description: str = "",
-    category: str = "work",        # ← DEFAULT ADDED
+    category: str = "work",        
     due_date: str | None = None,
     is_habit: bool = False,
     status: str = "todo",
     parent_id: int | None = None,
-    timeframe: str = "monthly"
+    timeframe: str | None = None
     ) -> Goal:
     """
     FORGE A NEW GOAL — FULLY WEAPONIZED FOR 2025 DOMINATION
@@ -55,35 +56,77 @@ def create_goal(
             raise ValueError("Invalid due date format — must be YYYY-MM-DD")
 
     # Determine ltree path
-    if parent_id is None:
-        path = Ltree('root')
-    else:
+    # Determine initial path — temp to satisfy NOT NULL
+    path = Ltree('temp')  # dummy — will be overwritten
+
+    if parent_id is not None:
         parent = Goal.query.get_or_404(parent_id)
-        path = parent.path + Ltree(str(parent.id))
+        # Depth check
+        depth = 0
+        current = parent
+        while current.parent_id:
+            depth += 1
+            current = Goal.query.get(current.parent_id)
+        if depth >= 4:
+            raise ValueError("Maximum goal depth of 5 levels reached")
+    else:
+        parent = None  # for later use
+
+    # Validate category
+    try:
+        category_enum = GoalCategory[category.upper()]
+    except KeyError:
+        raise ValueError(f"Invalid category: {category}")
+
+    # Validate status
+    try:
+        status_enum = GoalStatus[status.upper()]
+    except KeyError:
+        raise ValueError(f"Invalid status: {status}")
+
+    # Validate timeframe if provided
+    if timeframe:
+        try:
+            timeframe_enum = GoalTimeframe[timeframe.upper()]
+        except KeyError:
+            raise ValueError(f"Invalid timeframe: {timeframe}")
+    else:
+        # TIMEFRAME INHERITANCE
+        timeframe_to_use = timeframe or 'monthly'
+        if parent_id and timeframe is None:
+            inheritance_map = {
+                'yearly': 'quarterly',
+                'quarterly': 'monthly',
+                'monthly': 'weekly',
+                'weekly': 'daily',
+                'daily': 'daily'
+            }
+            timeframe_to_use = inheritance_map.get(parent.timeframe.value, 'monthly')
+        timeframe_enum = GoalTimeframe[timeframe_to_use.upper()]
 
     goal = Goal(
         user_id=user_id,
         title=title.strip(),
         description=description.strip() if description else None,
-        category=GoalCategory[category.upper()],  # still safe
+        category=GoalCategory[category.upper()],
         status=GoalStatus[status.upper()],
         due_date=due_date_obj,
         is_habit=is_habit,
         parent_id=parent_id,
-        timeframe=timeframe,
-        path=path
+        timeframe=timeframe_enum,
+        path=path  # temp path
     )
-    db.session.add(goal)
-    db.session.commit()
-    
-    # Refresh to get updated path with new ID
-    db.session.refresh(goal)
-    
-    # If has parent, update path to include self (ltree requires final ID)
-    if parent_id is not None:
-        goal.path = path + Ltree(str(goal.id))
-        db.session.commit()
 
+    db.session.add(goal)
+    db.session.flush()  # get ID
+
+    # NOW BUILD CORRECT PATH
+    if parent:
+        goal.path = parent.path + Ltree(str(goal.id))
+    else:
+        goal.path = Ltree(str(goal.id))
+
+    db.session.commit()
     return goal
 
 def move_goal(goal_id: int, new_status: str, new_parent_id: int | None = None):
@@ -108,6 +151,23 @@ def update_goal(goal_id: int, **updates) -> Goal:
     """
     goal = Goal.query.get_or_404(goal_id)
 
+    # CYCLE DETECTION FOR PARENT CHANGE
+    new_parent_id = updates.get('parent_id')
+    if new_parent_id is not None and new_parent_id != goal.parent_id:
+        if new_parent_id == goal_id:
+            raise ValueError("Goal cannot be its own parent")
+        
+        # Walk up from new parent — if we hit goal_id, cycle!
+        current = Goal.query.get(new_parent_id)
+        seen = set()
+        while current:
+            if current.id == goal_id:
+                raise ValueError("Cycle detected in goal hierarchy")
+            if current.id in seen:
+                break  # safety
+            seen.add(current.id)
+            current = current.parent
+
     allowed_fields = {'title', 'description', 'status', 'category', 'due_date', 'is_habit', 'timeframe'}
     for field, value in updates.items():
         if field not in allowed_fields:
@@ -125,6 +185,9 @@ def update_goal(goal_id: int, **updates) -> Goal:
             goal.timeframe = GoalTimeframe[value.upper()]
         else:
             setattr(goal, field, value or None)
+
+    if 'parent_id' in updates:
+        goal.parent_id = updates['parent_id']
 
     db.session.commit()
     return goal
