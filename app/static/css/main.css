@@ -440,3 +440,21 @@
   left: 8px !important;
   opacity: 0.9;
 }
+
+/* COMPLETED SUBGOAL GLOW-UP — GREEN VICTORY WHEN 'DONE' (SUBGOALS ONLY) */
+.goal-item.subgoal-complete > .goal-header {
+  background: linear-gradient(135deg, #166534, #4f7462);  /* Jacked green gradient — championship shine! */
+  border-bottom: 4px solid #15803d;                      /* Extra bold edge */
+  box-shadow: 0 8px 20px rgba(34, 197, 94, 0.5);         /* Victory glow that pops in dark mode */
+  transition: all 0.3s ease;                            /* Smooth slam on load/edit */
+}
+
+.goal-item.subgoal-complete > .goal-header .toggle-icon,
+.goal-item.subgoal-complete > .goal-header .text-white {
+  color: white !important;  /* Force white text — no fade, only glory */
+}
+
+.goal-item.subgoal-complete > .goal-header:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 30px rgba(34, 197, 94, 0.7);        /* Hover lift — feels alive! */
+}

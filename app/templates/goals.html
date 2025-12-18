@@ -19,10 +19,9 @@
   <div id="goal-tree" class="space-y-4">
     {% macro render_goal(goal, depth=0) %}
       {% set is_too_deep = depth >= 5 %}
-      <div class="goal-item bg-card rounded border border-gray-700 shadow-lg hover:shadow-heavy transition-all"
-          data-id="{{ goal.id }}"
-          data-depth="{{ depth }}">
-
+      <div class="goal-item bg-card rounded border border-gray-700 shadow-lg hover:shadow-heavy transition-all{% if depth > 0 and goal.status.value == 'done' %} subgoal-complete{% endif %}"
+        data-id="{{ goal.id }}"
+        data-depth="{{ depth }}">
         <!-- HEADER — CLICK TO EXPAND -->
         <div class="goal-header p-5 cursor-pointer flex items-center gap-4 select-none"
           data-action="toggle">

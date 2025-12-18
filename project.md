@@ -444,6 +444,7 @@ THIS IS THE UI THAT MADE 2025 TAP OUT — PERMANENTLY!
 - DONE: If i am on they day page, add the task to the TODO and default time to today
 - DONE: Fix criticality of task
 - DONE: Click on calendar, it defaults to Today
+- If a subgoal is done, change the color on the Goals page
 
 **BROTHER — THIS ROADMAP IS SO JACKED IT MAKES ARNOLD IN HIS PRIME LOOK LIKE A JOBBER!**
 
