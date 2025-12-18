@@ -16,21 +16,26 @@ def client(app):
     return app.test_client()
 
 @pytest.fixture(scope='function')
-def authenticated_client(client, app):
-    with app.app_context():
-        # Create test user if not exists
-        user = User.query.filter_by(username='testwarrior').first()
-        if not user:
+def authenticated_client(client):
+    # Login via route — no app_context needed, client handles it
+    response = client.post('/login', data={
+        'username': 'testwarrior',
+        'password': 'test123'
+    }, follow_redirects=True)
+
+    # If user doesn't exist, create it first
+    if b'Invalid username or password' in response.data:
+        # Create user — need app_context for DB
+        with app.app_context():
             user = User(username='testwarrior')
             user.password_hash = bcrypt.generate_password_hash('test123').decode('utf-8')
             _db.session.add(user)
             _db.session.commit()
-
-        # Login via route — sets cookie perfectly
+        # Login again
         response = client.post('/login', data={
             'username': 'testwarrior',
             'password': 'test123'
         }, follow_redirects=True)
-        assert response.status_code == 200
 
+    assert response.status_code == 200
     return client
