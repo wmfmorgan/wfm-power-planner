@@ -1,6 +1,6 @@
 # app/calendar_routes.py
 # CALENDAR COMMAND CENTER — PHASE 2 BEGINS
-from flask import Blueprint, render_template, jsonify, request, make_response
+from flask import Blueprint, flash, render_template, jsonify, request, make_response
 from flask_login import login_required, current_user
 from app.extensions import db
 from app.services.calendar_service import import_ics_events
@@ -299,11 +299,11 @@ def import_calendar(datestr):
     
     result = import_ics_events(imported_events)
     
+    flash(f"ICS sync complete — {result['imported']} new events added, {result['skipped']} skipped.", 'success')
     return jsonify({
         'success': True,
         'imported': result['imported'],
-        'skipped': result['skipped'],
-        'message': f"ICS import complete — {result['imported']} new events added!"
+        'skipped': result['skipped']
     })
 
 from app.services.calendar_service import (

@@ -448,6 +448,9 @@ THIS IS THE UI THAT MADE 2025 TAP OUT — PERMANENTLY!
 - Add health check endpoint (/api/health)
 - Remove tailwind
 - cleanup dead code
+- Do not show Add Step on goal modal for daily level goals
+- Move/Show unfished tasks when day ends
+- Dont show JSON on ICS import
 - DONE: remove goal page kanban
 - DONE: Delete goals/subgoals
 - DONE: Dynamically refresh goals after add/delete
@@ -465,6 +468,7 @@ THIS IS THE UI THAT MADE 2025 TAP OUT — PERMANENTLY!
 - DONE: Goals are defaulting to TODO status when created
 - DONE: Hide add step on goal modal if creating parent goal
 - If all subgoals are done, ask to mark parent goal done
+- Click on blank space in task kanban to add a new task to that column status
 
 **BROTHER — THIS ROADMAP IS SO JACKED IT MAKES ARNOLD IN HIS PRIME LOOK LIKE A JOBBER!**
 

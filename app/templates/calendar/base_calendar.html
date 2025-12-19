@@ -38,13 +38,11 @@
 
   <div class="mt-20">
     <h2 class="text-4xl font-black text-gold text-center mb-12 drop-shadow-lg">
-      {% if current_view == 'day' %}
-        TODAY'S GOALS
-      {% elif current_view == 'week' %}
+      {% if current_view == 'week' %}
         THIS WEEK'S GOALS
       {% elif current_view == 'month' %}
         THIS MONTH'S GOALS
-      {% else %}
+      {% elif current_view == 'quarter' %}
         THIS QUARTER'S GOALS
       {% endif %}
     </h2>

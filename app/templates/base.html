@@ -167,10 +167,11 @@
                     TODAY
                     </button>
                     {% if current_view == 'day' %}
-                    <a href="{{ url_for('calendar.import_calendar', datestr=year ~ '%02d'|format(month) ~ '%02d'|format(day)) }}"
-                        class="bg-gray-700 hover:bg-gray-600 text-gold font-bold py-2 px-5 rounded shadow-lg transition-all hover-grow">
-                        SYNC
-                    </a>
+                    <button id="sync-ics-btn"
+                            class="bg-gray-700 hover:bg-gray-600 text-gold font-bold py-2 px-5 rounded shadow-lg transition-all hover-grow"
+                            data-datestr="{{ year ~ '%02d'|format(month) ~ '%02d'|format(day) }}">
+                    SYNC
+                    </button>
                     {% endif %}
                 </div>
                 </div>
@@ -215,6 +216,9 @@
       {# Calendar nav + styles already in base_calendar.html, but period goals needed on all views #}
       <script src="{{ url_for('static', filename='js/goal_manager.js') }}"></script>
       <script src="{{ url_for('static', filename='js/reflection_zones.js') }}"></script>
+    {% endif %}
+    {% if current_view == 'day' %}
+        <script src="{{ url_for('static', filename='js/ics_sync.js') }}"></script>
     {% endif %}
     {# Future: Goals page specific script if it grows #}
     {% if request.path.startswith('/goals') %}
