@@ -11,7 +11,6 @@ if (window.taskModalInitialized) {
 
   const modal = document.getElementById('task-modal');
   if (!modal) {
-    console.log('No #task-modal — safe skip');
     window.openTaskModal = () => {};
     window.openEditModal = () => {};
     window.closeTaskModal = () => {};
@@ -99,9 +98,6 @@ if (window.taskModalInitialized) {
 
     // EDIT: populate + show DELETE
     window.openEditModal = function(task) {
-      console.log('openEditModal CALLED — TASK OBJECT:', task);
-      console.log('Priority value:', task.priority);
-      console.log('Priority element:', document.getElementById('task-priority'));
       hiddenId.value = task.id || '';
       document.getElementById('task-title').value = task.title || '';
       document.getElementById('task-description').value = task.description || '';

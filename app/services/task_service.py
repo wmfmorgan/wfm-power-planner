@@ -10,15 +10,6 @@ def get_all_tasks():
 def create_task(title, description="", due_date=None, priority="medium", tags="", status="backlog",
                 is_recurring=False, recurrence_type=None, recurrence_interval=1, recurrence_end_date=None,
                 from_day_page=False):
-    print("=== TASK SERVICE DEBUG ===")
-    print("Title:", title)
-    print("is_recurring:", is_recurring)
-    print("recurrence_type (raw):", recurrence_type)
-    print("recurrence_type (converted):", TaskRecurrenceType[recurrence_type.upper()].value if recurrence_type else None)
-    print("recurrence_interval:", recurrence_interval)
-    print("recurrence_end_date:", recurrence_end_date)
-    print("Final task object recurrence_type:", recurrence_type)
-    print("=============================")
 
     if from_day_page and not due_date:
         due_date = date.today()

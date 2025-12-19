@@ -1,6 +1,6 @@
 // static/js/calendar_events.js
 // PHASE 8 — CALENDAR EVENTS DOMINATION — PURE PROTEIN
-console.log('calendar_events.js LOADED — TIME GRID ARMED');
+// console.log('calendar_events.js LOADED — TIME GRID ARMED');
 
 if (window.calendarEventsInitialized) {
   console.log('calendar_events.js already running — skipping');

@@ -20,8 +20,7 @@ Issue List
 
   In static/js/tasks_day.js and static/js/tasks_global.js, `createTaskCard` functions are nearly identical. Violates Tenet #13 (refactor hurts maintainability); extract to shared utility in kanban_core.js.
 
-- **Issue #6: Bug - Recurrence Type Not Properly Handled in Task Create**  
-  **FIXED**
+- **Issue #6: Bug - Recurrence Type Not Properly Handled in Task Create STATUS: DONE**  
 
   In app/services/task_service.py, `recurrence_type=TaskRecurrenceType[recurrence_type.upper()].value` assumes uppercase input, but frontend sends lowercase. May cause KeyError; normalize input or use .get().
 
@@ -37,7 +36,7 @@ Issue List
 
   In app/models/task.py, fields like `is_habit`, `current_streak` are defined but not used in routes/services. Phase 3.3 backlog, but remove or comment as TODO to avoid bloat (Tenet #13).
 
-- **Issue #10: Potential Bug - ltree Path in Import/Export**
+- **Issue #10: Potential Bug - ltree Path in Import/Export STATUS: DONE**
 
   In app/services/goal_service.py, export serializes path as str, but import rebuilds using new IDs. Test deeply for deep hierarchies; may fail on >5 levels (Tenet #16). Add validation.
 
@@ -45,8 +44,8 @@ Issue List
 
   The `_parse_dt` and full ICS parsing/processing code (lines 50-200+) in `app/calendar_routes.py` is a large block embedded in the route handler. This violates code cleanliness and maintainability (Tenet #13). Extract the parsing logic into a dedicated helper file like `app/helpers/ics_parser.py` or move to `calendar_service.py` for better separation of concerns.
 
-- **Issue #12: Export/Import Endpoints in goals_routes.py Should Move to Dedicated Service**
-
+- **Issue #12: Export/Import Endpoints in goals_routes.py Should Move to Dedicated Service STATUS: DONE**
+  
   The `/api/export` and `/api/import` routes in `app/goals_routes.py` handle data serialization and DB operations directly. This mixes routing with business logic. Relocate the core export/import functions to `app/services/data_service.py` (new file) to enforce Tenet #17 (all DB writes through service layer) and reduce route file size.
 
 - **Issue #13: goal_manager.js Handles Too Many Concerns (Tree, Modal, Calendar Kanban)**

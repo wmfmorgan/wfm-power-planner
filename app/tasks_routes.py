@@ -62,14 +62,6 @@ def api_tasks():
 def api_create_task():
     data = request.get_json() or {}
 
-    print("=== TASK CREATE DEBUG ===")
-    print("Raw JSON from frontend:", data)
-    print("is_recurring:", data.get('is_recurring'))
-    print("recurrence_type:", data.get('recurrence_type'))
-    print("recurrence_interval:", data.get('recurrence_interval'))
-    print("recurrence_end_date:", data.get('recurrence_end_date'))
-    print("=========================")
-
     task = create_task(
         title=data.get('title', ''),
         description=data.get('description', ''),
