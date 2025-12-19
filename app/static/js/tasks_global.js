@@ -17,7 +17,7 @@ function fetchAllTasks() {
 
 function renderTasks() {
   document.querySelectorAll('#tasks-kanban [id^="tasks-kanban-column-"]').forEach(col => {
-    col.innerHTML = '<p class="text-gray-500 text-center py-8">Drop tasks here...</p>';
+    col.innerHTML = '<p class="text-gray-500 text-center py-8"></p>';
   });
 
   allTasks.forEach(task => {

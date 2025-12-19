@@ -461,7 +461,7 @@ THIS IS THE UI THAT MADE 2025 TAP OUT — PERMANENTLY!
 - DONE: Fix criticality of task
 - DONE: Click on calendar, it defaults to Today
 - DONE: If a subgoal is done, change the color on the Goals page
-- Put Goal kanban above task kanban on day page
+- DONE: Put Goal kanban above task kanban on day page
 - Goals are defaulting to TODO status when created
 - Hide add step on goal modal if creating parent goal
 - If all subgoals are done, ask to mark parent goal done

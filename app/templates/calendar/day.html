@@ -74,6 +74,27 @@
     </div>
     <!-- LEFT: TIME GRID -->
   </div>
+  <div class="mt-20">
+    <h2 class="text-4xl font-black text-gold text-center mb-12 drop-shadow-lg">
+        TODAY'S GOALS
+    </h2>
+
+    <!-- GOALS FOR THIS PERIOD -->
+    
+    {% set calendar_statuses = [] %}
+    {% for s in goal_statuses %}
+      {% if s.value != 'backlog' %}
+        {% set _ = calendar_statuses.append(s) %}
+      {% endif %}
+    {% endfor %}
+      {% with
+        kanban_id="period-goals-kanban",
+        kanban_statuses=calendar_statuses,
+        kanban_type="goal"
+      %}
+        {% include "shared/kanban.html" %}
+      {% endwith %}
+  </div>
       <!-- TASKS KANBAN — FULL WIDTH, CENTERED -->
     <div class="mt-20">
       <div class="max-w-7xl mx-auto">

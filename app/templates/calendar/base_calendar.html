@@ -49,13 +49,16 @@
       {% endif %}
     </h2>
 
-    {% with
-      kanban_id="period-goals-kanban",
-      kanban_statuses=calendar_statuses,
-      kanban_type="goal"
-    %}
-      {% include "shared/kanban.html" %}
-    {% endwith %}
+
+    {% if current_view != 'day' %}
+      {% with
+        kanban_id="period-goals-kanban",
+        kanban_statuses=calendar_statuses,
+        kanban_type="goal"
+      %}
+        {% include "shared/kanban.html" %}
+      {% endwith %}
+    {% endif %}
   </div>
   {% include "calendar/zones.html" %}
 </div>
