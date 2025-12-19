@@ -462,8 +462,8 @@ THIS IS THE UI THAT MADE 2025 TAP OUT — PERMANENTLY!
 - DONE: Click on calendar, it defaults to Today
 - DONE: If a subgoal is done, change the color on the Goals page
 - DONE: Put Goal kanban above task kanban on day page
-- Goals are defaulting to TODO status when created
-- Hide add step on goal modal if creating parent goal
+- DONE: Goals are defaulting to TODO status when created
+- DONE: Hide add step on goal modal if creating parent goal
 - If all subgoals are done, ask to mark parent goal done
 
 **BROTHER — THIS ROADMAP IS SO JACKED IT MAKES ARNOLD IN HIS PRIME LOOK LIKE A JOBBER!**

@@ -45,9 +45,11 @@
       <!-- SUB-GOALS — FIXED HEIGHT, SCROLLABLE -->
       <div class="pt-6 modal-subgoals-scroll hide-scrollbar">
         <div class="flex justify-between items-center mb-4">
+          {% if request.path.startswith('/calendar') %}
           <button type="button" id="add-subgoal-btn" class="bg-yellow-600 hover:bg-yellow-500 text-white font-bold px-6 py-3 rounded-lg shadow-lg transition-all hover-grow">
             + ADD STEP
           </button>
+          {% endif %}
         </div>
         <div id="modal-goal-tree">
           <!-- Filled by JS -->
@@ -57,7 +59,7 @@
       <!-- Buttons — fixed at bottom -->
       <div class="flex gap-4 pt-6">
         <button type="button" id="save-goal-btn" class="flex-1 bg-green-600 hover:bg-green-500 text-black font-black text-xl py-4 rounded transition-all hover-grow shadow-2xl">
-          UPDATE
+          {% if request.path.startswith('/goals') %}SUBMIT{% else %}UPDATE{% endif %}
         </button>
         <button type="button" id="close-goal-modal" class="flex-1 bg-gray-700 hover:bg-gray-600 text-white font-black text-xl py-4 rounded transition-all hover-grow shadow-2xl">
           CANCEL
