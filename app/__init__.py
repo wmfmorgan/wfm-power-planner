@@ -1,7 +1,7 @@
 # app/__init__.py
 # THE ONE AND ONLY APP FACTORY — CLEAN, ETERNAL, CHAMPIONSHIP-CALIBER
-from flask import Flask, render_template, request
-from flask import Flask
+import os
+from flask import Flask, app, jsonify, render_template, request
 from flask_login import LoginManager, login_required, current_user
 from flask_migrate import Migrate
 
@@ -25,7 +25,7 @@ def create_app():
     app.config['TEMPLATES_AUTO_RELOAD'] = True   # ← THIS LINE
     app.jinja_env.auto_reload = True             # ← AND THIS LINE
     app.config.from_object(Config)
-
+    app.config['DEBUG'] = os.getenv('FLASK_ENV', 'development') != 'production'
     # === EXTENSIONS ===
     db.init_app(app)
     login_manager.init_app(app)
@@ -44,6 +44,16 @@ def create_app():
     @login_required
     def index():
         return render_template('index.html')
+
+    from flask import render_template
+    @app.errorhandler(500)
+    def internal_error(error):
+        app.logger.error(f"500 error: {error}")
+        return render_template('500.html'), 500  # Create simple 500.html template
+
+    @app.route('/api/health')
+    def health():
+        return jsonify({"status": "jacked"}), 200
 
     # === USER LOADER ===
     @login_manager.user_loader
@@ -121,4 +131,18 @@ def create_app():
                 'calendar_date_str': date_str
             }
         return {}
+    
+    import logging
+    from logging.handlers import RotatingFileHandler
+    if not app.debug:
+        if not os.path.exists('logs'):
+            os.mkdir('logs')
+        file_handler = RotatingFileHandler('logs/wfm.log', maxBytes=10240, backupCount=10)
+        file_handler.setFormatter(logging.Formatter(
+            '%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]'))
+        file_handler.setLevel(logging.INFO)
+        app.logger.addHandler(file_handler)
+        app.logger.setLevel(logging.INFO)
+        app.logger.info('WFM Power Planner startup')
+
     return app
