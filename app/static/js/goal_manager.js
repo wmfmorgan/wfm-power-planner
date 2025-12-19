@@ -266,7 +266,7 @@ function addChildGoal(parentId, inModal = false) {
         due_date: parent.due_date,
         category: parent.category,
         timeframe: childTimeframe,
-        status: 'todo'
+        status: GOAL_STATUS.BACKLOG
       };
 
       fetch('/api/goals', {

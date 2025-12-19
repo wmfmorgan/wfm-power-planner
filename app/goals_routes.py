@@ -94,10 +94,10 @@ def api_create_goal():
             user_id=current_user.id,
             title=data['title'],
             description=data.get('description', ''),
-            category=data.get('category', 'work'),
+            category=data.get('category', GoalCategory.WORK.value),
             due_date=data.get('due_date'),
             is_habit=data.get('is_habit', False),
-            status=data.get('status', 'todo'),
+            status=data.get('status', GoalStatus.BACKLOG.value),
             parent_id=data.get('parent_id'),
             timeframe=data.get('timeframe')
         )

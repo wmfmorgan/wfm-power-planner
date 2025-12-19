@@ -34,10 +34,10 @@ def create_goal(
     user_id: int,
     title: str,
     description: str = "",
-    category: str = "work",        
+    category: str |None = None,        
     due_date: str | None = None,
     is_habit: bool = False,
-    status: str = "todo",
+    status: str | None = None,
     parent_id: int | None = None,
     timeframe: str | None = None
     ) -> Goal:
@@ -72,34 +72,46 @@ def create_goal(
     else:
         parent = None  # for later use
 
-    # Validate category
-    try:
-        category_enum = GoalCategory[category.upper()]
-    except KeyError:
-        raise ValueError(f"Invalid category: {category}")
+    # CATEGORY — DEFAULT + INHERITANCE + VALIDATION
+    if category is not None:
+        try:
+            category_enum = GoalCategory[category.upper()]
+        except KeyError:
+            raise ValueError(f"Invalid category: {category}")
+    elif parent_id is not None:
+        parent = Goal.query.get(parent_id)
+        category_enum = parent.category if parent else GoalCategory.WORK
+    else:
+        category_enum = GoalCategory.WORK
 
-    # Validate status
-    try:
-        status_enum = GoalStatus[status.upper()]
-    except KeyError:
-        raise ValueError(f"Invalid status: {status}")
+    # STATUS — DEFAULT + INHERITANCE + VALIDATION
+    if status is not None:
+        try:
+            status_enum = GoalStatus[status.upper()]
+        except KeyError:
+            raise ValueError(f"Invalid status: {status}")
+    elif parent_id is not None:
+        parent = Goal.query.get(parent_id)
+        status_enum = parent.status if parent else GoalStatus.BACKLOG
+    else:
+        status_enum = GoalStatus.BACKLOG
 
-    # Validate timeframe if provided
+    # TIMEFRAME — INHERITANCE + VALIDATION (your existing logic, just cleaned)
     if timeframe:
         try:
             timeframe_enum = GoalTimeframe[timeframe.upper()]
         except KeyError:
             raise ValueError(f"Invalid timeframe: {timeframe}")
     else:
-        # TIMEFRAME INHERITANCE
-        timeframe_to_use = timeframe or 'monthly'
-        if parent_id and timeframe is None:
+        timeframe_to_use = 'monthly'
+        if parent_id:
+            parent = Goal.query.get(parent_id)
             inheritance_map = {
-                'yearly': 'quarterly',
-                'quarterly': 'monthly',
-                'monthly': 'weekly',
-                'weekly': 'daily',
-                'daily': 'daily'
+                GoalTimeframe.YEARLY.value: 'quarterly',
+                GoalTimeframe.QUARTERLY.value: 'monthly',
+                GoalTimeframe.MONTHLY.value: 'weekly',
+                GoalTimeframe.WEEKLY.value: 'daily',
+                GoalTimeframe.DAILY.value: 'daily'
             }
             timeframe_to_use = inheritance_map.get(parent.timeframe.value, 'monthly')
         timeframe_enum = GoalTimeframe[timeframe_to_use.upper()]
@@ -108,8 +120,8 @@ def create_goal(
         user_id=user_id,
         title=title.strip(),
         description=description.strip() if description else None,
-        category=GoalCategory[category.upper()],
-        status=GoalStatus[status.upper()],
+        category=category_enum,
+        status=status_enum,
         due_date=due_date_obj,
         is_habit=is_habit,
         parent_id=parent_id,
